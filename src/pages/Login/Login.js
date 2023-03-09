@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../app/services/auth";
 import { setCredentials } from "../../features/auth/authSlice";
 import encryptData from "../../utils/utils";
-import { Snackbar } from "@mui/material";
+import { FormControl, FormHelperText, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -22,6 +22,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loginError, setLoginError] = useState("");
+    const [invalidEmail, setInvalidEmail] = useState(false);
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -37,6 +38,16 @@ function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [login, { isLoading }] = useLoginMutation();
+
+    const handleEmailChange = (e) => {
+        const emailCheckRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,12})+$/;
+        setEmail(e.target.value);
+        if (e.target.value.length > 0 && !emailCheckRegex.test(e.target.value)) {
+            setInvalidEmail(true);
+        } else {
+            setInvalidEmail(false);
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -65,7 +76,7 @@ function Login() {
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 autoHideDuration={4000}
             >
-                <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+                <Alert onClose={handleClose} severity={"error"} sx={{ width: "100%" }}>
                     {loginError}
                 </Alert>
             </Snackbar>
@@ -75,9 +86,14 @@ function Login() {
                     <InputCommon
                         inputType={"email"}
                         inputLabel={"Crust Email Address"}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={handleEmailChange}
                         value={email}
                     />
+                    {invalidEmail && (
+                        <FormControl error={invalidEmail} variant="standard">
+                            <FormHelperText>Enter a valid email address</FormHelperText>
+                        </FormControl>
+                    )}
                     <InputCommonWithIcon
                         inputType={showPassword ? "text" : "password"}
                         inputLabel={"Password"}
