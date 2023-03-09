@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-function InputCommon({ inputType, inputLabel }) {
+function InputCommon({ inputType, inputLabel, onChange, value }) {
     return (
         <Container>
             <label htmlFor={inputType}>{inputLabel}</label>
-            <input type={inputType} name={inputType} />
+            <input type={inputType} name={inputType} onChange={onChange} value={value} />
         </Container>
     );
 }

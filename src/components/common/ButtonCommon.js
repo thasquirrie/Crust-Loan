@@ -1,6 +1,15 @@
 import styled from "styled-components";
+import CircularProgress from "@mui/material/CircularProgress";
 
-function ButtonCommon({ text, onClick, marginTop, backgroundColor, textColor, disabled }) {
+function ButtonCommon({
+    text,
+    onClick,
+    marginTop,
+    backgroundColor,
+    textColor,
+    disabled,
+    isLoading,
+}) {
     return (
         <ButtonContainer
             onClick={onClick}
@@ -9,7 +18,7 @@ function ButtonCommon({ text, onClick, marginTop, backgroundColor, textColor, di
             textColor={textColor}
             disabled={disabled}
         >
-            {text}
+            {isLoading ? <CircularProgress size={20} color="inherit" /> : text}
         </ButtonContainer>
     );
 }
@@ -25,6 +34,7 @@ const ButtonContainer = styled.button`
     font-size: 1rem;
     line-height: 1.2rem;
     letter-spacing: -0.02em;
+    cursor: pointer;
     ${(props) => (props.textColor ? `color: ${props.textColor};` : `color: #ffffff;`)}
     ${(props) => props.marginTop && `margin-top: ${props.marginTop};`}
     ${(props) =>
@@ -34,5 +44,6 @@ const ButtonContainer = styled.button`
 
     &:disabled {
         background-color: #7a7a7a;
+        cursor: not-allowed;
     }
 `;

@@ -20,7 +20,7 @@ const authSlice = createSlice({
     extraReducers: (builder) => {},
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
 

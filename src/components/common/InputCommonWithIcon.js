@@ -1,11 +1,19 @@
 import styled from "styled-components";
 
-function InputCommonWithIcon({ inputType, inputLabel, icon, onClickIcon, marginTop }) {
+function InputCommonWithIcon({
+    inputType,
+    inputLabel,
+    icon,
+    onClickIcon,
+    marginTop,
+    onChange,
+    value,
+}) {
     return (
         <Container marginTop={marginTop}>
             <label htmlFor={inputType}>{inputLabel}</label>
             <div className="inputWithIcon">
-                <input type={inputType} name={inputType} />
+                <input type={inputType} name={inputType} onChange={onChange} value={value} />
                 <img src={icon} alt="" onClick={onClickIcon} />
             </div>
         </Container>

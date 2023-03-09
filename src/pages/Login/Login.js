@@ -1,26 +1,91 @@
-import React from "react";
-
+import React, { useState } from "react";
 import Navbar from "../../components/common/Navbar";
 import { Container, ForgotPassword, SignInContainer } from "./LoginStyles";
 import InputCommon from "../../components/common/InputCommon";
 import InputCommonWithIcon from "../../components/common/InputCommonWithIcon";
 import eye_off from "../../assets/common/eye-off.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ButtonCommon from "../../components/common/ButtonCommon";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../../app/services/auth";
+import { setCredentials } from "../../features/auth/authSlice";
+import encryptData from "../../utils/utils";
+import { Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [loginError, setLoginError] = useState("");
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpenSnackbar(false);
+        setLoginError("");
+    };
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [login, { isLoading }] = useLoginMutation();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            const result = await login({
+                username: email,
+                password: encryptData(password),
+            }).unwrap();
+            const { data } = result;
+            console.log("successfully logged in", data);
+            dispatch(setCredentials({ user: data.user, token: data.access_token }));
+            navigate("/");
+        } catch (err) {
+            setLoginError(err.data.message);
+            setOpenSnackbar(true);
+        }
+    };
+
     return (
         <>
             <Navbar />
+            <Snackbar
+                open={openSnackbar}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                autoHideDuration={4000}
+            >
+                <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+                    {loginError}
+                </Alert>
+            </Snackbar>
             <Container>
                 <SignInContainer>
                     <h4>Sign in</h4>
-                    <InputCommon inputType={"email"} inputLabel={"Crust Email Address"} />
+                    <InputCommon
+                        inputType={"email"}
+                        inputLabel={"Crust Email Address"}
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                    />
                     <InputCommonWithIcon
-                        inputType={"password"}
+                        inputType={showPassword ? "text" : "password"}
                         inputLabel={"Password"}
                         icon={eye_off}
                         marginTop={"2rem"}
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                        onClickIcon={() => setShowPassword(!showPassword)}
                     />
                     <ForgotPassword>
                         <Link to="/">Forgot Password?</Link>
@@ -29,7 +94,9 @@ function Login() {
                         text={"Sign in"}
                         marginTop={"2rem"}
                         textColor={"#ffffff"}
-                        disabled={true}
+                        disabled={!(email && password.length >= 8) || isLoading}
+                        onClick={handleLogin}
+                        isLoading={isLoading}
                     />
                 </SignInContainer>
             </Container>
