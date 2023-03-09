@@ -28,6 +28,7 @@ const Container = styled.div`
     padding: 0px 2%;
     box-sizing: border-box;
     height: 48px;
+    z-index: 100;
 
     h4 {
         color: #ffffff;
