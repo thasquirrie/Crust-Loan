@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logOut } from "../../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "https://api.staging.crust.africa/api/v2/",
+    baseUrl: "https://api.staging.crust.africa/api/v2/user",
 });
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {

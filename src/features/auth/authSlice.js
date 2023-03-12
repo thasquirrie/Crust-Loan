@@ -8,7 +8,6 @@ const authSlice = createSlice({
     },
     reducers: {
         setCredentials: (state, action) => {
-            console.log("action.payload", action.payload);
             const { user } = action.payload;
             state.user = user;
         },

@@ -22,9 +22,9 @@ const Container = styled.div`
     align-items: center;
     width: 100%;
     background: #2c1505;
-    position: absolute;
-    top: 0px;
-    left: 0px;
+    position: fixed;
+    top: 0;
+    left: 0;
     padding: 0px 2%;
     box-sizing: border-box;
     height: 48px;
