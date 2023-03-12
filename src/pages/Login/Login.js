@@ -51,15 +51,13 @@ function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
         try {
             const result = await login({
                 username: email,
                 password: encryptData(password),
             }).unwrap();
             const { data } = result;
-            console.log("successfully logged in", data);
-            dispatch(setCredentials({ user: data.user, token: data.access_token }));
+            dispatch(setCredentials({ user: { user: data.user, token: data.access_token } }));
             navigate("/");
         } catch (err) {
             setLoginError(err.data.message);

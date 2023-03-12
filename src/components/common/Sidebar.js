@@ -60,52 +60,6 @@ function Sidebar({ openSidebar, handleOpenSidebar, openLoansDropdown, handleOpen
                     </div>
                 </SubMenu>
             </Loans>
-            <Loans openSidebar={openSidebar} openLoansDropdown={openLoansDropdown}>
-                <div className="loanContainer" onClick={handleOpenLoansDropdown}>
-                    <Link to="/">
-                        <img src={transaction} alt="" />
-                        Loans
-                    </Link>
-                    <img src={transaction} alt="" />
-                </div>
-                <SubMenu openLoansDropdown={openLoansDropdown}>
-                    <div className="SubMenuItem">
-                        <Link to="/">
-                            <img src={transaction} alt="" />
-                            Dashboard
-                        </Link>
-                    </div>
-                    <div className="SubMenuItem">
-                        <Link to="/">
-                            <img src={transaction} alt="" />
-                            Cluster Management
-                        </Link>
-                    </div>
-                </SubMenu>
-            </Loans>
-            <Loans openSidebar={openSidebar} openLoansDropdown={openLoansDropdown}>
-                <div className="loanContainer" onClick={handleOpenLoansDropdown}>
-                    <Link to="/">
-                        <img src={transaction} alt="" />
-                        Loans
-                    </Link>
-                    <img src={transaction} alt="" />
-                </div>
-                <SubMenu openLoansDropdown={openLoansDropdown}>
-                    <div className="SubMenuItem">
-                        <Link to="/">
-                            <img src={transaction} alt="" />
-                            Dashboard
-                        </Link>
-                    </div>
-                    <div className="SubMenuItem">
-                        <Link to="/">
-                            <img src={transaction} alt="" />
-                            Cluster Management
-                        </Link>
-                    </div>
-                </SubMenu>
-            </Loans>
         </Container>
     );
 }

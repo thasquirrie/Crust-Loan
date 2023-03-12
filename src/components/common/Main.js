@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import { useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
 
 function Main({ children }) {
     const [openSidebar, setOpenSidebar] = useState(false);
@@ -14,7 +16,10 @@ function Main({ children }) {
         setOpenLoansDropdown(!openLoansDropdown);
     };
 
-    return (
+    const location = useLocation();
+    const user = useSelector((state) => state.auth.user);
+
+    return user ? (
         <div>
             <Navbar />
             <Sidebar
@@ -25,6 +30,8 @@ function Main({ children }) {
             />
             {children}
         </div>
+    ) : (
+        <Navigate to="/auth/login" from={location} replace />
     );
 }
 

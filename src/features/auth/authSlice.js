@@ -1,28 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 
 const authSlice = createSlice({
     name: "auth",
     initialState: {
         user: null,
-        token: null,
     },
     reducers: {
         setCredentials: (state, action) => {
-            const { user, accessToken } = action.payload;
+            console.log("action.payload", action.payload);
+            const { user } = action.payload;
             state.user = user;
-            state.token = accessToken;
         },
         logOut: (state) => {
             state.user = null;
-            state.token = null;
         },
     },
-    extraReducers: (builder) => {},
+    extraReducers: (builder) => {
+        builder.addCase(PURGE, (state) => {
+            state.user = null;
+        });
+    },
 });
 
 export const { setCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
-
-export const selectCurrentUser = (state) => state.auth.user;
-export const selectCurrentToken = (state) => state.auth.token;
