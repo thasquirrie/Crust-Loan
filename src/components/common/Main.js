@@ -48,5 +48,10 @@ export default Main;
 const Container = styled.div`
     width: 100%;
     overflow: hidden;
-    /* height: 100vh; */
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
 `;
