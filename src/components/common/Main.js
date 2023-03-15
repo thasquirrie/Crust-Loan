@@ -54,4 +54,6 @@ const Container = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 `;

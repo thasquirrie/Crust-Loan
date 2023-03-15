@@ -12,6 +12,7 @@ import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
 import ButtonCommon from "../../components/common/ButtonCommon";
 import SelectCommon from "../../components/common/SelectCommon";
 import { DateRangePicker } from "rsuite";
+import Table from "../../components/common/Table";
 
 function Transactions() {
     return (
@@ -58,6 +59,7 @@ function Transactions() {
                         </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
+                <Table />
             </Container>
         </Main>
     );
