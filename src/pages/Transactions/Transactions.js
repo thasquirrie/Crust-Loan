@@ -14,6 +14,39 @@ import SelectCommon from "../../components/common/SelectCommon";
 import { DateRangePicker } from "rsuite";
 import Table from "../../components/common/Table";
 
+const TableColumns = [
+    { id: "name", label: "Agent Name" },
+    { id: "code", label: "Account Number" },
+    {
+        id: "population",
+        label: "Amount",
+    },
+    {
+        id: "size",
+        label: "Platform Ref.",
+    },
+    {
+        id: "size",
+        label: "TransactionRef",
+    },
+    {
+        id: "size",
+        label: "Date and Time",
+    },
+    {
+        id: "density",
+        label: "Fee",
+    },
+    {
+        id: "density",
+        label: "Type",
+    },
+    {
+        id: "density",
+        label: "Status",
+    },
+];
+
 function Transactions() {
     return (
         <Main>
@@ -34,6 +67,7 @@ function Transactions() {
                                     "Transaction Ref.": "transactionRef",
                                     "Platform Ref.": "platformRef",
                                 }}
+                                placeholder={'Click "Enter" to search'}
                             />
                         </SelectSearchBar>
                         <SearchFilters>
@@ -59,7 +93,7 @@ function Transactions() {
                         </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
-                <Table />
+                <Table columns={TableColumns} />
             </Container>
         </Main>
     );

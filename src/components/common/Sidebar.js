@@ -135,8 +135,8 @@ const Container = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     width: ${(props) => (props.openSidebar ? "3%" : "19.5%")};
-    transition: all 0.4s ease-in-out;
-    height: 100vh;
+    transition: all 0.2s ease-in-out;
+    height: 100%;
     background-color: #f5f5f5;
     padding: 7rem 0 0 0;
     position: relative;
@@ -149,7 +149,7 @@ const SidebarLinksContainer = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
-    height: 75vh;
+    min-height: 100vh;
     overflow: auto;
     box-sizing: border-box;
 `;
@@ -164,7 +164,7 @@ const AdminManagement = styled.div`
     box-sizing: border-box;
     border-bottom: 1px solid #d0dce4;
     opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-    transition: all 0.4s ease-in-out;
+    transition: all 0.2s ease-in-out;
 
     a {
         display: flex;
@@ -180,7 +180,7 @@ const AdminManagement = styled.div`
         width: 100%;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
         white-space: nowrap;
-        transition: all 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
 
         img {
             margin-right: 1rem;
@@ -208,7 +208,7 @@ const LoanManagement = styled.div`
     box-sizing: border-box;
     border-bottom: 1px solid #d0dce4;
     opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-    transition: all 0.4s ease-in-out;
+    transition: all 0.2s ease-in-out;
 
     .loanContainer {
         display: flex;
@@ -217,12 +217,12 @@ const LoanManagement = styled.div`
         justify-content: space-between;
         padding: 1.5rem 1.5rem;
         box-sizing: border-box;
-        transition: all 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
         width: 100%;
 
         img {
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            transition: all 0.4s ease-in-out;
+            transition: all 0.2s ease-in-out;
         }
 
         .accordionCloseIcon {
@@ -242,7 +242,7 @@ const LoanManagement = styled.div`
             text-decoration: none;
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            transition: all 0.4s ease-in-out;
+            transition: all 0.2s ease-in-out;
 
             img {
                 margin-right: 1rem;
@@ -278,7 +278,7 @@ const POSManagement = styled.div`
     box-sizing: border-box;
     border-bottom: 1px solid #d0dce4;
     opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-    transition: all 0.4s ease-in-out;
+    transition: all 0.2s ease-in-out;
 
     .posManagementContainer {
         display: flex;
@@ -287,12 +287,12 @@ const POSManagement = styled.div`
         justify-content: space-between;
         padding: 1.5rem 1.5rem;
         box-sizing: border-box;
-        transition: all 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
         width: 100%;
 
         img {
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            transition: all 0.4s ease-in-out;
+            transition: all 0.2s ease-in-out;
         }
 
         .accordionCloseIcon {
@@ -314,7 +314,7 @@ const POSManagement = styled.div`
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
             white-space: nowrap;
-            transition: all 0.4s ease-in-out;
+            transition: all 0.2s ease-in-out;
 
             img {
                 margin-right: 1rem;
@@ -348,8 +348,8 @@ const LoanManagementSubMenu = styled.div`
     justify-content: flex-start;
     width: 100%;
     display: ${(props) => (props.openLoansDropdown ? "flex" : "none")};
-    transition: all 0.4s ease-in-out;
-    animation: easeIn 0.4s ease-in-out forwards;
+    transition: all 0.2s ease-in-out;
+    animation: easeIn 0.2s ease-in-out forwards;
 
     .SubMenuItem {
         display: flex;
@@ -361,7 +361,7 @@ const LoanManagementSubMenu = styled.div`
         padding-left: 2.5rem;
         box-sizing: border-box;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-        transition: all 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
 
         a {
             display: flex;
@@ -377,7 +377,7 @@ const LoanManagementSubMenu = styled.div`
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
             white-space: nowrap;
-            transition: all 0.4s ease-in-out;
+            transition: all 0.2s ease-in-out;
 
             img {
                 margin-right: 1rem;
@@ -404,8 +404,8 @@ const POSManagementSubMenu = styled.div`
     justify-content: flex-start;
     width: 100%;
     display: ${(props) => (props.openPOSManagementDropdown ? "flex" : "none")};
-    transition: all 0.4s ease-in-out;
-    animation: easeIn 0.4s ease-in-out forwards;
+    transition: all 0.2s ease-in-out;
+    animation: easeIn 0.2s ease-in-out forwards;
 
     @keyframes easeIn {
         0% {
@@ -428,7 +428,7 @@ const POSManagementSubMenu = styled.div`
         padding-left: 2.5rem;
         box-sizing: border-box;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-        transition: all 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
 
         a {
             display: flex;
@@ -444,7 +444,7 @@ const POSManagementSubMenu = styled.div`
             white-space: nowrap;
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            transition: all 0.4s ease-in-out;
+            transition: all 0.2s ease-in-out;
 
             img {
                 margin-right: 1rem;
@@ -479,7 +479,7 @@ const SidebarButton = styled.div`
 
     img {
         transform: ${(props) => (props.openSidebar ? "rotate(180deg)" : "rotate(0deg)")};
-        transition: all 0.4s ease-in-out;
+        transition: all 0.2s ease-in-out;
         transform-origin: center;
     }
 `;
@@ -494,13 +494,13 @@ const SignOut = styled.div`
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    position: fixed;
-    bottom: 0;
+    position: sticky;
+    bottom: 20px;
     left: 0;
     padding: 1.5rem;
     opacity: ${(props) => (props.openSidebar ? "0" : "1")};
     z-index: ${(props) => (props.openSidebar ? "-1" : "1")};
-    transition: all 0.4s ease-in-out;
+    transition: all 0.2s ease-in-out;
     box-sizing: border-box;
 
     img {

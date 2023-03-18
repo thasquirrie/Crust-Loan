@@ -7,32 +7,8 @@ import TableContainer from "@mui/material/TableContainer";
 import { TableHead } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import styled from "styled-components";
-
-const columns = [
-    { id: "name", label: "Name", minWidth: 170 },
-    { id: "code", label: "ISO\u00a0Code", minWidth: 100 },
-    {
-        id: "population",
-        label: "Population",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toLocaleString("en-US"),
-    },
-    {
-        id: "size",
-        label: "Size\u00a0(km\u00b2)",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toLocaleString("en-US"),
-    },
-    {
-        id: "density",
-        label: "Density",
-        minWidth: 170,
-        align: "right",
-        format: (value) => value.toFixed(2),
-    },
-];
+import ActionMenu from "./ActionMenu";
+import arrow from "../../assets/common/arrow-pagination.svg";
 
 function createData(name, code, population, size) {
     const density = population / size;
@@ -69,31 +45,35 @@ export const StyledTableRow = styled(TableRow)`
 
     & .MuiTableCell-root {
         border: none;
-        border-radius: 6px;
+        /* border-radius: 6px; */
         margin: 1rem 0;
     }
 `;
 
-export default function StickyHeadTable() {
+export default function StickyHeadTable({ columns }) {
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
-            <TableContainer sx={{ maxHeight: "50vh" }}>
+            <TableContainer sx={{ maxHeight: "67%" }}>
                 <Table
                     stickyHeader
                     aria-label="sticky table"
-                    style={{ borderSpacing: "0px 10x", borderCollapse: "separate" }}
+                    style={{ borderSpacing: "5px 10x", borderCollapse: "separate" }}
                 >
                     <StyledTableHead>
                         <TableRow>
                             {columns.map((column) => (
                                 <TableCell
                                     key={column.id}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth, fontWeight: 700 }}
+                                    align={"left"}
+                                    style={{ minWidth: 150, fontWeight: 700 }}
                                 >
                                     {column.label}
                                 </TableCell>
                             ))}
+                            <TableCell
+                                align={"center"}
+                                style={{ minWidth: 30, fontWeight: 700 }}
+                            ></TableCell>
                         </TableRow>
                     </StyledTableHead>
                     <TableBody>
@@ -103,19 +83,103 @@ export default function StickyHeadTable() {
                                     {columns.map((column) => {
                                         const value = row[column.id];
                                         return (
-                                            <TableCell key={column.id} align={column.align}>
-                                                {column.format && typeof value === "number"
-                                                    ? column.format(value)
-                                                    : value}
-                                            </TableCell>
+                                            <>
+                                                <TableCell key={column.id} align={"left"}>
+                                                    {column.format && typeof value === "number"
+                                                        ? column.format(value)
+                                                        : value}
+                                                </TableCell>
+                                            </>
                                         );
                                     })}
+                                    <TableCell
+                                        align={"center"}
+                                        sx={{
+                                            "& .MuiButtonBase-root": {
+                                                padding: 0,
+                                            },
+                                        }}
+                                    >
+                                        <ActionMenu />
+                                    </TableCell>
                                 </StyledTableRow>
                             );
                         })}
                     </TableBody>
                 </Table>
             </TableContainer>
+            <PageCount>
+                <Prev>
+                    <img src={arrow} alt="arrow" />
+                    <span>Prev</span>
+                </Prev>
+                <PageNumber>1</PageNumber>
+                <Next>
+                    <span>Next</span>
+                    <img src={arrow} alt="arrow" />
+                </Next>
+            </PageCount>
         </Paper>
     );
 }
+
+const PageCount = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 1rem 0;
+    margin-right: 1rem;
+`;
+
+const Prev = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    img {
+        margin-right: 0.5rem;
+    }
+
+    span {
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        color: #7a7a7a;
+    }
+`;
+
+const Next = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    img {
+        transform: rotate(180deg);
+    }
+
+    span {
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        color: #7a7a7a;
+        margin-right: 0.5rem;
+    }
+`;
+
+const PageNumber = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    color: #7a7a7a;
+    margin: 0 1.4rem;
+    width: 30px;
+    height: 30px;
+    border: 0.8px solid #dbbeae;
+    border-radius: 4px;
+`;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import searchIcon from "../../assets/common/search.svg";
 import arrowDown from "../../assets/common/arrow-down.svg";
 
-function TableSelectSearchBar({ options }) {
+function TableSelectSearchBar({ options, placeholder }) {
     return (
         <Container>
             <SelectContainer>
@@ -13,7 +13,7 @@ function TableSelectSearchBar({ options }) {
                 </select>
             </SelectContainer>
             <SearchBar>
-                <input type={"text"} name={"text"} />
+                <input type={"text"} name={"text"} placeholder={placeholder} />
                 <img src={searchIcon} alt="" />
             </SearchBar>
         </Container>
@@ -91,6 +91,7 @@ const SearchBar = styled.div`
     }
 
     input:focus {
+        outline: none;
         border: none;
         border: 1px solid #933d0c;
     }

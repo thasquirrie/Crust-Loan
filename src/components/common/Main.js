@@ -25,7 +25,7 @@ function Main({ children }) {
     const location = useLocation();
     const user = useSelector((state) => state.auth.user);
 
-    return user ? (
+    return !user ? (
         <Container>
             <Navbar />
             <Sidebar
