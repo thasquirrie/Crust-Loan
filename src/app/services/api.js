@@ -2,9 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logOut } from "../../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "https://api.staging.crust.africa/api/v2/",
+    baseUrl: process.env.REACT_APP_BASE_API_URL,
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.token;
+        const ttoken2 = getState().auth;
+        console.log("token", ttoken2);
         if (token) {
             headers.set("Authorization", `Bearer ${token}`);
         }
