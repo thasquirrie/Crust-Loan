@@ -31,6 +31,5 @@ export const transactionApi = baseApi.injectEndpoints({
 export const {
     useGetAllTransactionServicesQuery,
     useGetAllTransactionsQuery,
-    useCreateTransactionMutation,
-    useUpdateTransactionMutation,
+    useLazyGetAllTransactionsQuery,
 } = transactionApi;

@@ -2,11 +2,20 @@ import styled from "styled-components";
 import searchIcon from "../../assets/common/search.svg";
 import arrowDown from "../../assets/common/arrow-down.svg";
 
-function TableSelectSearchBar({ options, placeholder }) {
+function TableSelectSearchBar({
+    options,
+    selectOnChange,
+    searchInputOnChange,
+    placeholder,
+    onClickSearchIcon,
+    onClickClear,
+    showClearSearch,
+    searchInputValue,
+}) {
     return (
         <Container>
             <SelectContainer>
-                <select>
+                <select onChange={selectOnChange}>
                     {Object.keys(options).map((key) => (
                         <option key={key} value={options[key]}>
                             {key}
@@ -15,9 +24,20 @@ function TableSelectSearchBar({ options, placeholder }) {
                 </select>
             </SelectContainer>
             <SearchBar>
-                <input type={"text"} name={"text"} placeholder={placeholder} />
-                <img src={searchIcon} alt="" />
+                <input
+                    type={"text"}
+                    name={"text"}
+                    placeholder={placeholder}
+                    onChange={searchInputOnChange}
+                    value={searchInputValue}
+                />
+                <img src={searchIcon} alt="" onClick={onClickSearchIcon} />
             </SearchBar>
+            {showClearSearch && (
+                <ClearSearch onClick={onClickClear}>
+                    <span>Clear</span>
+                </ClearSearch>
+            )}
         </Container>
     );
 }
@@ -97,4 +117,13 @@ const SearchBar = styled.div`
         border: none;
         border: 1px solid #933d0c;
     }
+`;
+
+const ClearSearch = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+    cursor: pointer;
 `;

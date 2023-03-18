@@ -9,10 +9,13 @@ const transactionSlice = createSlice({
         setTransactionServices: (state, action) => {
             state.services = action.payload.data;
         },
+        setAllTransactions: (state, action) => {
+            state.transactions = action.payload.data;
+        },
     },
     extraReducers: (builder) => {},
 });
 
-export const { setTransactionServices } = transactionSlice.actions;
+export const { setTransactionServices, setAllTransactions } = transactionSlice.actions;
 
 export default transactionSlice.reducer;

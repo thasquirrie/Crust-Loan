@@ -72,6 +72,10 @@ const SelectSearchFilter = styled.div`
 
 const SelectSearchBar = styled.div`
     width: 35%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 `;
 
 const SearchFilters = styled.div`

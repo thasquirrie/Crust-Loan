@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import arrowDown from "../../assets/common/arrow-down.svg";
 
-function SelectCommon({ options }) {
+function SelectCommon({ options, onChange, value }) {
     return (
         <SelectContainer>
-            <select>
+            <select onChange={onChange} value={value}>
                 {options &&
                     Object.keys(options).map((key) => (
-                        <option key={key} value={options[key]}>
-                            {key}
+                        <option key={key} value={key}>
+                            {options[key]}
                         </option>
                     ))}
             </select>

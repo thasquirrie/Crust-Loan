@@ -9,29 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import styled from "styled-components";
 import ActionMenu from "./ActionMenu";
 import arrow from "../../assets/common/arrow-pagination.svg";
-
-function createData(name, code, population, size) {
-    const density = population / size;
-    return { name, code, population, size, density };
-}
-
-const rows = [
-    createData("India", "IN", 1324171354, 3287263),
-    createData("China", "CN", 1403500365, 9596961),
-    createData("Italy", "IT", 60483973, 301340),
-    createData("United States", "US", 327167434, 9833520),
-    createData("Canada", "CA", 37602103, 9984670),
-    createData("Australia", "AU", 25475400, 7692024),
-    createData("Germany", "DE", 83019200, 357578),
-    createData("Ireland", "IE", 4857000, 70273),
-    createData("Mexico", "MX", 126577691, 1972550),
-    createData("Japan", "JP", 126317000, 377973),
-    createData("France", "FR", 67022000, 640679),
-    createData("United Kingdom", "GB", 67545757, 242495),
-    createData("Russia", "RU", 146793744, 17098246),
-    createData("Nigeria", "NG", 200962417, 923768),
-    createData("Brazil", "BR", 210147125, 8515767),
-];
+import { TailSpin } from "react-loader-spinner";
 
 export const StyledTableHead = styled(TableHead)`
     & .MuiTableCell-root {
@@ -45,17 +23,22 @@ export const StyledTableRow = styled(TableRow)`
 
     & .MuiTableCell-root {
         border: none;
-        /* border-radius: 6px; */
         margin: 1rem 0;
     }
 `;
 
-// set dynamic height calculated based on screen height
 const StyledTableContainer = styled(TableContainer)`
     max-height: calc(100vh - 430px);
 `;
 
-export default function StickyHeadTable({ columns }) {
+export default function StickyHeadTable({
+    columns,
+    rows,
+    loading,
+    currentPageNumber,
+    onClickPrevPage,
+    onClickNextPage,
+}) {
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
             <StyledTableContainer>
@@ -81,49 +64,81 @@ export default function StickyHeadTable({ columns }) {
                             ></TableCell>
                         </TableRow>
                     </StyledTableHead>
-                    <TableBody>
-                        {rows.slice(0, 50).map((row) => {
-                            return (
-                                <StyledTableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                    {columns.map((column) => {
-                                        const value = row[column.id];
-                                        return (
-                                            <>
-                                                <TableCell key={column.id} align={"left"}>
-                                                    {column.format && typeof value === "number"
-                                                        ? column.format(value)
-                                                        : value}
-                                                </TableCell>
-                                            </>
-                                        );
-                                    })}
-                                    <TableCell
-                                        align={"center"}
-                                        sx={{
-                                            "& .MuiButtonBase-root": {
-                                                padding: 0,
-                                            },
-                                        }}
+                    {!loading ? (
+                        <TableBody>
+                            {rows.map((row) => {
+                                return (
+                                    <StyledTableRow
+                                        hover
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={row.id}
                                     >
-                                        <ActionMenu />
-                                    </TableCell>
-                                </StyledTableRow>
-                            );
-                        })}
-                    </TableBody>
+                                        {columns.map((column) => {
+                                            const value = row[column.id];
+                                            return (
+                                                <>
+                                                    <TableCell
+                                                        key={column.id}
+                                                        align={"left"}
+                                                        style={{ minWidth: 150 }}
+                                                    >
+                                                        {value}
+                                                    </TableCell>
+                                                </>
+                                            );
+                                        })}
+                                        <TableCell
+                                            align={"center"}
+                                            sx={{
+                                                "& .MuiButtonBase-root": {
+                                                    padding: 0,
+                                                },
+                                            }}
+                                        >
+                                            <ActionMenu />
+                                        </TableCell>
+                                    </StyledTableRow>
+                                );
+                            })}
+                        </TableBody>
+                    ) : (
+                        <div
+                            style={{
+                                position: "absolute",
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100vw",
+                                marginTop: "10%",
+                            }}
+                        >
+                            <TailSpin
+                                height="80"
+                                width="80"
+                                color="#933D0C"
+                                ariaLabel="bars-loading"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                                visible={true}
+                            />
+                        </div>
+                    )}
                 </Table>
             </StyledTableContainer>
-            <PageCount>
-                <Prev>
-                    <img src={arrow} alt="arrow" />
-                    <span>Prev</span>
-                </Prev>
-                <PageNumber>1</PageNumber>
-                <Next>
-                    <span>Next</span>
-                    <img src={arrow} alt="arrow" />
-                </Next>
-            </PageCount>
+            {!loading && (
+                <PageCount>
+                    <Prev onClick={onClickPrevPage}>
+                        <img src={arrow} alt="arrow" />
+                        <span>Prev</span>
+                    </Prev>
+                    <PageNumber>{currentPageNumber}</PageNumber>
+                    <Next onClick={onClickNextPage}>
+                        <span>Next</span>
+                        <img src={arrow} alt="arrow" />
+                    </Next>
+                </PageCount>
+            )}
         </Paper>
     );
 }
