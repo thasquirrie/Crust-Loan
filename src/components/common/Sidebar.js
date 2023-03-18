@@ -46,17 +46,17 @@ function Sidebar({
                     </Link>
                 </Agents>
                 <Transactions openSidebar={openSidebar}>
-                    <Link to="/">
+                    <Link to="/transaction">
                         <img src={transaction} alt="" />
                         Transactions
                     </Link>
                 </Transactions>
                 <LoanManagement openSidebar={openSidebar} openLoansDropdown={openLoansDropdown}>
                     <div className="loanContainer" onClick={handleOpenLoansDropdown}>
-                        <Link to="/">
+                        <div className="loanMenu">
                             <img src={loan} alt="" />
                             Loans
-                        </Link>
+                        </div>
                         <img className="accordionCloseIcon" src={accordionClose} alt="" />
                     </div>
                     <LoanManagementSubMenu
@@ -64,9 +64,9 @@ function Sidebar({
                         openSidebar={openSidebar}
                     >
                         <div className="SubMenuItem">
-                            <Link to="/">
+                            <Link to="/loan/application">
                                 <img src={dashboard} alt="" />
-                                Dashboard
+                                Loan Applications
                             </Link>
                         </div>
                         <div className="SubMenuItem">
@@ -85,10 +85,10 @@ function Sidebar({
                         className="posManagementContainer"
                         onClick={handleOpenPOSManagementDropdown}
                     >
-                        <Link to="/">
+                        <div className="posMenu">
                             <img src={posManagement} alt="" />
                             POS Management
-                        </Link>
+                        </div>
                         <img className="accordionCloseIcon" src={accordionClose} alt="" />
                     </div>
                     <POSManagementSubMenu openPOSManagementDropdown={openPOSManagementDropdown}>
@@ -134,9 +134,9 @@ const Container = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    width: ${(props) => (props.openSidebar ? "3%" : "19.5%")};
+    width: ${(props) => (props.openSidebar ? "3%" : "23%")};
     transition: all 0.2s ease-in-out;
-    height: 100%;
+    height: 100vh;
     background-color: #f5f5f5;
     padding: 7rem 0 0 0;
     position: relative;
@@ -149,7 +149,7 @@ const SidebarLinksContainer = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
-    min-height: 100vh;
+    height: 90%;
     overflow: auto;
     box-sizing: border-box;
 `;
@@ -229,7 +229,7 @@ const LoanManagement = styled.div`
             transform: ${(props) => (props.openLoansDropdown ? "rotate(180deg)" : "rotate(0deg)")};
         }
 
-        a {
+        .loanMenu {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -300,7 +300,7 @@ const POSManagement = styled.div`
                 props.openPOSManagementDropdown ? "rotate(180deg)" : "rotate(0deg)"};
         }
 
-        a {
+        .posMenu {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -494,8 +494,8 @@ const SignOut = styled.div`
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    position: sticky;
-    bottom: 20px;
+    position: fixed;
+    bottom: 0;
     left: 0;
     padding: 1.5rem;
     opacity: ${(props) => (props.openSidebar ? "0" : "1")};

@@ -1,17 +1,12 @@
 import {
     Container,
-    DownloadButtonContainer,
     Header,
     HeaderTitle,
-    SearchFilters,
     SelectSearchBar,
     SelectSearchFilter,
-} from "./TransactionsStyles";
+} from "./LoanApplicationStyles";
 import Main from "../../components/common/Main";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
-import ButtonCommon from "../../components/common/ButtonCommon";
-import SelectCommon from "../../components/common/SelectCommon";
-import { DateRangePicker } from "rsuite";
 import Table from "../../components/common/Table";
 
 const TableColumns = [
@@ -47,18 +42,15 @@ const TableColumns = [
     },
 ];
 
-function Transactions() {
+function LoanApplication() {
     return (
         <Main>
             <Container>
                 <Header>
                     <HeaderTitle>
-                        <h1>Transactions</h1>
-                        <p>1200 Transactions</p>
+                        <h1>Loan Application</h1>
+                        <p>1200 Loan Applications</p>
                     </HeaderTitle>
-                    <DownloadButtonContainer>
-                        <ButtonCommon text={"Download Report"} />
-                    </DownloadButtonContainer>
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
@@ -70,27 +62,6 @@ function Transactions() {
                                 placeholder={'Click "Enter" to search'}
                             />
                         </SelectSearchBar>
-                        <SearchFilters>
-                            <DateRangePicker
-                                appearance="default"
-                                placeholder="Date Range"
-                                style={{ width: 230 }}
-                                readOnly={false}
-                            />
-
-                            <SelectCommon
-                                options={{
-                                    "Inter Bank": "InterBank",
-                                    Local: "Locsl",
-                                }}
-                            />
-                            <SelectCommon
-                                options={{
-                                    Reverse: "Reverse",
-                                    Successful: "Successful",
-                                }}
-                            />
-                        </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
                 <Table columns={TableColumns} />
@@ -99,4 +70,4 @@ function Transactions() {
     );
 }
 
-export default Transactions;
+export default LoanApplication;

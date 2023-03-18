@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Transactions from "./pages/Transactions/Transactions";
 import "rsuite/dist/rsuite.min.css";
 import "./App.css";
+import LoanApplication from "./pages/LoanApplication/LoanApplication";
 
 function App() {
     return (
@@ -11,9 +12,13 @@ function App() {
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 {/* <Route path="users/*" element={<Users />} /> */}
-                <Route path="transactions" element={<Transactions />} />
+                <Route path="transaction" element={<Transactions />} />
                 <Route path="auth">
                     <Route path="login" element={<Login />} />
+                    {/* <Route path=":id" element={<UserProfile />} /> */}
+                </Route>
+                <Route path="loan">
+                    <Route path="application" element={<LoanApplication />} />
                     {/* <Route path=":id" element={<UserProfile />} /> */}
                 </Route>
             </Routes>

@@ -6,7 +6,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 function Main({ children }) {
-    const [openSidebar, setOpenSidebar] = useState(false);
+    const [openSidebar, setOpenSidebar] = useState(true);
     const [openLoansDropdown, setOpenLoansDropdown] = useState(false);
     const [openPOSManagementDropdown, setOpenPOSManagementDropdown] = useState(false);
 
