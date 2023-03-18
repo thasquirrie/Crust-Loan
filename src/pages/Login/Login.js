@@ -60,7 +60,11 @@ function Login() {
             dispatch(setCredentials({ user: { user: data.user, token: data.access_token } }));
             navigate("/");
         } catch (err) {
-            setLoginError(err.data.message);
+            if (err.data.message) {
+                setLoginError(err.data.message);
+            } else {
+                setLoginError("Something went wrong, Try again later!");
+            }
             setOpenSnackbar(true);
         }
     };

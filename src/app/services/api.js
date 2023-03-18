@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setCredentials, logOut } from "../../features/auth/authSlice";
+import { logOut } from "../../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: "https://api.staging.crust.africa/api/v2/",
@@ -15,22 +15,22 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
-        // try to get a new token
-        const refreshResult = await baseQuery("/refreshToken", api, extraOptions);
-        if (refreshResult.data) {
-            // store the new token
-            api.dispatch(setCredentials(refreshResult.data));
-            // retry the initial query
-            result = await baseQuery(args, api, extraOptions);
-        } else {
-            api.dispatch(logOut());
-        }
+        // // try to get a new token
+        // const refreshResult = await baseQuery("/refreshToken", api, extraOptions);
+        // if (refreshResult.data) {
+        //     // store the new token
+        //     api.dispatch(setCredentials(refreshResult.data));
+        //     // retry the initial query
+        //     result = await baseQuery(args, api, extraOptions);
+        // } else {
+        api.dispatch(logOut());
+        // }
     }
     return result;
 };
 
 export const baseApi = createApi({
-    reducerPath: "authApi",
+    reducerPath: "baseApi",
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({}),
 });

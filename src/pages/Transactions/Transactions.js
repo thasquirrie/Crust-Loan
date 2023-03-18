@@ -13,6 +13,13 @@ import ButtonCommon from "../../components/common/ButtonCommon";
 import SelectCommon from "../../components/common/SelectCommon";
 import { DateRangePicker } from "rsuite";
 import Table from "../../components/common/Table";
+import {
+    useGetAllTransactionServicesQuery,
+    useGetAllTransactionsQuery,
+} from "../../app/services/transaction";
+import { useDispatch } from "react-redux";
+import { setTransactionServices } from "../../features/transaction/transactionSlice";
+import { useEffect } from "react";
 
 const TableColumns = [
     { id: "name", label: "Agent Name" },
@@ -48,6 +55,24 @@ const TableColumns = [
 ];
 
 function Transactions() {
+    const { data: transactionServices } = useGetAllTransactionServicesQuery();
+    const { data: transactions } = useGetAllTransactionsQuery();
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (transactionServices) {
+            dispatch(setTransactionServices(transactionServices));
+        }
+    }, [transactionServices, dispatch]);
+
+    const transactionServicesArray = transactionServices?.data.reduce((acc, curr) => {
+        acc[curr] = curr;
+        return acc;
+    }, {});
+
+    console.log(transactions);
+
     return (
         <Main>
             <Container>
@@ -78,12 +103,7 @@ function Transactions() {
                                 readOnly={false}
                             />
 
-                            <SelectCommon
-                                options={{
-                                    "Inter Bank": "InterBank",
-                                    Local: "Locsl",
-                                }}
-                            />
+                            <SelectCommon options={transactionServicesArray} />
                             <SelectCommon
                                 options={{
                                     Reverse: "Reverse",

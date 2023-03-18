@@ -8,7 +8,9 @@ function TableSelectSearchBar({ options, placeholder }) {
             <SelectContainer>
                 <select>
                     {Object.keys(options).map((key) => (
-                        <option value={options[key]}>{key}</option>
+                        <option key={key} value={options[key]}>
+                            {key}
+                        </option>
                     ))}
                 </select>
             </SelectContainer>

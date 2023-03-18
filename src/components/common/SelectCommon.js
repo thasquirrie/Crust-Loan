@@ -5,9 +5,12 @@ function SelectCommon({ options }) {
     return (
         <SelectContainer>
             <select>
-                {Object.keys(options).map((key) => (
-                    <option value={options[key]}>{key}</option>
-                ))}
+                {options &&
+                    Object.keys(options).map((key) => (
+                        <option key={key} value={options[key]}>
+                            {key}
+                        </option>
+                    ))}
             </select>
         </SelectContainer>
     );

@@ -50,10 +50,15 @@ export const StyledTableRow = styled(TableRow)`
     }
 `;
 
+// set dynamic height calculated based on screen height
+const StyledTableContainer = styled(TableContainer)`
+    max-height: calc(100vh - 430px);
+`;
+
 export default function StickyHeadTable({ columns }) {
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
-            <TableContainer sx={{ maxHeight: "67%" }}>
+            <StyledTableContainer>
                 <Table
                     stickyHeader
                     aria-label="sticky table"
@@ -107,7 +112,7 @@ export default function StickyHeadTable({ columns }) {
                         })}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </StyledTableContainer>
             <PageCount>
                 <Prev>
                     <img src={arrow} alt="arrow" />
