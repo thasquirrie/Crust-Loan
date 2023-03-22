@@ -11,11 +11,10 @@ export const transactionApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
-        createTransaction: builder.mutation({
-            query: (body) => ({
-                url: "transaction",
-                method: "POST",
-                body,
+        downloadTransactionRecords: builder.query({
+            query: (params) => ({
+                url: "/transaction/records/download",
+                params,
             }),
         }),
         updateTransaction: builder.mutation({
@@ -32,4 +31,7 @@ export const {
     useGetAllTransactionServicesQuery,
     useGetAllTransactionsQuery,
     useLazyGetAllTransactionsQuery,
+    useLazyGetAllTransactionServicesQuery,
+    useUpdateTransactionMutation,
+    useLazyDownloadTransactionRecordsQuery,
 } = transactionApi;

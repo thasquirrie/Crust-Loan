@@ -9,19 +9,22 @@ import {
 } from "./TransactionsStyles";
 import Main from "../../components/common/Main";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
-import ButtonCommon from "../../components/common/ButtonCommon";
+// import ButtonCommon from "../../components/common/ButtonCommon";
 import SelectCommon from "../../components/common/SelectCommon";
 import { DateRangePicker } from "rsuite";
 import Table from "../../components/common/Table";
 import {
     useGetAllTransactionServicesQuery,
     useGetAllTransactionsQuery,
+    useLazyDownloadTransactionRecordsQuery,
     useLazyGetAllTransactionsQuery,
 } from "../../app/services/transaction";
 import { useDispatch } from "react-redux";
 import { setTransactionServices } from "../../features/transaction/transactionSlice";
 import { useEffect, useState } from "react";
 import { setAllTransactions } from "../../features/transaction/transactionSlice";
+import ButtonCommonLink from "../../components/common/ButtonCommonLink";
+import TransactionModalDetails from "../../components/transactions/TransactionDetailsModal";
 
 const TableColumns = [
     { id: "accountName", label: "Agent Name" },
@@ -36,6 +39,7 @@ const TableColumns = [
 ];
 
 function Transactions() {
+    const [transactionModalDetails, setTransactionModalDetails] = useState(null);
     const [searchFilters, setSearchFilters] = useState({
         searchFilterBy: "accountNumber",
         searchFilterValue: "",
@@ -51,26 +55,37 @@ function Transactions() {
 
     const dispatch = useDispatch();
 
+    const lazyQueryOptions = {
+        refetchOnMountOrArgChange: true,
+        refetchOnReconnect: true,
+        refreshOnWindowFocus: true,
+    };
+
     const { data: transactionServices } = useGetAllTransactionServicesQuery();
     const {
         data: transactions,
         isLoading: getQueryIsLoading,
-        isError: getQueryIsError,
-        error: getQueryError,
+        // isError: getQueryIsError,
+        // error: getQueryError,
     } = useGetAllTransactionsQuery();
+
     const [
-        trigger,
+        triggerGetAllTransactions,
         {
             data: lazyQueryTransactions,
             isLoading: lazyQueryIsLoading,
-            isError: lazyQueryIsError,
-            error: lazyQueryError,
+            // isError: lazyQueryIsError,
         },
-    ] = useLazyGetAllTransactionsQuery({
-        refetchOnMountOrArgChange: true,
-        refetchOnReconnect: true,
-        refreshOnWindowFocus: true,
-    });
+    ] = useLazyGetAllTransactionsQuery(lazyQueryOptions);
+
+    const [
+        triggerDownloadTransactions,
+        {
+            data: lazyQueryDownloadTransactions,
+            isLoading: lazyQueryDownloadIsLoading,
+            isError: lazyQueryDownloadIsError,
+        },
+    ] = useLazyDownloadTransactionRecordsQuery(lazyQueryOptions);
 
     useEffect(() => {
         if (transactionServices && transactions) {
@@ -85,8 +100,20 @@ function Transactions() {
         return acc;
     }, {});
 
+    const tableMenuItems = [
+        {
+            name: "View more",
+            onClick: (id) => setTransactionModalDetails(id),
+        },
+    ];
+
     return (
         <Main>
+            <TransactionModalDetails
+                open={transactionModalDetails ? true : false}
+                handleClose={() => setTransactionModalDetails(null)}
+                transaction={transactionModalDetails}
+            />
             <Container>
                 <Header>
                     <HeaderTitle>
@@ -94,7 +121,17 @@ function Transactions() {
                         <p>{transactions?.data?.totalElements} Transactions</p>
                     </HeaderTitle>
                     <DownloadButtonContainer>
-                        <ButtonCommon text={"Download Report"} />
+                        <ButtonCommonLink
+                            text={"Download Report"}
+                            href={lazyQueryDownloadTransactions?.data}
+                            disabled={
+                                lazyQueryDownloadIsLoading ||
+                                lazyQueryDownloadIsError ||
+                                !lazyQueryDownloadTransactions?.data
+                            }
+                            isLoading={lazyQueryDownloadIsLoading}
+                            download={true}
+                        />
                     </DownloadButtonContainer>
                     <SelectSearchFilter>
                         <SelectSearchBar>
@@ -119,7 +156,7 @@ function Transactions() {
                                 }}
                                 placeholder={'Click "Search Icon" to search'}
                                 onClickSearchIcon={() =>
-                                    trigger({
+                                    triggerGetAllTransactions({
                                         ...transactionParams,
                                         accountNumber:
                                             searchFilters.searchFilterBy === "accountNumber"
@@ -143,7 +180,7 @@ function Transactions() {
                                         ...searchFilters,
                                         searchFilterValue: "",
                                     });
-                                    trigger({
+                                    triggerGetAllTransactions({
                                         ...transactionParams,
                                         accountNumber: "",
                                         platformRef: "",
@@ -161,7 +198,7 @@ function Transactions() {
                                 onClean={() => {
                                     delete transactionParams.startDate;
                                     delete transactionParams.endDate;
-                                    trigger(transactionParams);
+                                    triggerGetAllTransactions(transactionParams);
                                 }}
                                 onChange={(value) => {
                                     const startDate =
@@ -174,7 +211,13 @@ function Transactions() {
                                             startDate,
                                             endDate: endDate,
                                         });
-                                        trigger({
+                                        triggerGetAllTransactions({
+                                            ...transactionParams,
+                                            startDate,
+                                            endDate: endDate,
+                                        });
+
+                                        triggerDownloadTransactions({
                                             ...transactionParams,
                                             startDate,
                                             endDate: endDate,
@@ -190,7 +233,7 @@ function Transactions() {
                                         ...transactionParams,
                                         transactionType: e.target.value,
                                     });
-                                    trigger({
+                                    triggerGetAllTransactions({
                                         ...transactionParams,
                                         transactionType: e.target.value,
                                     });
@@ -210,7 +253,7 @@ function Transactions() {
                                         ...transactionParams,
                                         transactionStatus: e.target.value,
                                     });
-                                    trigger({
+                                    triggerGetAllTransactions({
                                         ...transactionParams,
                                         transactionStatus: e.target.value,
                                     });
@@ -234,7 +277,7 @@ function Transactions() {
                             ...transactionParams,
                             page: transactionParams.page - 1,
                         });
-                        trigger({
+                        triggerGetAllTransactions({
                             ...transactionParams,
                             page: transactionParams.page - 1,
                         });
@@ -249,11 +292,12 @@ function Transactions() {
                             ...transactionParams,
                             page: transactionParams.page + 1,
                         });
-                        trigger({
+                        triggerGetAllTransactions({
                             ...transactionParams,
                             page: transactionParams.page + 1,
                         });
                     }}
+                    menuItems={tableMenuItems}
                 />
             </Container>
         </Main>

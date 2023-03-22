@@ -4,6 +4,8 @@ const transactionSlice = createSlice({
     name: "transaction",
     initialState: {
         services: null,
+        transactions: null,
+        transactionrecords: null,
     },
     reducers: {
         setTransactionServices: (state, action) => {
@@ -11,6 +13,9 @@ const transactionSlice = createSlice({
         },
         setAllTransactions: (state, action) => {
             state.transactions = action.payload.data;
+        },
+        setTransactionRecords: (state, action) => {
+            state.transactionrecords = action.payload.data;
         },
     },
     extraReducers: (builder) => {},

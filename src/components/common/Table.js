@@ -38,6 +38,7 @@ export default function StickyHeadTable({
     currentPageNumber,
     onClickPrevPage,
     onClickNextPage,
+    menuItems,
 }) {
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
@@ -66,22 +67,25 @@ export default function StickyHeadTable({
                     </StyledTableHead>
                     {!loading ? (
                         <TableBody>
-                            {rows.map((row) => {
+                            {rows?.map((row) => {
                                 return (
                                     <StyledTableRow
                                         hover
                                         role="checkbox"
                                         tabIndex={-1}
-                                        key={row.id}
+                                        key={row?.id}
                                     >
-                                        {columns.map((column) => {
-                                            const value = row[column.id];
+                                        {columns?.map((column) => {
+                                            const value = row[column?.id];
                                             return (
                                                 <>
                                                     <TableCell
-                                                        key={column.id}
+                                                        key={value?.id}
                                                         align={"left"}
-                                                        style={{ minWidth: 150 }}
+                                                        style={{
+                                                            minWidth: 150,
+                                                            whiteSpace: "nowrap",
+                                                        }}
                                                     >
                                                         {value}
                                                     </TableCell>
@@ -89,14 +93,15 @@ export default function StickyHeadTable({
                                             );
                                         })}
                                         <TableCell
-                                            align={"center"}
+                                            align={"left"}
                                             sx={{
+                                                minWidth: 90,
                                                 "& .MuiButtonBase-root": {
                                                     padding: 0,
                                                 },
                                             }}
                                         >
-                                            <ActionMenu />
+                                            <ActionMenu menuItems={menuItems} row={row} />
                                         </TableCell>
                                     </StyledTableRow>
                                 );

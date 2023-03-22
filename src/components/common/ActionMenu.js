@@ -4,7 +4,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-export default function ActionMenu({ data }) {
+export default function ActionMenu({ menuItems, row }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -13,17 +13,6 @@ export default function ActionMenu({ data }) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const add = () => {
-        console.log("Add: ", data.name);
-        handleClose();
-    };
-
-    const menuItems = [
-        {
-            name: "View more",
-            onClick: add,
-        },
-    ];
 
     return (
         <div>
@@ -63,7 +52,11 @@ export default function ActionMenu({ data }) {
                 {menuItems.map((item) => (
                     <MenuItem
                         key={item.name}
-                        onClick={item.onClick}
+                        onClick={(e) => {
+                            console.log("row", row);
+                            item.onClick(row);
+                            setAnchorEl(null);
+                        }}
                         sx={{
                             fontWeight: 400,
                             fontSize: "14px",
