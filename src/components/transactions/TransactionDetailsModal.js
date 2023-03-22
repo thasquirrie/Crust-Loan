@@ -29,7 +29,12 @@ const formattedTime = (time) => {
     return convertedTime;
 };
 
-export default function TransactionModalDetails({ open, handleClose, transaction }) {
+export default function TransactionModalDetails({
+    open,
+    handleClose,
+    transaction,
+    onClickReverseTransaction,
+}) {
     const {
         data: transactionPDF,
         isLoading: transactionPDFLoading,
@@ -175,7 +180,7 @@ export default function TransactionModalDetails({ open, handleClose, transaction
                                     transactionPDFError && <p>Unable to Fetch</p>
                                 )}
                             </Link>
-                            <button>Reverse Transaction</button>
+                            <button onClick={onClickReverseTransaction}>Reverse Transaction</button>
                         </DownloadandReverseTransactionButtons>
                     </TransactionDetaailsModalBody>
                     <TransactionDetailsModalFooter>

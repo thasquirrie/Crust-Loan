@@ -9,7 +9,6 @@ import {
 } from "./TransactionsStyles";
 import Main from "../../components/common/Main";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
-// import ButtonCommon from "../../components/common/ButtonCommon";
 import SelectCommon from "../../components/common/SelectCommon";
 import { DateRangePicker } from "rsuite";
 import Table from "../../components/common/Table";
@@ -18,13 +17,14 @@ import {
     useGetAllTransactionsQuery,
     useLazyDownloadTransactionRecordsQuery,
     useLazyGetAllTransactionsQuery,
+    useReverseTransactionMutation,
 } from "../../app/services/transaction";
-import { useDispatch } from "react-redux";
-import { setTransactionServices } from "../../features/transaction/transactionSlice";
-import { useEffect, useState } from "react";
-import { setAllTransactions } from "../../features/transaction/transactionSlice";
+import { forwardRef, useEffect, useState } from "react";
 import ButtonCommonLink from "../../components/common/ButtonCommonLink";
 import TransactionModalDetails from "../../components/transactions/TransactionDetailsModal";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
+import { Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 
 const TableColumns = [
     { id: "accountName", label: "Agent Name" },
@@ -38,8 +38,19 @@ const TableColumns = [
     { id: "transactionStatus", label: "Status" },
 ];
 
+const Alert = forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 function Transactions() {
     const [transactionModalDetails, setTransactionModalDetails] = useState(null);
+    const [openReverseTransactionModal, setOpenReverseTransactionModal] = useState(false);
+    const [openTransactionDetailsModal, setOpenTransactionDetailsModal] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState({
+        open: false,
+        severity: "success",
+        message: "",
+    });
     const [searchFilters, setSearchFilters] = useState({
         searchFilterBy: "accountNumber",
         searchFilterValue: "",
@@ -53,8 +64,6 @@ function Transactions() {
         endDate: "",
     });
 
-    const dispatch = useDispatch();
-
     const lazyQueryOptions = {
         refetchOnMountOrArgChange: true,
         refetchOnReconnect: true,
@@ -62,20 +71,11 @@ function Transactions() {
     };
 
     const { data: transactionServices } = useGetAllTransactionServicesQuery();
-    const {
-        data: transactions,
-        isLoading: getQueryIsLoading,
-        // isError: getQueryIsError,
-        // error: getQueryError,
-    } = useGetAllTransactionsQuery();
+    const { data: transactions, isLoading: getQueryIsLoading } = useGetAllTransactionsQuery();
 
     const [
         triggerGetAllTransactions,
-        {
-            data: lazyQueryTransactions,
-            isLoading: lazyQueryIsLoading,
-            // isError: lazyQueryIsError,
-        },
+        { data: lazyQueryTransactions, isLoading: lazyQueryIsLoading },
     ] = useLazyGetAllTransactionsQuery(lazyQueryOptions);
 
     const [
@@ -87,12 +87,33 @@ function Transactions() {
         },
     ] = useLazyDownloadTransactionRecordsQuery(lazyQueryOptions);
 
+    const [
+        reverseTransaction,
+        {
+            isLoading: reverseTransactionIsLoading,
+            isSuccess: reverseTransactionIsSuccess,
+            error: reverseTransactionError,
+        },
+    ] = useReverseTransactionMutation();
+
     useEffect(() => {
-        if (transactionServices && transactions) {
-            dispatch(setTransactionServices(transactionServices));
-            dispatch(setAllTransactions(transactions));
+        if (reverseTransactionIsSuccess) {
+            setOpenSnackbar({
+                open: true,
+                severity: "success",
+                message: "Transaction reversed successfully",
+            });
+        } else if (reverseTransactionError) {
+            const errorKey = Object.keys(reverseTransactionError?.data.errors)[0];
+            const errorMessage = reverseTransactionError?.data.errors[errorKey];
+            setOpenSnackbar({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
         }
-    }, [transactions, transactionServices, dispatch]);
+        setOpenReverseTransactionModal(false);
+    }, [reverseTransactionIsSuccess, reverseTransactionError]);
 
     const transactionServicesArray = transactionServices?.data.reduce((acc, curr) => {
         acc[""] = "All";
@@ -103,19 +124,59 @@ function Transactions() {
     const tableMenuItems = [
         {
             name: "View more",
-            onClick: (id) => setTransactionModalDetails(id),
+            onClick: (id) => {
+                setTransactionModalDetails(id);
+                setOpenTransactionDetailsModal(true);
+            },
         },
     ];
 
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpenSnackbar({
+            open: false,
+            severity: "success",
+            message: "",
+        });
+    };
+
     return (
         <Main>
+            <Snackbar
+                open={openSnackbar?.open}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                autoHideDuration={4000}
+            >
+                <Alert onClose={handleSnackbarClose} severity={"error"} sx={{ width: "100%" }}>
+                    {openSnackbar?.message}
+                </Alert>
+            </Snackbar>
             {transactionModalDetails && (
                 <TransactionModalDetails
-                    open={transactionModalDetails ? true : false}
+                    open={openTransactionDetailsModal}
                     handleClose={() => setTransactionModalDetails(null)}
                     transaction={transactionModalDetails}
+                    onClickReverseTransaction={() => {
+                        setOpenReverseTransactionModal(true);
+                        setOpenTransactionDetailsModal(false);
+                    }}
                 />
             )}
+            <ConfirmationModal
+                open={openReverseTransactionModal}
+                HeaderText={"Reverse Transaction"}
+                ConfirmationBody={"Are you sure you want to reverse this transaction?"}
+                confirmationText={"Yes, Reverse"}
+                handleClose={() => setOpenReverseTransactionModal(false)}
+                loading={reverseTransactionIsLoading}
+                onClickConfirm={() => {
+                    reverseTransaction(transactionModalDetails.id);
+                }}
+            />
             <Container>
                 <Header>
                     <HeaderTitle>

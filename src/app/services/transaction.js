@@ -22,6 +22,13 @@ export const transactionApi = baseApi.injectEndpoints({
                 url: `/transaction/detail/pdf/${id}`,
             }),
         }),
+        reverseTransaction: builder.mutation({
+            query: (id) => ({
+                url: `/transaction/reverse`,
+                method: "POST",
+                body: { transactionId: id },
+            }),
+        }),
     }),
 });
 
@@ -29,6 +36,7 @@ export const {
     useGetAllTransactionServicesQuery,
     useGetAllTransactionsQuery,
     useDownloadTransactionQuery,
+    useReverseTransactionMutation,
     useLazyGetAllTransactionsQuery,
     useLazyGetAllTransactionServicesQuery,
     useLazyDownloadTransactionRecordsQuery,
