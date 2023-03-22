@@ -2,7 +2,7 @@ import { JSEncrypt } from "jsencrypt";
 
 var encrypt = new JSEncrypt();
 
-const publicKey = process.env.REACT_APP_PUBLIC_KEY_PROD;
+const publicKey = process.env.REACT_APP_PUBLIC_KEY;
 
 const encryptData = (data) => {
     encrypt.setPublicKey(publicKey);
