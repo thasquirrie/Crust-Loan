@@ -56,7 +56,7 @@ const DownloadButtonContainer = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 12%;
+    width: 15%;
     margin-left: auto;
     margin-bottom: 1rem;
 `;

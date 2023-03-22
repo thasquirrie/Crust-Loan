@@ -40,7 +40,7 @@ const ButtonContainer = styled.div`
     font-size: 1rem;
     line-height: 1.2rem;
     letter-spacing: -0.02em;
-    padding: 0.7rem;
+    /* padding: 0.5rem; */
     cursor: pointer;
     ${(props) => (props.textColor ? `color: ${props.textColor};` : `color: #ffffff;`)}
     ${(props) => props.marginTop && `margin-top: ${props.marginTop};`}

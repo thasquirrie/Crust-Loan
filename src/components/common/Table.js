@@ -39,6 +39,7 @@ export default function StickyHeadTable({
     onClickPrevPage,
     onClickNextPage,
     menuItems,
+    totalPages,
 }) {
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
@@ -131,7 +132,7 @@ export default function StickyHeadTable({
                     )}
                 </Table>
             </StyledTableContainer>
-            {!loading && (
+            {!loading && totalPages > 1 ? (
                 <PageCount>
                     <Prev onClick={onClickPrevPage}>
                         <img src={arrow} alt="arrow" />
@@ -143,7 +144,7 @@ export default function StickyHeadTable({
                         <img src={arrow} alt="arrow" />
                     </Next>
                 </PageCount>
-            )}
+            ) : null}
         </Paper>
     );
 }
