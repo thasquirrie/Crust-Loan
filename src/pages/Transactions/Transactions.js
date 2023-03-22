@@ -379,7 +379,11 @@ function Transactions() {
                         });
                     }}
                     menuItems={tableMenuItems}
-                    totalPages={lazyQueryTransactions?.data?.totalPages}
+                    totalPages={
+                        lazyQueryTransactions?.data?.totalPages
+                            ? lazyQueryTransactions.data.totalPages
+                            : transactions?.data?.totalPages
+                    }
                 />
             </Container>
         </Main>
