@@ -9,7 +9,7 @@ import ButtonCommon from "../../components/common/ButtonCommon";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../app/services/auth";
 import { setCredentials } from "../../features/auth/authSlice";
-import encryptData from "../../utils/utils";
+import encryptData from "../../utils/encryptData";
 import { FormControl, FormHelperText, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
