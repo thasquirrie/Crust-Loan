@@ -53,7 +53,6 @@ export default function ActionMenu({ menuItems, row }) {
                     <MenuItem
                         key={item.name}
                         onClick={(e) => {
-                            console.log("row", row);
                             item.onClick(row);
                             setAnchorEl(null);
                         }}

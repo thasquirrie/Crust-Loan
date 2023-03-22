@@ -109,11 +109,13 @@ function Transactions() {
 
     return (
         <Main>
-            <TransactionModalDetails
-                open={transactionModalDetails ? true : false}
-                handleClose={() => setTransactionModalDetails(null)}
-                transaction={transactionModalDetails}
-            />
+            {transactionModalDetails && (
+                <TransactionModalDetails
+                    open={transactionModalDetails ? true : false}
+                    handleClose={() => setTransactionModalDetails(null)}
+                    transaction={transactionModalDetails}
+                />
+            )}
             <Container>
                 <Header>
                     <HeaderTitle>
@@ -127,7 +129,9 @@ function Transactions() {
                             disabled={
                                 lazyQueryDownloadIsLoading ||
                                 lazyQueryDownloadIsError ||
-                                !lazyQueryDownloadTransactions?.data
+                                !lazyQueryDownloadTransactions?.data ||
+                                !transactionParams?.startDate ||
+                                !transactionParams?.endDate
                             }
                             isLoading={lazyQueryDownloadIsLoading}
                             download={true}
@@ -155,7 +159,7 @@ function Transactions() {
                                     });
                                 }}
                                 placeholder={'Click "Search Icon" to search'}
-                                onClickSearchIcon={() =>
+                                onClickSearchIcon={() => {
                                     triggerGetAllTransactions({
                                         ...transactionParams,
                                         accountNumber:
@@ -170,8 +174,29 @@ function Transactions() {
                                             searchFilters.searchFilterBy === "transactionRef"
                                                 ? searchFilters.searchFilterValue
                                                 : "",
-                                    })
-                                }
+                                    });
+
+                                    if (
+                                        transactionParams?.startDate &&
+                                        transactionParams?.endDate
+                                    ) {
+                                        triggerDownloadTransactions({
+                                            ...transactionParams,
+                                            accountNumber:
+                                                searchFilters.searchFilterBy === "accountNumber"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            platformRef:
+                                                searchFilters.searchFilterBy === "platformRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            transactionRef:
+                                                searchFilters.searchFilterBy === "transactionRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                        });
+                                    }
+                                }}
                                 showClearSearch={
                                     searchFilters.searchFilterValue.length > 0 ? true : false
                                 }
@@ -221,6 +246,18 @@ function Transactions() {
                                             ...transactionParams,
                                             startDate,
                                             endDate: endDate,
+                                            accountNumber:
+                                                searchFilters.searchFilterBy === "accountNumber"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            platformRef:
+                                                searchFilters.searchFilterBy === "platformRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            transactionRef:
+                                                searchFilters.searchFilterBy === "transactionRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
                                         });
                                     }
                                 }}
@@ -237,6 +274,28 @@ function Transactions() {
                                         ...transactionParams,
                                         transactionType: e.target.value,
                                     });
+
+                                    if (
+                                        transactionParams?.startDate &&
+                                        transactionParams?.endDate
+                                    ) {
+                                        triggerDownloadTransactions({
+                                            ...transactionParams,
+                                            transactionType: e.target.value,
+                                            accountNumber:
+                                                searchFilters.searchFilterBy === "accountNumber"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            platformRef:
+                                                searchFilters.searchFilterBy === "platformRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            transactionRef:
+                                                searchFilters.searchFilterBy === "transactionRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                        });
+                                    }
                                 }}
                             />
                             <SelectCommon
@@ -257,6 +316,28 @@ function Transactions() {
                                         ...transactionParams,
                                         transactionStatus: e.target.value,
                                     });
+
+                                    if (
+                                        transactionParams?.startDate &&
+                                        transactionParams?.endDate
+                                    ) {
+                                        triggerDownloadTransactions({
+                                            ...transactionParams,
+                                            transactionStatus: e.target.value,
+                                            accountNumber:
+                                                searchFilters.searchFilterBy === "accountNumber"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            platformRef:
+                                                searchFilters.searchFilterBy === "platformRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                            transactionRef:
+                                                searchFilters.searchFilterBy === "transactionRef"
+                                                    ? searchFilters.searchFilterValue
+                                                    : "",
+                                        });
+                                    }
                                 }}
                             />
                         </SearchFilters>
