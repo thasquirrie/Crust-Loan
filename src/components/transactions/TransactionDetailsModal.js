@@ -384,7 +384,7 @@ const DownloadandReverseTransactionButtons = styled.div`
         border: 1px solid #933d0c;
         height: 3rem;
         border-radius: 4px;
-        width: ${(props) => (props.transactionStatus === "SUCCESSFUL" ? "100%" : "49%")};
+        width: ${(props) => (props.transactionStatus === "FAILED" ? "49%" : "100%")};
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -397,7 +397,7 @@ const DownloadandReverseTransactionButtons = styled.div`
     }
 
     button {
-        display: ${(props) => (props.transactionStatus === "SUCCESSFUL" ? "none" : "block")};
+        display: ${(props) => (props.transactionStatus === "FAILED" ? "block" : "none")};
         background: #933d0c;
         color: #ffffff;
         border: none;
