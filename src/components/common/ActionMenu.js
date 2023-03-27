@@ -49,7 +49,7 @@ export default function ActionMenu({ menuItems, row }) {
                     },
                 }}
             >
-                {menuItems.map((item) => (
+                {menuItems?.map((item) => (
                     <MenuItem
                         key={item.name}
                         onClick={(e) => {

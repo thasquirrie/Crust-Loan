@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
+import styled, { css } from "styled-components";
 import monitor from "../../assets/sidebar/monitor.svg";
 import people from "../../assets/sidebar/people.svg";
 import home from "../../assets/sidebar/home.svg";
@@ -21,6 +21,8 @@ function Sidebar({
     openPOSManagementDropdown,
     handleOpenPOSManagementDropdown,
 }) {
+    const location = useLocation();
+
     return (
         <Container openSidebar={openSidebar}>
             <SidebarButton onClick={handleOpenSidebar} openSidebar={openSidebar}>
@@ -45,13 +47,22 @@ function Sidebar({
                         Agents
                     </Link>
                 </Agents>
-                <Transactions openSidebar={openSidebar}>
+                <Transactions
+                    openSidebar={openSidebar}
+                    isActive={location.pathname === "/transaction"}
+                >
                     <Link to="/transaction">
                         <img src={transaction} alt="" />
                         Transactions
                     </Link>
                 </Transactions>
-                <LoanManagement openSidebar={openSidebar} openLoansDropdown={openLoansDropdown}>
+                <LoanManagement
+                    openSidebar={openSidebar}
+                    openLoansDropdown={
+                        location.pathname.includes("/loan") ? true : openLoansDropdown
+                    }
+                    isActive={location.pathname.includes("/loan")}
+                >
                     <div className="loanContainer" onClick={handleOpenLoansDropdown}>
                         <div className="loanMenu">
                             <img src={loan} alt="" />
@@ -60,10 +71,13 @@ function Sidebar({
                         <img className="accordionCloseIcon" src={accordionClose} alt="" />
                     </div>
                     <LoanManagementSubMenu
-                        openLoansDropdown={openLoansDropdown}
+                        openLoansDropdown={
+                            location.pathname.includes("/loan") ? true : openLoansDropdown
+                        }
                         openSidebar={openSidebar}
+                        activeSubMenuItem={location.pathname}
                     >
-                        <div className="SubMenuItem">
+                        <div className="SubMenuItem" id="loanApplication">
                             <Link to="/loan/application">
                                 <img src={dashboard} alt="" />
                                 Loan Applications
@@ -79,7 +93,10 @@ function Sidebar({
                 </LoanManagement>
                 <POSManagement
                     openSidebar={openSidebar}
-                    openPOSManagementDropdown={openPOSManagementDropdown}
+                    openPOSManagementDropdown={
+                        location.pathname.includes("/pos") ? true : openPOSManagementDropdown
+                    }
+                    isActive={location.pathname.includes("/pos")}
                 >
                     <div
                         className="posManagementContainer"
@@ -91,8 +108,13 @@ function Sidebar({
                         </div>
                         <img className="accordionCloseIcon" src={accordionClose} alt="" />
                     </div>
-                    <POSManagementSubMenu openPOSManagementDropdown={openPOSManagementDropdown}>
-                        <div className="SubMenuItem">
+                    <POSManagementSubMenu
+                        openPOSManagementDropdown={
+                            location.pathname.includes("/pos") ? true : openPOSManagementDropdown
+                        }
+                        activeSubMenuItem={location.pathname}
+                    >
+                        <div className="SubMenuItem" id="posDashboard">
                             <Link to="/">
                                 <img src={dashboard} alt="" />
                                 Dashboard
@@ -104,8 +126,8 @@ function Sidebar({
                                 POS Devices
                             </Link>
                         </div>
-                        <div className="SubMenuItem">
-                            <Link to="/">
+                        <div className="SubMenuItem" id="posRequest">
+                            <Link to="/pos/requests">
                                 <img src={posManagement} alt="" />
                                 POS Requests
                             </Link>
@@ -160,7 +182,6 @@ const AdminManagement = styled.div`
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    padding: 1.5rem 1.5rem;
     box-sizing: border-box;
     border-bottom: 1px solid #d0dce4;
     opacity: ${(props) => (props.openSidebar ? "0" : "1")};
@@ -178,6 +199,7 @@ const AdminManagement = styled.div`
         color: #474747;
         text-decoration: none;
         width: 100%;
+        padding: 1.5rem 1.5rem;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
         white-space: nowrap;
         transition: all 0.2s ease-in-out;
@@ -193,10 +215,19 @@ const AdminManagement = styled.div`
             color: #933d0c;
 
             img {
-                filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                /* filter: hue-rotate(180deg); */
             }
         }
     }
+
+    ${(props) =>
+        props.isActive &&
+        css`
+            background-color: #fffaf6;
+            a {
+                color: #933d0c;
+            }
+        `}
 `;
 
 const LoanManagement = styled.div`
@@ -219,6 +250,7 @@ const LoanManagement = styled.div`
         box-sizing: border-box;
         transition: all 0.2s ease-in-out;
         width: 100%;
+        cursor: pointer;
 
         img {
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
@@ -254,19 +286,30 @@ const LoanManagement = styled.div`
     &:hover {
         .loanContainer {
             background-color: #fffaf6;
-            a {
+            .loanMenu {
                 color: #933d0c;
 
                 img {
-                    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                    /* filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg); */
                 }
             }
 
             img {
-                filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                /* filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg); */
             }
         }
     }
+
+    ${(props) =>
+        props.isActive &&
+        css`
+            .loanContainer {
+                background-color: #fffaf6;
+                .loanMenu {
+                    color: #933d0c;
+                }
+            }
+        `}
 `;
 
 const POSManagement = styled.div`
@@ -288,7 +331,9 @@ const POSManagement = styled.div`
         padding: 1.5rem 1.5rem;
         box-sizing: border-box;
         transition: all 0.2s ease-in-out;
+        text-overflow: ellipsis;
         width: 100%;
+        cursor: pointer;
 
         img {
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
@@ -313,7 +358,8 @@ const POSManagement = styled.div`
             text-decoration: none;
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            white-space: nowrap;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
             transition: all 0.2s ease-in-out;
 
             img {
@@ -326,19 +372,30 @@ const POSManagement = styled.div`
     &:hover {
         .posManagementContainer {
             background-color: #fffaf6;
-            a {
+            .posMenu {
                 color: #933d0c;
 
                 img {
-                    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                    /* filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg); */
                 }
             }
 
             img {
-                filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                /* filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg); */
             }
         }
     }
+
+    ${(props) =>
+        props.isActive &&
+        css`
+            .posManagementContainer {
+                background-color: #fffaf6;
+                .posMenu {
+                    color: #933d0c;
+                }
+            }
+        `}
 `;
 
 const LoanManagementSubMenu = styled.div`
@@ -357,8 +414,7 @@ const LoanManagementSubMenu = styled.div`
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        padding: 1.5rem;
-        padding-left: 2.5rem;
+        padding-left: 1rem;
         box-sizing: border-box;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
         transition: all 0.2s ease-in-out;
@@ -371,12 +427,13 @@ const LoanManagementSubMenu = styled.div`
             font-weight: 700;
             font-size: 14px;
             line-height: 18px;
+            padding: 1.5rem;
             letter-spacing: 0.0571895px;
             color: #474747;
             text-decoration: none;
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            white-space: nowrap;
+            white-space: ellipsis;
             transition: all 0.2s ease-in-out;
 
             img {
@@ -390,11 +447,22 @@ const LoanManagementSubMenu = styled.div`
                 color: #933d0c;
 
                 img {
-                    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                    /* filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg); */
                 }
             }
         }
     }
+
+    ${(props) =>
+        props.activeSubMenuItem === "/loan/application" &&
+        css`
+            #loanApplication {
+                background-color: #fffaf6;
+                a {
+                    color: #933d0c;
+                }
+            }
+        `}
 `;
 
 const POSManagementSubMenu = styled.div`
@@ -406,6 +474,7 @@ const POSManagementSubMenu = styled.div`
     display: ${(props) => (props.openPOSManagementDropdown ? "flex" : "none")};
     transition: all 0.2s ease-in-out;
     animation: easeIn 0.2s ease-in-out forwards;
+    text-overflow: ellipsis;
 
     @keyframes easeIn {
         0% {
@@ -424,8 +493,7 @@ const POSManagementSubMenu = styled.div`
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        padding: 1.5rem;
-        padding-left: 2.5rem;
+        padding-left: 1rem;
         box-sizing: border-box;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
         transition: all 0.2s ease-in-out;
@@ -438,12 +506,13 @@ const POSManagementSubMenu = styled.div`
             font-weight: 700;
             font-size: 14px;
             line-height: 18px;
+            padding: 1.5rem;
             letter-spacing: 0.0571895px;
             color: #474747;
             text-decoration: none;
-            white-space: nowrap;
             width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
+            white-space: ellipsis;
             transition: all 0.2s ease-in-out;
 
             img {
@@ -457,11 +526,22 @@ const POSManagementSubMenu = styled.div`
                 color: #933d0c;
 
                 img {
-                    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(100deg);
+                    color: #933d0c;
                 }
             }
         }
     }
+
+    ${(props) =>
+        props.activeSubMenuItem === "/pos/requests" &&
+        css`
+            #posRequest {
+                background-color: #fffaf6;
+                a {
+                    color: #933d0c;
+                }
+            }
+        `}
 `;
 
 const SidebarButton = styled.div`
