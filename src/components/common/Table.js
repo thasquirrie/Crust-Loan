@@ -40,6 +40,8 @@ export default function StickyHeadTable({
     onClickNextPage,
     menuItems,
     totalPages,
+    firstPage,
+    lastPage,
 }) {
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
@@ -134,12 +136,12 @@ export default function StickyHeadTable({
             </StyledTableContainer>
             {!loading && totalPages > 1 ? (
                 <PageCount>
-                    <Prev onClick={onClickPrevPage}>
+                    <Prev onClick={onClickPrevPage} firstPage={firstPage}>
                         <img src={arrow} alt="arrow" />
                         <span>Prev</span>
                     </Prev>
                     <PageNumber>{currentPageNumber}</PageNumber>
-                    <Next onClick={onClickNextPage}>
+                    <Next onClick={onClickNextPage} lastPage={lastPage}>
                         <span>Next</span>
                         <img src={arrow} alt="arrow" />
                     </Next>
@@ -162,7 +164,7 @@ const Prev = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    cursor: ${(props) => (props.firstPage ? "not-allowed" : "pointer")};
 
     img {
         margin-right: 0.5rem;
@@ -180,7 +182,7 @@ const Next = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    cursor: ${(props) => (props.lastPage ? "not-allowed" : "pointer")};
 
     img {
         transform: rotate(180deg);

@@ -58,10 +58,6 @@ function Transactions() {
 
     const [transactionParams, setAllTransactionParams] = useState({
         page: 1,
-        transactionType: "",
-        transactionStatus: "",
-        startDate: "",
-        endDate: "",
     });
 
     const lazyQueryOptions = {
@@ -444,6 +440,13 @@ function Transactions() {
                         lazyQueryTransactions?.data?.totalPages
                             ? lazyQueryTransactions.data.totalPages
                             : transactions?.data?.totalPages
+                    }
+                    firstPage={transactionParams.page === 1}
+                    lastPage={
+                        transactionParams.page ===
+                        (lazyQueryTransactions?.data?.totalPages
+                            ? lazyQueryTransactions.data.totalPages
+                            : transactions?.data?.totalPages)
                     }
                 />
             </Container>

@@ -5,6 +5,7 @@ import Transactions from "./pages/Transactions/Transactions";
 import "rsuite/dist/rsuite.min.css";
 import "./App.css";
 import LoanApplication from "./pages/LoanApplication/LoanApplication";
+import POSRequest from "./pages/POSRequest/POSRequest";
 
 function App() {
     return (
@@ -19,6 +20,10 @@ function App() {
                 </Route>
                 <Route path="loan">
                     <Route path="application" element={<LoanApplication />} />
+                    {/* <Route path=":id" element={<UserProfile />} /> */}
+                </Route>
+                <Route path="pos">
+                    <Route path="requests" element={<POSRequest />} />
                     {/* <Route path=":id" element={<UserProfile />} /> */}
                 </Route>
             </Routes>
