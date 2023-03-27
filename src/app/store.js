@@ -14,6 +14,8 @@ import {
     PURGE,
     REGISTER,
 } from "redux-persist";
+import posSlice from "../features/pos/posSlice";
+import loanSlice from "../features/loan/loanSlice";
 
 const persistConfig = {
     key: "auth",
@@ -30,6 +32,8 @@ export const store = configureStore({
         [baseApi.reducerPath]: baseApi.reducer,
         auth: persistedAuthReducer,
         transaction: transactionSlice,
+        pos: posSlice,
+        loan: loanSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
