@@ -401,6 +401,7 @@ function Transactions() {
                     </SelectSearchFilter>
                 </Header>
                 <Table
+                    heightOfTable={"420px"}
                     columns={TableColumns}
                     rows={
                         lazyQueryTransactions?.data?.content

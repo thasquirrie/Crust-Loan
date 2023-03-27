@@ -27,10 +27,6 @@ export const StyledTableRow = styled(TableRow)`
     }
 `;
 
-const StyledTableContainer = styled(TableContainer)`
-    max-height: calc(100vh - 430px);
-`;
-
 export default function StickyHeadTable({
     columns,
     rows,
@@ -42,7 +38,12 @@ export default function StickyHeadTable({
     totalPages,
     firstPage,
     lastPage,
+    heightOfTable,
 }) {
+    const StyledTableContainer = styled(TableContainer)`
+        max-height: calc(100vh - ${heightOfTable ? heightOfTable : "350px"});
+    `;
+
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
             <StyledTableContainer>

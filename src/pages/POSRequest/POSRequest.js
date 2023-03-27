@@ -50,7 +50,6 @@ function POSRequest() {
                         <h1>POS Requests</h1>
                         <p>{posRequests?.data?.totalElements} Requests</p>
                     </HeaderTitle>
-                    <br />
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
