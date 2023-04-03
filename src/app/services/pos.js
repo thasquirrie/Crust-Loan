@@ -8,7 +8,19 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getAllPosTransactions: builder.query({
+            query: (params) => ({
+                url: "/transaction/tms/transaction/view",
+                params,
+            }),
+        }),
+        downloadPosTransaction: builder.query({
+            query: (params) => ({
+                url: `/transaction/tms/transaction/download`,
+                params
+            }),
+        }),
     }),
 });
 
-export const { useGetAllPosRequestsQuery, useLazyGetAllPosRequestsQuery } = posApi;
+export const { useGetAllPosRequestsQuery, useLazyDownloadPosTransactionQuery, useGetAllPosTransactionsQuery,  useLazyGetAllPosTransactionsQuery, useLazyGetAllPosRequestsQuery } = posApi;

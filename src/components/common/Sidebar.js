@@ -138,6 +138,12 @@ function Sidebar({
                                 Aggregator Management
                             </Link>
                         </div>
+                        <div className="SubMenuItem">
+                            <Link to="/pos/tms">
+                                <img src={posManagement} alt="" />
+                                POS TMS
+                            </Link>
+                        </div>
                     </POSManagementSubMenu>
                 </POSManagement>
             </SidebarLinksContainer>

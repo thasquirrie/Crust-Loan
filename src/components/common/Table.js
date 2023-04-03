@@ -70,47 +70,57 @@ export default function StickyHeadTable({
                         </TableRow>
                     </StyledTableHead>
                     {!loading ? (
-                        <TableBody>
-                            {rows?.map((row) => {
-                                return (
-                                    <StyledTableRow
-                                        hover
-                                        role="checkbox"
-                                        tabIndex={-1}
-                                        key={row?.id}
-                                    >
-                                        {columns?.map((column) => {
-                                            const value = row[column?.id];
-                                            return (
-                                                <>
-                                                    <TableCell
-                                                        key={value?.id}
-                                                        align={"left"}
-                                                        style={{
-                                                            minWidth: 150,
-                                                            whiteSpace: "nowrap",
-                                                        }}
-                                                    >
-                                                        {value}
-                                                    </TableCell>
-                                                </>
-                                            );
-                                        })}
-                                        <TableCell
-                                            align={"left"}
-                                            sx={{
-                                                minWidth: 90,
-                                                "& .MuiButtonBase-root": {
-                                                    padding: 0,
-                                                },
-                                            }}
+                        totalPages === 0 ? (
+                            <NoRecordFound>
+                                <h4>NO RECORD FOUND 😢!</h4>
+                            </NoRecordFound>
+                        ) : (
+                            <TableBody>
+                                {rows?.map((row) => {
+                                    return (
+                                        <StyledTableRow
+                                            hover
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            key={row?.id}
                                         >
-                                            <ActionMenu menuItems={menuItems} row={row} />
-                                        </TableCell>
-                                    </StyledTableRow>
-                                );
-                            })}
-                        </TableBody>
+                                            {columns?.map((column) => {
+                                                const value = row[column?.id];
+                                                return (
+                                                    <>
+                                                        <TableCell
+                                                            key={value?.id}
+                                                            align={"left"}
+                                                            style={{
+                                                                minWidth: 150,
+                                                                whiteSpace: "nowrap",
+                                                            }}
+                                                        >
+                                                            {column?.format
+                                                                ? column?.format(value)
+                                                                : value}
+                                                        </TableCell>
+                                                    </>
+                                                );
+                                            })}
+                                            <TableCell
+                                                align={"left"}
+                                                sx={{
+                                                    minWidth: 90,
+                                                    "& .MuiButtonBase-root": {
+                                                        padding: 0,
+                                                    },
+                                                }}
+                                            >
+                                                {menuItems && (
+                                                    <ActionMenu menuItems={menuItems} row={row} />
+                                                )}
+                                            </TableCell>
+                                        </StyledTableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        )
                     ) : (
                         <div
                             style={{
@@ -211,4 +221,20 @@ const PageNumber = styled.div`
     height: 30px;
     border: 0.8px solid #dbbeae;
     border-radius: 4px;
+`;
+
+const NoRecordFound = styled.div`
+    position: absolute;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    margin-top: 10%;
+
+    h4 {
+        color: #933d0c;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.8rem;
+    }
 `;
