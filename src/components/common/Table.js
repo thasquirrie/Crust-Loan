@@ -41,7 +41,7 @@ export default function StickyHeadTable({
     heightOfTable,
 }) {
     const StyledTableContainer = styled(TableContainer)`
-        max-height: calc(100vh - ${heightOfTable ? heightOfTable : "350px"});
+        max-height: calc(100vh - ${heightOfTable ? heightOfTable : "360px"});
     `;
 
     return (
@@ -98,6 +98,8 @@ export default function StickyHeadTable({
                                                         >
                                                             {column?.format
                                                                 ? column?.format(value)
+                                                                : value === ""
+                                                                ? "NA"
                                                                 : value}
                                                         </TableCell>
                                                     </>
@@ -113,7 +115,14 @@ export default function StickyHeadTable({
                                                 }}
                                             >
                                                 {menuItems && (
-                                                    <ActionMenu menuItems={menuItems} row={row} />
+                                                    <ActionMenu
+                                                        menuItems={
+                                                            typeof menuItems === "function"
+                                                                ? menuItems(row)
+                                                                : menuItems
+                                                        }
+                                                        row={row}
+                                                    />
                                                 )}
                                             </TableCell>
                                         </StyledTableRow>

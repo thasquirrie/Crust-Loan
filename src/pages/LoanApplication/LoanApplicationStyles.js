@@ -64,4 +64,26 @@ const SelectSearchBar = styled.div`
     width: 35%;
 `;
 
-export { Container, Header, HeaderTitle, SelectSearchFilter, SelectSearchBar };
+const SearchFilters = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+
+    div:nth-child(2) {
+        width: 10vw;
+        margin: 0 1rem;
+    }
+
+    div:nth-child(3) {
+        width: 10vw;
+    }
+
+    div:nth-child(1) {
+        width: 10vw;
+        margin: 0 1rem;
+    }
+`;
+
+export { Container, Header, HeaderTitle, SelectSearchFilter, SelectSearchBar, SearchFilters };

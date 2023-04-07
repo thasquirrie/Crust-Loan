@@ -8,20 +8,12 @@ import crustLogoFooter from "../../assets/transactions/crustLogoFooter.svg";
 import { Link } from "react-router-dom";
 import { useDownloadTransactionQuery } from "../../app/services/transaction";
 import { CircularProgress } from "@mui/material";
+import formattedAmount from "../../utils/formatCurrency";
 const moment = require("moment");
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-const formattedAmount = (amount) => {
-    const formattedAmount = new Intl.NumberFormat("en-NG", {
-        style: "currency",
-        currency: "NGN",
-    }).format(amount);
-
-    return formattedAmount;
-};
 
 const formattedTime = (time) => {
     const formatString = "ddd Do MMM, YYYY | hh:mm a";
