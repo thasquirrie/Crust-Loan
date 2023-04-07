@@ -45,9 +45,9 @@ const TableColumns = [
 
 function LoanApplication() {
     const APPROVED_LOAN = "APPROVED";
-    const PENDING_LOAN = "PENDING";
+    // const PENDING_LOAN = "PENDING";
+    // const LOAN_HISTORY = "LOAN_HISTORY";
     const DISAPPROVED_LOAN = "DISAPPROVED";
-    const LOAN_HISTORY = "LOAN_HISTORY";
     const VIEW_AGENT_DETAILS = "VIEW_AGENT_DETAILS";
 
     const [loanModalType, setLoanModalType] = useState("");
@@ -263,7 +263,12 @@ function LoanApplication() {
                 <Header>
                     <HeaderTitle>
                         <h1>Loan Application</h1>
-                        <p>{loanApplications?.data?.totalElements} Loan Applications</p>
+                        <p>
+                            {lazyQueryLoanApplications?.data?.totalElements !== undefined
+                                ? lazyQueryLoanApplications?.data?.totalElements
+                                : loanApplications?.data?.totalElements}{" "}
+                            Loan Applications
+                        </p>
                     </HeaderTitle>
                     <SelectSearchFilter>
                         <SelectSearchBar>
@@ -422,7 +427,7 @@ function LoanApplication() {
                         });
                     }}
                     totalPages={
-                        lazyQueryLoanApplications?.data?.totalPages
+                        lazyQueryLoanApplications?.data?.totalPages !== undefined
                             ? lazyQueryLoanApplications.data.totalPages
                             : loanApplications?.data?.totalPages
                     }
