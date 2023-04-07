@@ -17,10 +17,62 @@ export const posApi = baseApi.injectEndpoints({
         downloadPosTransaction: builder.query({
             query: (params) => ({
                 url: `/transaction/tms/transaction/download`,
-                params
+                params,
+            }),
+        }),
+        getAggregator: builder.query({
+            query: (params) => ({
+                url: "/user/admin/aggregators",
+                params,
+            }),
+        }),
+        getPos: builder.query({
+            query: (params) => ({
+                url: "/transaction/pos",
+                params,
+            }),
+        }),
+        approvePosRequest: builder.mutation({
+            query: (body) => ({
+                url: "transaction/pos/requests/approve",
+                method: "POST",
+                body,
+            }),
+        }),
+        declinePosRequest: builder.mutation({
+            query: (body) => ({
+                url: "transaction/pos/requests/decline",
+                method: "POST",
+                body,
+            }),
+        }),
+        mapPosToAggregators: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/requests/assign",
+                method: "POST",
+                body,
+            }),
+        }),
+        assignPosToAgent: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/agent/assign",
+                method: "POST",
+                body,
             }),
         }),
     }),
 });
 
-export const { useGetAllPosRequestsQuery, useLazyDownloadPosTransactionQuery, useGetAllPosTransactionsQuery,  useLazyGetAllPosTransactionsQuery, useLazyGetAllPosRequestsQuery } = posApi;
+export const {
+    useGetAllPosRequestsQuery,
+    useLazyDownloadPosTransactionQuery,
+    useGetAllPosTransactionsQuery,
+    useLazyGetAllPosTransactionsQuery,
+    useLazyGetAllPosRequestsQuery,
+    useLazyGetAggregatorQuery,
+    useLazyGetPosQuery,
+    useApprovePosRequestMutation,
+    useDeclinePosRequestMutation,
+    useMapPosToAggregatorsMutation,
+    useAssignPosToAgentMutation,
+} = posApi;
