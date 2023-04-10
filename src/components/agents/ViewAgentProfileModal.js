@@ -28,6 +28,7 @@ import LinkCircle from "../../assets/agents/link-circle.svg";
 import { useGetUserDetailsQuery } from "../../app/services/loan";
 import formattedAmount from "../../utils/formatCurrency";
 import moment from "moment";
+import { TailSpin } from "react-loader-spinner";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -36,7 +37,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function ViewAgentProfile({ open, handleClose, userId }) {
     const [tab, setTab] = useState("personal");
 
-    const { data: userDetails } = useGetUserDetailsQuery(userId, {
+    const { data: userDetails, isLoading: userDetailsIsLoading } = useGetUserDetailsQuery(userId, {
         skip: !userId,
     });
 
@@ -51,538 +52,617 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                 aria-describedby="alert-dialog-slide-description"
             >
                 <ModalContainer>
-                    <ModalHeader>
-                        <AgentHeader>
-                            <AgentHeaderInfo>
-                                <Avatar>
-                                    <p>
-                                        {userDetails?.data?.personal.firstName[0]}
-                                        {userDetails?.data?.personal.lastName[0]}
+                    {userDetailsIsLoading ? (
+                        <div
+                            style={{
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "center",
+                                height: "100vh",
+                            }}
+                        >
+                            <TailSpin
+                                height="80"
+                                width="80"
+                                color="#933D0C"
+                                ariaLabel="bars-loading"
+                                wrapperStyle={{
+                                    marginBottom: "10vh",
+                                }}
+                                wrapperClass=""
+                                visible={true}
+                            />
+                        </div>
+                    ) : (
+                        <>
+                            <ModalHeader>
+                                <AgentHeader>
+                                    <AgentHeaderInfo>
+                                        <Avatar>
+                                            <p>
+                                                {userDetails?.data?.personal.firstName[0]}
+                                                {userDetails?.data?.personal.lastName[0]}
+                                            </p>
+                                        </Avatar>
+                                        <AgentNameDetails>
+                                            <h4>
+                                                {userDetails?.data?.personal.firstName}{" "}
+                                                {userDetails?.data?.personal.lastName}
+                                            </h4>
+                                            <AgentDetail>
+                                                <p>
+                                                    <span>Born</span>{" "}
+                                                    <span>
+                                                        {moment(
+                                                            userDetails?.data?.personal.dateOfBirth
+                                                        ).format("DD MMM YYYY")}
+                                                    </span>{" "}
+                                                </p>
+                                                <img src={Ellipse} alt={"ellips"} />
+                                                <span>{userDetails?.data?.personal.gender}</span>
+                                                <img src={Ellipse} alt={"ellips"} />
+                                                <span>
+                                                    {userDetails?.data?.personal.maritalStatus}
+                                                </span>
+                                                <img src={Ellipse} alt={"ellips"} />
+                                                <span>
+                                                    {userDetails?.data?.personal.location || "NA"}
+                                                </span>
+                                            </AgentDetail>
+                                        </AgentNameDetails>
+                                    </AgentHeaderInfo>
+                                    <p style={{ fontWeight: "700" }}>
+                                        {
+                                            // calculate age from date of birth
+                                            userDetails?.data?.personal.dateOfBirth &&
+                                                moment().diff(
+                                                    moment(userDetails?.data?.personal.dateOfBirth),
+                                                    "years"
+                                                )
+                                        }{" "}
+                                        years
                                     </p>
-                                </Avatar>
-                                <AgentNameDetails>
-                                    <h4>
-                                        {userDetails?.data?.personal.firstName}{" "}
-                                        {userDetails?.data?.personal.lastName}
-                                    </h4>
-                                    <AgentDetail>
-                                        <p>
-                                            <span>Born</span>{" "}
-                                            <span>
-                                                {moment(
-                                                    userDetails?.data?.personal.dateOfBirth
-                                                ).format("DD MMM YYYY")}
-                                            </span>{" "}
-                                        </p>
-                                        <img src={Ellipse} alt={"ellips"} />
-                                        <span>{userDetails?.data?.personal.gender}</span>
-                                        <img src={Ellipse} alt={"ellips"} />
-                                        <span>{userDetails?.data?.personal.maritalStatus}</span>
-                                        <img src={Ellipse} alt={"ellips"} />
-                                        <span>{userDetails?.data?.personal.location || "NA"}</span>
-                                    </AgentDetail>
-                                </AgentNameDetails>
-                            </AgentHeaderInfo>
-                            <p style={{ fontWeight: "700" }}>
-                                {
-                                    // calculate age from date of birth
-                                    userDetails?.data?.personal.dateOfBirth &&
-                                        moment().diff(
-                                            moment(userDetails?.data?.personal.dateOfBirth),
-                                            "years"
-                                        )
-                                }{" "}
-                                years
-                            </p>
-                        </AgentHeader>
-                        <PillsContainer>
-                            <Pills
-                                onClick={() => {
-                                    setTab("personal");
-                                }}
-                                active={tab === "personal"}
-                            >
-                                <p>Personal</p>
-                            </Pills>
-                            <Pills
-                                onClick={() => {
-                                    setTab("business");
-                                }}
-                                active={tab === "business"}
-                            >
-                                <p>Business</p>
-                            </Pills>
-                            <Pills
-                                onClick={() => {
-                                    setTab("guarantors");
-                                }}
-                                active={tab === "guarantors"}
-                            >
-                                <p>Guarantors</p>
-                            </Pills>
-                        </PillsContainer>
-                    </ModalHeader>
-                    <ModalBody>
-                        {/* <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br /> */}
-                        {tab === "personal" && (
-                            <>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Bank-related Info</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Code} alt={"bank"} />
-                                                Account Number
-                                            </p>
-                                            <p>{userDetails?.data?.account.accountNumber}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Bank} alt={"bank"} />
-                                                Account Balance
-                                            </p>
-                                            <p>N{userDetails?.data?.account.accountBalance}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Cards} alt={"bank"} />
-                                                BVN
-                                            </p>
-                                            <p>{userDetails?.data?.personal.bvn}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Cards} alt={"bank"} />
-                                                Transaction Limit
-                                            </p>
-                                            <p>
-                                                {formattedAmount(
-                                                    userDetails?.data?.account.dailyTransactionLimit
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Diagram} alt={"bank"} />
-                                                BVN Credit History
-                                            </p>
-                                            <p>NA</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Graph} alt={"bank"} />
-                                                Credit History
-                                            </p>
-                                            <p>NA</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Identity Info</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={PersonalCard} alt={"bank"} />
-                                                Identification Type
-                                            </p>
-                                            <p>
-                                                <p>{userDetails?.data?.personal.idType}</p>
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Code} alt={"bank"} />
-                                                ID Type No.
-                                            </p>
-                                            <p>{userDetails?.data?.personal.idNumber}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Contact Info</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Phone} alt={"bank"} />
-                                                Phone Number
-                                            </p>
-                                            <p>{userDetails?.data?.personal.phone}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Mail} alt={"bank"} />
-                                                Email Address
-                                            </p>
-                                            <p>{userDetails?.data?.personal.email}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={House} alt={"bank"} />
-                                                Business Address
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.personal.businessAddress ? (
-                                                    userDetails?.data?.personal.businessAddress
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Cluster Info</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Cluster} alt={"bank"} />
-                                                Cluster Name
-                                            </p>
-                                            <p>{userDetails?.data?.personal.cluster}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Icon} alt={"bank"} />
-                                                Cluster Head
-                                            </p>
-                                            <p>{userDetails?.data?.personal.clusterHead}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Phone} alt={"bank"} />
-                                                Phone Number
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.personal.clsuterHeadPhoneNumber}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                            </>
-                        )}
-                        {tab === "business" && (
-                            <>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Business ID</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Shop} alt={"bank"} />
-                                                Business Name
-                                            </p>
-                                            <p>{userDetails?.data?.business.businessName}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Map} alt={"bank"} />
-                                                Location
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business.businessLocation ? (
-                                                    userDetails?.data?.business.businessLocation
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Arrow} alt={"bank"} />
-                                                Registration Status
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business.registered
-                                                    ? "Registered"
-                                                    : "Not Registered"}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Diagram} alt={"bank"} />
-                                                Business Reg. Number
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business.rcNumber ? (
-                                                    userDetails?.data?.business.rcNumber
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Mobile Money History</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Wallet} alt={"bank"} />
-                                                Mobile Money Agent?
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business.mobileMoneyAgent
-                                                    ? "Yes"
-                                                    : "No"}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Circle} alt={"bank"} />
-                                                How long?
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business.howLong ? (
-                                                    userDetails?.data?.business.howLong
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Bag} alt={"bank"} />
-                                                Mobile Money Co.
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business.mobileMoney ? (
-                                                    userDetails?.data?.business.mobileMoney
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Text} alt={"bank"} />
-                                                Transaction Size
-                                            </p>
-                                            <p>
-                                                {userDetails?.data?.business
-                                                    .monthlyTransactionSize ? (
-                                                    userDetails?.data?.business
-                                                        .monthlyTransactionSize
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Text} alt={"bank"} />6 Month Account
-                                                Statement
-                                            </p>
-                                            <AccountStatement>
-                                                <img src={pdf} alt={"bank"} />
-                                                <a
-                                                    href={
-                                                        userDetails?.data?.business
-                                                            .accountStatementUrl
-                                                    }
-                                                    download
-                                                >
-                                                    Download
-                                                </a>
-                                            </AccountStatement>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                            </>
-                        )}
-                        {tab === "guarantors" && (
-                            <>
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Guarantor 1</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={User} alt={"bank"} />
-                                                Guarantor's Name
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                {userDetails?.data?.guarantors[0].firstName}{" "}
-                                                {userDetails?.data?.guarantors[0].lastName}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Phone} alt={"bank"} />
-                                                Phone Number
-                                            </p>
-                                            <p>08012345678</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Box} alt={"bank"} />
-                                                Occupation
-                                            </p>
-                                            <p> {userDetails?.data?.guarantors[0].occupation}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={LinkCircle} alt={"bank"} />
-                                                Relationship
-                                            </p>
-                                            <p> {userDetails?.data?.guarantors[0].relationship}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={LinkCircle} alt={"bank"} />
-                                                NIN
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                {userDetails?.data?.guarantors[0].idNumber ? (
-                                                    userDetails?.data?.guarantors[0].idNumber
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
+                                </AgentHeader>
+                                <PillsContainer>
+                                    {userDetails?.data?.personal && (
+                                        <Pills
+                                            onClick={() => {
+                                                setTab("personal");
+                                            }}
+                                            active={tab === "personal"}
+                                        >
+                                            <p>Personal</p>
+                                        </Pills>
+                                    )}
+                                    {userDetails?.data?.business && (
+                                        <Pills
+                                            onClick={() => {
+                                                setTab("business");
+                                            }}
+                                            active={tab === "business"}
+                                        >
+                                            <p>Business</p>
+                                        </Pills>
+                                    )}
+                                    {userDetails?.data?.guarantors && (
+                                        <Pills
+                                            onClick={() => {
+                                                setTab("guarantors");
+                                            }}
+                                            active={tab === "guarantors"}
+                                        >
+                                            <p>Guarantors</p>
+                                        </Pills>
+                                    )}
+                                </PillsContainer>
+                            </ModalHeader>
+                            <ModalBody>
+                                {tab === "personal" && (
+                                    <>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Bank-related Info</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Code} alt={"bank"} />
+                                                        Account Number
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.account.accountNumber}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Bank} alt={"bank"} />
+                                                        Account Balance
+                                                    </p>
+                                                    <p>
+                                                        N{userDetails?.data?.account.accountBalance}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Cards} alt={"bank"} />
+                                                        BVN
+                                                    </p>
+                                                    <p>{userDetails?.data?.personal.bvn}</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Cards} alt={"bank"} />
+                                                        Transaction Limit
+                                                    </p>
+                                                    <p>
+                                                        {formattedAmount(
+                                                            userDetails?.data?.account
+                                                                .dailyTransactionLimit
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Diagram} alt={"bank"} />
+                                                        BVN Credit History
+                                                    </p>
+                                                    <p>NA</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Graph} alt={"bank"} />
+                                                        Credit History
+                                                    </p>
+                                                    <p>NA</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Identity Info</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={PersonalCard} alt={"bank"} />
+                                                        Identification Type
+                                                    </p>
+                                                    <p>
+                                                        <p>{userDetails?.data?.personal.idType}</p>
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Code} alt={"bank"} />
+                                                        ID Type No.
+                                                    </p>
+                                                    <p>{userDetails?.data?.personal.idNumber}</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Contact Info</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Phone} alt={"bank"} />
+                                                        Phone Number
+                                                    </p>
+                                                    <p>{userDetails?.data?.personal.phone}</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Mail} alt={"bank"} />
+                                                        Email Address
+                                                    </p>
+                                                    <p>{userDetails?.data?.personal.email}</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={House} alt={"bank"} />
+                                                        Business Address
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.personal
+                                                            .businessAddress ? (
+                                                            userDetails?.data?.personal
+                                                                .businessAddress
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Cluster Info</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Cluster} alt={"bank"} />
+                                                        Cluster Name
+                                                    </p>
+                                                    <p>{userDetails?.data?.personal.cluster}</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Icon} alt={"bank"} />
+                                                        Cluster Head
+                                                    </p>
+                                                    <p>{userDetails?.data?.personal.clusterHead}</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Phone} alt={"bank"} />
+                                                        Phone Number
+                                                    </p>
+                                                    <p>
+                                                        {
+                                                            userDetails?.data?.personal
+                                                                .clsuterHeadPhoneNumber
+                                                        }
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                    </>
+                                )}
+                                {tab === "business" && (
+                                    <>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Business ID</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Shop} alt={"bank"} />
+                                                        Business Name
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business.businessName}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Map} alt={"bank"} />
+                                                        Location
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business
+                                                            .businessLocation ? (
+                                                            userDetails?.data?.business
+                                                                .businessLocation
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Arrow} alt={"bank"} />
+                                                        Registration Status
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business.registered
+                                                            ? "Registered"
+                                                            : "Not Registered"}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Diagram} alt={"bank"} />
+                                                        Business Reg. Number
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business.rcNumber ? (
+                                                            userDetails?.data?.business.rcNumber
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Mobile Money History</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Wallet} alt={"bank"} />
+                                                        Mobile Money Agent?
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business
+                                                            .mobileMoneyAgent
+                                                            ? "Yes"
+                                                            : "No"}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Circle} alt={"bank"} />
+                                                        How long?
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business.howLong ? (
+                                                            userDetails?.data?.business.howLong
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Bag} alt={"bank"} />
+                                                        Mobile Money Co.
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business.mobileMoney ? (
+                                                            userDetails?.data?.business.mobileMoney
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Text} alt={"bank"} />
+                                                        Transaction Size
+                                                    </p>
+                                                    <p>
+                                                        {userDetails?.data?.business
+                                                            .monthlyTransactionSize ? (
+                                                            userDetails?.data?.business
+                                                                .monthlyTransactionSize
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Text} alt={"bank"} />6 Month
+                                                        Account Statement
+                                                    </p>
+                                                    <AccountStatement>
+                                                        <img src={pdf} alt={"bank"} />
+                                                        <a
+                                                            href={
+                                                                userDetails?.data?.business
+                                                                    .accountStatementUrl
+                                                            }
+                                                            download
+                                                        >
+                                                            Download
+                                                        </a>
+                                                    </AccountStatement>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                    </>
+                                )}
+                                {tab === "guarantors" && (
+                                    <>
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Guarantor 1</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={User} alt={"bank"} />
+                                                        Guarantor's Name
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {
+                                                            userDetails?.data?.guarantors[0]
+                                                                .firstName
+                                                        }{" "}
+                                                        {userDetails?.data?.guarantors[0].lastName}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Phone} alt={"bank"} />
+                                                        Phone Number
+                                                    </p>
+                                                    <p>08012345678</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Box} alt={"bank"} />
+                                                        Occupation
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {
+                                                            userDetails?.data?.guarantors[0]
+                                                                .occupation
+                                                        }
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={LinkCircle} alt={"bank"} />
+                                                        Relationship
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {
+                                                            userDetails?.data?.guarantors[0]
+                                                                .relationship
+                                                        }
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={LinkCircle} alt={"bank"} />
+                                                        NIN
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {userDetails?.data?.guarantors[0]
+                                                            .idNumber ? (
+                                                            userDetails?.data?.guarantors[0]
+                                                                .idNumber
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
 
-                                <br />
-                                <HorizontalLine />
-                                <TitleHead>
-                                    <h5>Guarantor 2</h5>
-                                </TitleHead>
-                                <HorizontalLine />
-                                <TitleHeadItemContainer>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={User} alt={"bank"} />
-                                                Guarantor's Name
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                {userDetails?.data?.guarantors[1].firstName}{" "}
-                                                {userDetails?.data?.guarantors[1].lastName}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Phone} alt={"bank"} />
-                                                Phone Number
-                                            </p>
-                                            <p>08012345678</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={Box} alt={"bank"} />
-                                                Occupation
-                                            </p>
-                                            <p> {userDetails?.data?.guarantors[1].occupation}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={LinkCircle} alt={"bank"} />
-                                                Relationship
-                                            </p>
-                                            <p> {userDetails?.data?.guarantors[1].relationship}</p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                    <TitleHeadItem>
-                                        <InfoContainer>
-                                            <p>
-                                                <img src={LinkCircle} alt={"bank"} />
-                                                NIN
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                {userDetails?.data?.guarantors[1].idNumber ? (
-                                                    userDetails?.data?.guarantors[1].idNumber
-                                                ) : (
-                                                    <span>NA</span>
-                                                )}
-                                            </p>
-                                        </InfoContainer>
-                                    </TitleHeadItem>
-                                </TitleHeadItemContainer>
-                            </>
-                        )}
-                    </ModalBody>
+                                        <br />
+                                        <HorizontalLine />
+                                        <TitleHead>
+                                            <h5>Guarantor 2</h5>
+                                        </TitleHead>
+                                        <HorizontalLine />
+                                        <TitleHeadItemContainer>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={User} alt={"bank"} />
+                                                        Guarantor's Name
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {
+                                                            userDetails?.data?.guarantors[1]
+                                                                .firstName
+                                                        }{" "}
+                                                        {userDetails?.data?.guarantors[1].lastName}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Phone} alt={"bank"} />
+                                                        Phone Number
+                                                    </p>
+                                                    <p>08012345678</p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={Box} alt={"bank"} />
+                                                        Occupation
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {
+                                                            userDetails?.data?.guarantors[1]
+                                                                .occupation
+                                                        }
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={LinkCircle} alt={"bank"} />
+                                                        Relationship
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {
+                                                            userDetails?.data?.guarantors[1]
+                                                                .relationship
+                                                        }
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                            <TitleHeadItem>
+                                                <InfoContainer>
+                                                    <p>
+                                                        <img src={LinkCircle} alt={"bank"} />
+                                                        NIN
+                                                    </p>
+                                                    <p>
+                                                        {" "}
+                                                        {userDetails?.data?.guarantors[1]
+                                                            .idNumber ? (
+                                                            userDetails?.data?.guarantors[1]
+                                                                .idNumber
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
+                                                    </p>
+                                                </InfoContainer>
+                                            </TitleHeadItem>
+                                        </TitleHeadItemContainer>
+                                    </>
+                                )}
+                            </ModalBody>
+                        </>
+                    )}
                 </ModalContainer>
             </Dialog>
         </div>
@@ -742,6 +822,7 @@ const AgentNameDetails = styled.div`
 const AgentDetail = styled.div`
     display: flex;
     justify-content: space-between;
+    margin-top: 0.3rem;
 
     p {
         span:first-child {

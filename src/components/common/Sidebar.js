@@ -10,6 +10,8 @@ import loan from "../../assets/sidebar/loan.svg";
 import accordionClose from "../../assets/sidebar/accordionClose.svg";
 import dashboard from "../../assets/sidebar/dashboard.svg";
 import posManagement from "../../assets/sidebar/posManagement.svg";
+import posTMS from "../../assets/sidebar/posTMS.svg";
+import posActivity from "../../assets/sidebar/posActivity.svg";
 import clusterManagement from "../../assets/sidebar/clusterManagement.svg";
 import signOut from "../../assets/sidebar/signOut.svg";
 
@@ -41,8 +43,8 @@ function Sidebar({
                         Core Home
                     </Link>
                 </CoreHome>
-                <Agents openSidebar={openSidebar}>
-                    <Link to="/">
+                <Agents openSidebar={openSidebar} isActive={location.pathname === "/agent"}>
+                    <Link to="/agent">
                         <img src={people} alt="" />
                         Agents
                     </Link>
@@ -114,10 +116,22 @@ function Sidebar({
                         }
                         activeSubMenuItem={location.pathname}
                     >
-                        <div className="SubMenuItem" id="posDashboard">
+                        {/* <div className="SubMenuItem" id="posDashboard">
                             <Link to="/">
                                 <img src={dashboard} alt="" />
                                 Dashboard
+                            </Link>
+                        </div> */}
+                        <div className="SubMenuItem">
+                            <Link to="/pos/tms">
+                                <img src={posTMS} alt="" />
+                                POS TMS
+                            </Link>
+                        </div>
+                        <div className="SubMenuItem">
+                            <Link to="/pos/transaction_activity">
+                                <img src={posActivity} alt="" />
+                                POS Activity
                             </Link>
                         </div>
                         {/* <div className="SubMenuItem">
@@ -138,12 +152,7 @@ function Sidebar({
                                 Aggregator Management
                             </Link>
                         </div>
-                        <div className="SubMenuItem">
-                            <Link to="/pos/tms">
-                                <img src={posManagement} alt="" />
-                                POS TMS
-                            </Link>
-                        </div> */}
+                       */}
                     </POSManagementSubMenu>
                 </POSManagement>
             </SidebarLinksContainer>
@@ -162,7 +171,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    width: ${(props) => (props.openSidebar ? "3%" : "23%")};
+    width: ${(props) => (props.openSidebar ? "3%" : "20%")};
     transition: all 0.2s ease-in-out;
     height: 100vh;
     background-color: #f5f5f5;
@@ -437,10 +446,14 @@ const LoanManagementSubMenu = styled.div`
             letter-spacing: 0.0571895px;
             color: #474747;
             text-decoration: none;
-            width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            white-space: ellipsis;
             transition: all 0.2s ease-in-out;
+
+            width: 98%;
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
 
             img {
                 margin-right: 1rem;
@@ -516,10 +529,14 @@ const POSManagementSubMenu = styled.div`
             letter-spacing: 0.0571895px;
             color: #474747;
             text-decoration: none;
-            width: 100%;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
-            white-space: ellipsis;
             transition: all 0.2s ease-in-out;
+
+            width: 98%;
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
 
             img {
                 margin-right: 1rem;
