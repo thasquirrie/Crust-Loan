@@ -1,14 +1,31 @@
 import styled from "styled-components";
 import monitorImg from "../../assets/navbar/monitor.svg";
+import { useSelector } from "react-redux";
 
 function Navbar() {
+    const user = useSelector((state) => state.auth.user);
+
+    console.log("yser", user);
+
     return (
         <Container>
             <h4>Crust Infrastructure</h4>
-            <AccessPortal>
-                <img src={monitorImg} alt="monitor" />
-                <p>Access Portal</p>
-            </AccessPortal>
+            {!user ? (
+                <AccessPortal>
+                    <img src={monitorImg} alt="monitor" />
+                    <p>Access Portal</p>
+                </AccessPortal>
+            ) : (
+                <CurrentUser>
+                    <p>
+                        {user?.user?.firstName} {user?.user?.lastName}
+                    </p>
+                    <p className="avatar">
+                        {user?.user?.firstName[0].toUpperCase()}
+                        {user?.user?.firstName[1].toUpperCase()}
+                    </p>
+                </CurrentUser>
+            )}
         </Container>
     );
 }
@@ -57,5 +74,32 @@ const AccessPortal = styled.div`
         letter-spacing: -0.02em;
         color: #ffffff;
         margin: 0px;
+    }
+`;
+
+const CurrentUser = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    p {
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+        margin: 0px;
+    }
+
+    .avatar {
+        border-radius: 50%;
+        background-color: #00a89b;
+        padding: 0.25rem 0.5rem;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 24px;
+        color: #ffffff;
+        margin-left: 0.6rem;
     }
 `;
