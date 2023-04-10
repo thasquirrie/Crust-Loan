@@ -25,6 +25,7 @@ import TransactionModalDetails from "../../components/transactions/TransactionDe
 import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import StatusTag from "../../components/common/StatusTag";
 
 const TableColumns = [
     { id: "accountName", label: "Agent Name" },
@@ -35,7 +36,24 @@ const TableColumns = [
     { id: "createdAt", label: "Date and Time" },
     { id: "fee", label: "Fee" },
     { id: "transactionType", label: "Type" },
-    { id: "transactionStatus", label: "Status" },
+    {
+        id: "transactionStatus",
+        label: "Status",
+        format: (value) => {
+            switch (value) {
+                case "SUCCESSFUL":
+                    return <StatusTag backgroundColor="#06C281" text={value} />;
+                case "FAILED":
+                    return <StatusTag backgroundColor="#FF4747" text={value} />;
+                case "PENDING":
+                    return <StatusTag backgroundColor="#FE822B" text={value} />;
+                case "REVERSED":
+                    return <StatusTag backgroundColor="#077E8C" text={value} />;
+                default:
+                    return <StatusTag backgroundColor="#F9DEA9" text={value} />;
+            }
+        },
+    },
 ];
 
 const Alert = forwardRef(function Alert(props, ref) {

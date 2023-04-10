@@ -6,6 +6,7 @@ import {
     SearchFilters,
     SelectSearchBar,
     SelectSearchFilter,
+    DownloadButtonContainer,
 } from "./POSTMSTransactionStyles";
 import Main from "../../components/common/Main";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
@@ -18,7 +19,10 @@ import {
     useLazyGetAllPosTransactionsQuery,
 } from "../../app/services/pos";
 import PosTmsTransactionDetailsModal from "../../components/pos/PosTmsTransactionDetailsModal";
+import { useLazyDownloadPosTransactionQuery } from "../../app/services/pos";
 import { PosTmsStatusCodes } from "../../utils/posTmsStatus";
+import ButtonCommonLink from "../../components/common/ButtonCommonLink";
+// import StatusTag from "../../components/common/StatusTag";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -50,7 +54,7 @@ const TableColumns = [
     { id: "responseCode", label: "STATUS CODE" },
 ];
 
-const PosTmsTransaction = () => {
+const PosTransaction = () => {
     const [posTransactionModalDetails, setPosTransactionModalDetails] = useState(null);
     const [openTransactionDetailsModal, setOpenTransactionDetailsModal] = useState(false);
     const [searchFilters, setSearchFilters] = useState({
@@ -76,6 +80,15 @@ const PosTmsTransaction = () => {
         { data: lazyQueryPosTransactions, isLoading: lazyQueryPosTransactionsIsLoading },
     ] = useLazyGetAllPosTransactionsQuery(lazyQueryOptions);
 
+    const [
+        triggerDownloadTransactions,
+        {
+            data: lazyQueryDownloadTransactions,
+            isLoading: lazyQueryDownloadIsLoading,
+            isError: lazyQueryDownloadIsError,
+        },
+    ] = useLazyDownloadPosTransactionQuery(lazyQueryOptions);
+
     const tableMenuItems = [
         {
             name: "View more",
@@ -85,6 +98,21 @@ const PosTmsTransaction = () => {
             },
         },
     ];
+
+    const searchFilterOptions = {
+        ...(searchFilters?.searchFilterBy === "serialNumber" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+                serialNumber: searchFilters?.searchFilterValue,
+            }),
+        ...(searchFilters?.searchFilterBy === "terminalId" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+                terminalId: searchFilters?.searchFilterValue,
+            }),
+        ...(searchFilters?.searchFilterBy === "transactionReference" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+                transactionReference: searchFilters?.searchFilterValue,
+            }),
+    };
 
     return (
         <>
@@ -100,8 +128,28 @@ const PosTmsTransaction = () => {
                     <Header>
                         <HeaderTitle>
                             <h1>POS Transactions</h1>
-                            <p>{posTransactions?.data?.totalElements} Total Transactions</p>
+                            <p>
+                                {lazyQueryPosTransactions?.data?.totalElements
+                                    ? lazyQueryPosTransactions?.data?.totalElements
+                                    : posTransactions?.data?.totalElements}{" "}
+                                Total Transactions
+                            </p>
                         </HeaderTitle>
+                        <DownloadButtonContainer>
+                            <ButtonCommonLink
+                                text={"Download Report"}
+                                href={lazyQueryDownloadTransactions?.data}
+                                disabled={
+                                    lazyQueryDownloadIsLoading ||
+                                    lazyQueryDownloadIsError ||
+                                    !lazyQueryDownloadTransactions?.data ||
+                                    !posTransactionParams?.startDate ||
+                                    !posTransactionParams?.endDate
+                                }
+                                isLoading={lazyQueryDownloadIsLoading}
+                                download={true}
+                            />
+                        </DownloadButtonContainer>
                         <SelectSearchFilter>
                             <SelectSearchBar>
                                 <TableSelectSearchBar
@@ -109,7 +157,7 @@ const PosTmsTransaction = () => {
                                     placeholder={'Click "Search Icon" to search'}
                                     options={{
                                         "Serial Number": "serialNumber",
-                                        "Terminal ID": "terminalId",
+                                        TerminalId: "terminalId",
                                         "Reference No": "transactionReference",
                                     }}
                                     showClearSearch={
@@ -130,19 +178,7 @@ const PosTmsTransaction = () => {
                                     onClickSearchIcon={() => {
                                         triggerPosTransactions({
                                             ...posTransactionParams,
-                                            serialNumber:
-                                                searchFilters.searchFilterBy === "serialNumber"
-                                                    ? searchFilters.searchFilterValue
-                                                    : "",
-                                            terminalId:
-                                                searchFilters.searchFilterBy === "terminalId"
-                                                    ? searchFilters.searchFilterValue
-                                                    : "",
-                                            transactionReference:
-                                                searchFilters.searchFilterBy ===
-                                                "transactionReference"
-                                                    ? searchFilters.searchFilterValue
-                                                    : "",
+                                            ...searchFilterOptions,
                                         });
                                     }}
                                     onClickClear={() => {
@@ -166,9 +202,16 @@ const PosTmsTransaction = () => {
                                     style={{ width: 230 }}
                                     readOnly={false}
                                     onClean={() => {
-                                        delete posTransactionParams.startDate;
-                                        delete posTransactionParams.endDate;
-                                        triggerPosTransactions(posTransactionParams);
+                                        const {
+                                            startDate,
+                                            endDate,
+                                            ...restOfPosTransactionParams
+                                        } = posTransactionParams;
+                                        setPosTransactionParams(restOfPosTransactionParams);
+                                        triggerPosTransactions({
+                                            ...restOfPosTransactionParams,
+                                            ...searchFilterOptions,
+                                        });
                                     }}
                                     onChange={(value) => {
                                         const startDate =
@@ -180,12 +223,19 @@ const PosTmsTransaction = () => {
                                             setPosTransactionParams({
                                                 ...posTransactionParams,
                                                 startDate,
-                                                endDate: endDate,
+                                                endDate,
                                             });
                                             triggerPosTransactions({
                                                 ...posTransactionParams,
                                                 startDate,
-                                                endDate: endDate,
+                                                endDate,
+                                                ...searchFilterOptions,
+                                            });
+                                            triggerDownloadTransactions({
+                                                ...posTransactionParams,
+                                                startDate,
+                                                endDate,
+                                                ...searchFilterOptions,
                                             });
                                         }
                                     }}
@@ -193,8 +243,8 @@ const PosTmsTransaction = () => {
                                 <SelectCommon
                                     options={{
                                         "": "Card Processor",
-                                        interswitch: "Interswitch",
-                                        unifiedpayment: "Unified Payment",
+                                        interswitch: "interswitch",
+                                        unifiedpayment: "unifiedpayment",
                                     }}
                                     value={posTransactionParams?.requestType}
                                     onChange={(e) => {
@@ -204,8 +254,20 @@ const PosTmsTransaction = () => {
                                         });
                                         triggerPosTransactions({
                                             ...posTransactionParams,
+                                            ...searchFilterOptions,
                                             processor: e.target.value,
                                         });
+
+                                        if (
+                                            posTransactionParams?.startDate &&
+                                            posTransactionParams?.endDate
+                                        ) {
+                                            triggerDownloadTransactions({
+                                                ...posTransactionParams,
+                                                ...searchFilterOptions,
+                                                processor: e.target.value,
+                                            });
+                                        }
                                     }}
                                 />
                                 <SelectCommon
@@ -223,14 +285,27 @@ const PosTmsTransaction = () => {
                                         });
                                         triggerPosTransactions({
                                             ...posTransactionParams,
+                                            ...searchFilterOptions,
                                             cardType: e.target.value,
                                         });
+
+                                        if (
+                                            posTransactionParams?.startDate &&
+                                            posTransactionParams?.endDate
+                                        ) {
+                                            triggerDownloadTransactions({
+                                                ...posTransactionParams,
+                                                ...searchFilterOptions,
+                                                cardType: e.target.value,
+                                            });
+                                        }
                                     }}
                                 />
                             </SearchFilters>
                         </SelectSearchFilter>
                     </Header>
                     <Table
+                        heightOfTable={"420px"}
                         columns={TableColumns}
                         rows={
                             lazyQueryPosTransactions?.data?.content
@@ -247,7 +322,16 @@ const PosTmsTransaction = () => {
                             triggerPosTransactions({
                                 ...posTransactionParams,
                                 page: posTransactionParams.page - 1,
+                                ...searchFilterOptions,
                             });
+
+                            if (posTransactionParams?.startDate && posTransactionParams?.endDate) {
+                                triggerDownloadTransactions({
+                                    ...posTransactionParams,
+                                    page: posTransactionParams.page - 1,
+                                    ...searchFilterOptions,
+                                });
+                            }
                         }}
                         onClickNextPage={() => {
                             const lastPageNumber = lazyQueryPosTransactions?.data?.totalPages
@@ -262,7 +346,16 @@ const PosTmsTransaction = () => {
                             triggerPosTransactions({
                                 ...posTransactionParams,
                                 page: posTransactionParams.page + 1,
+                                ...searchFilterOptions,
                             });
+
+                            if (posTransactionParams?.startDate && posTransactionParams?.endDate) {
+                                triggerDownloadTransactions({
+                                    ...posTransactionParams,
+                                    page: posTransactionParams.page + 1,
+                                    ...searchFilterOptions,
+                                });
+                            }
                         }}
                         firstPage={posTransactionParams.page === 1}
                         menuItems={tableMenuItems}
@@ -274,10 +367,11 @@ const PosTmsTransaction = () => {
                         }
                         loading={getQueryIsLoading || lazyQueryPosTransactionsIsLoading}
                         totalPages={
-                            lazyQueryPosTransactions?.data?.totalPages
+                            lazyQueryPosTransactions?.data?.totalPages !== undefined
                                 ? lazyQueryPosTransactions.data.totalPages
                                 : posTransactions?.data?.totalPages
                         }
+                        showEmptyBody={posTransactions?.data?.totalElements === 0}
                     />
                 </Container>
             </Main>
@@ -285,4 +379,4 @@ const PosTmsTransaction = () => {
     );
 };
 
-export default PosTmsTransaction;
+export default PosTransaction;

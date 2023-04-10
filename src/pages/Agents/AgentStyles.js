@@ -4,7 +4,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    // align-items: flex-start;
     width: 100%;
     padding: 0 2rem;
     margin: 0 auto;
@@ -20,17 +20,7 @@ const Header = styled.div`
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 2rem;
-`;
-
-const DownloadButtonContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 15%;
-    margin-left: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 43px;
 `;
 
 const HeaderTitle = styled.div`
@@ -42,13 +32,14 @@ const HeaderTitle = styled.div`
     margin-bottom: 1rem;
 
     h1 {
+        font-style: normal;
         font-weight: 700;
-        font-size: 24px;
-        line-height: 28px;
+        font-size: 18px;
+        line-height: 22px;
         letter-spacing: -0.01em;
         color: #292929;
         margin: 0;
-        margin-bottom: 12px;
+        margin-bottom: 0.8rem;
     }
 
     p {
@@ -59,6 +50,16 @@ const HeaderTitle = styled.div`
         margin: 0;
         color: #7a7a7a;
     }
+`;
+
+const DownloadButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    margin-left: auto;
+    margin-bottom: 1rem;
 `;
 
 const SelectSearchFilter = styled.div`
@@ -86,19 +87,45 @@ const SearchFilters = styled.div`
     width: auto;
 
     div:nth-child(2),
-    div:nth-child(3),
-    div:nth-child(4) {
-        width: 10vw;
+    div:nth-child(3) {
+        // width: 10vw;
         margin-left: 1rem;
+    }
+`;
+
+const AdminContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    h1 {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 27px;
+        color: #292929;
+    }
+    p {
+        width: 29.1px;
+        height: 29.1px;
+        color: #fff;
+        background: #00a89b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        margin-left: 31px;
     }
 `;
 
 export {
     Container,
     Header,
-    DownloadButtonContainer,
     HeaderTitle,
+    DownloadButtonContainer,
     SelectSearchFilter,
     SelectSearchBar,
     SearchFilters,
+    AdminContainer,
 };

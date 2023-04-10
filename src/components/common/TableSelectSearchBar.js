@@ -99,13 +99,13 @@ const SearchBar = styled.div`
     img {
         cursor: pointer;
         position: absolute;
-        right: 1rem;
+        right: 0.7rem;
     }
 
     input {
         width: 100%;
         height: 48px;
-        padding: 0px 1rem;
+        padding: 0px 1.9rem 0px 0.7rem;
         background: #ffffff;
         border: 1px solid #d3d3d3;
         border-radius: 0 4.5px 4.5px 0;

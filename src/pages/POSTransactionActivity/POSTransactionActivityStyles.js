@@ -23,16 +23,6 @@ const Header = styled.div`
     margin-bottom: 2rem;
 `;
 
-const DownloadButtonContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 15%;
-    margin-left: auto;
-    margin-bottom: 1rem;
-`;
-
 const HeaderTitle = styled.div`
     display: flex;
     flex-direction: column;
@@ -48,7 +38,7 @@ const HeaderTitle = styled.div`
         letter-spacing: -0.01em;
         color: #292929;
         margin: 0;
-        margin-bottom: 12px;
+        margin-bottom: 0.8rem;
     }
 
     p {
@@ -93,12 +83,4 @@ const SearchFilters = styled.div`
     }
 `;
 
-export {
-    Container,
-    Header,
-    DownloadButtonContainer,
-    HeaderTitle,
-    SelectSearchFilter,
-    SelectSearchBar,
-    SearchFilters,
-};
+export { Container, Header, HeaderTitle, SelectSearchFilter, SelectSearchBar, SearchFilters };

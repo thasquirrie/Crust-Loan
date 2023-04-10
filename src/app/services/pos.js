@@ -60,6 +60,12 @@ export const posApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
+        getAllPosActivity: builder.query({
+            query: (params) => ({
+                url: "/transaction/pos/transactions/activity",
+                params,
+            }),
+        }),
     }),
 });
 
@@ -75,4 +81,6 @@ export const {
     useDeclinePosRequestMutation,
     useMapPosToAggregatorsMutation,
     useAssignPosToAgentMutation,
+    useGetAllPosActivityQuery,
+    useLazyGetAllPosActivityQuery,
 } = posApi;

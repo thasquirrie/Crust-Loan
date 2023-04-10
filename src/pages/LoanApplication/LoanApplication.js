@@ -24,6 +24,7 @@ import ConfirmationModal from "../../components/common/ConfirmationModal";
 import ViewAgentProfile from "../../components/agents/ViewAgentProfileModal";
 import SnackBar from "../../components/common/SnackBar";
 import ConfirmationModalWithReason from "../../components/common/ConfirmationModalWithReason";
+import StatusTag from "../../components/common/StatusTag";
 const moment = require("moment");
 
 const TableColumns = [
@@ -40,7 +41,30 @@ const TableColumns = [
         },
     },
     // { id: "creditScore", label: "Credit Score" },
-    { id: "loanStatus", label: "Status" },
+    {
+        id: "loanStatus",
+        label: "Status",
+        format: (value) => {
+            switch (value) {
+                case "ACTIVE":
+                    return <StatusTag backgroundColor="#06C281" text={value} />;
+                case "DISAPPROVED":
+                    return <StatusTag backgroundColor="#FF4747" text={value} />;
+                case "APPROVED":
+                    return <StatusTag backgroundColor="#077E8C" text={value} />;
+                case "PENDING":
+                    return <StatusTag backgroundColor="#FE822B" text={value} />;
+                case "OFFER_ACCEPTED":
+                    return <StatusTag backgroundColor="#31405e" text={value} />;
+                case "OFFER_DECLINED":
+                    return <StatusTag backgroundColor="#31405e" text={value} />;
+                case "REPAID":
+                    return <StatusTag backgroundColor="#216a10" text={value} />;
+                default:
+                    return <StatusTag backgroundColor="#F9DEA9" text={value} />;
+            }
+        },
+    },
 ];
 
 function LoanApplication() {
@@ -185,7 +209,7 @@ function LoanApplication() {
                 severity: "error",
             });
         }
-    }, [lazyApproveLoanApplicationIsSuccess]);
+    }, [lazyApproveLoanApplicationIsSuccess, lazyApproveLoanApplicationIsError]);
 
     useMemo(() => {
         if (lazyDisapproveLoanApplicationIsSuccess) {
@@ -208,7 +232,13 @@ function LoanApplication() {
                 severity: "error",
             });
         }
-    }, [lazyDisapproveLoanApplicationIsSuccess]);
+    }, [
+        lazyDisapproveLoanApplicationIsSuccess,
+        lazyDisapproveLoanApplicationIsError,
+        lazyDisapproveLoanApplicationError,
+        triggerLoanApplications,
+        loanApplicationParams,
+    ]);
 
     return (
         <Main>
@@ -326,7 +356,7 @@ function LoanApplication() {
                                 readOnly={false}
                                 onClean={() => {
                                     delete loanApplicationParams.fromDate;
-                                    delete loanApplicationParams.fromDate;
+                                    delete loanApplicationParams.toDate;
                                     triggerLoanApplications(loanApplicationParams);
                                 }}
                                 onChange={(value) => {

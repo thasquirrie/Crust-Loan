@@ -7,6 +7,8 @@ import "./App.css";
 import LoanApplication from "./pages/LoanApplication/LoanApplication";
 import POSRequest from "./pages/POSRequest/POSRequest";
 import PosTransaction from "./pages/POSTMSTransaction/POSTMSTransaction";
+import POSTransactionActivity from "./pages/POSTransactionActivity/POSTransactionActivity";
+import Agents from "./pages/Agents/Agents";
 
 function App() {
     return (
@@ -14,6 +16,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="transaction" element={<Transactions />} />
+                <Route path="agent" element={<Agents />} />
                 <Route path="auth">
                     <Route path="login" element={<Login />} />
                 </Route>
@@ -23,6 +26,7 @@ function App() {
                 <Route path="pos">
                     <Route path="requests" element={<POSRequest />} />
                     <Route path="tms" element={<PosTransaction />} />
+                    <Route path="transaction_activity" element={<POSTransactionActivity />} />
                 </Route>
             </Routes>
         </BrowserRouter>

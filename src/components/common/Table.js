@@ -63,10 +63,12 @@ export default function StickyHeadTable({
                                     {column.label}
                                 </TableCell>
                             ))}
-                            <TableCell
-                                align={"center"}
-                                style={{ minWidth: 30, fontWeight: 700 }}
-                            ></TableCell>
+                            {menuItems && (
+                                <TableCell
+                                    align={"center"}
+                                    style={{ minWidth: 30, fontWeight: 700 }}
+                                ></TableCell>
+                            )}
                         </TableRow>
                     </StyledTableHead>
                     {!loading ? (
@@ -105,16 +107,16 @@ export default function StickyHeadTable({
                                                     </>
                                                 );
                                             })}
-                                            <TableCell
-                                                align={"left"}
-                                                sx={{
-                                                    minWidth: 90,
-                                                    "& .MuiButtonBase-root": {
-                                                        padding: 0,
-                                                    },
-                                                }}
-                                            >
-                                                {menuItems && (
+                                            {menuItems && (
+                                                <TableCell
+                                                    align={"left"}
+                                                    sx={{
+                                                        minWidth: 90,
+                                                        "& .MuiButtonBase-root": {
+                                                            padding: 0,
+                                                        },
+                                                    }}
+                                                >
                                                     <ActionMenu
                                                         menuItems={
                                                             typeof menuItems === "function"
@@ -123,8 +125,8 @@ export default function StickyHeadTable({
                                                         }
                                                         row={row}
                                                     />
-                                                )}
-                                            </TableCell>
+                                                </TableCell>
+                                            )}
                                         </StyledTableRow>
                                     );
                                 })}
