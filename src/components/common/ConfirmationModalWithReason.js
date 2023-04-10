@@ -76,7 +76,7 @@ const ModalHeader = styled.div`
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0.8rem;
+    padding: 1rem;
     box-sizing: border-box;
     position: sticky;
     top: 0;
@@ -84,9 +84,9 @@ const ModalHeader = styled.div`
 
     h4 {
         font-weight: 700;
-        font-size: 1.1rem;
-        line-height: 1.2rem;
-        color: black;
+        font-size: 1.4rem;
+        line-height: 1.6rem;
+        color: #933d0c;
         margin-right: 5rem;
     }
 
@@ -102,7 +102,7 @@ const ModalBody = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1rem 0.8rem;
+    padding: 1rem 1rem;
     box-sizing: border-box;
 
     .declinePosMessage {
@@ -121,7 +121,7 @@ const InputField = styled.textarea`
     height: 5rem;
     border: 1px solid #d3d3d3;
     border-radius: 4px;
-    padding: 0.8rem;
+    padding: 1rem;
     box-sizing: border-box;
     outline: none;
 `;
@@ -141,7 +141,7 @@ const PersonalInformation = styled.div`
         margin: 0;
         padding-bottom: 0.5rem;
         width: 100%;
-        padding-bottom: 0.8rem;
+        padding-bottom: 1rem;
     }
 `;
 
