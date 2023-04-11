@@ -98,7 +98,7 @@ export default function PosTmsTransactionDetailsModal({ open, handleClose, trans
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Transaction Amount</p>
-                                <p>{formattedAmount(transaction?.amount)}</p>
+                                <p>{formattedAmount(transaction?.amount / 100) }</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Reference Number</p>
