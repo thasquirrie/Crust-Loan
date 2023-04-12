@@ -1,67 +1,16 @@
-import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import styled from "styled-components";
-
-export const StyledTableHead = styled(TableHead)`
-    & .MuiTableCell-root {
-        background-color: #fffaf6;
-        border: none;
-    }
-`;
-
-export const StyledTableRow = styled(TableRow)`
-    background: rgba(224, 224, 224, 0.12);
-
-    & .MuiTableCell-root {
-        border: none;
-        margin: 1rem 0;
-    }
-`;
-
-const StyledTableContainer = styled(TableContainer)`
-max-height: calc(100vh -  360px);
-`;
-
-const headCells = [
-    {
-      id: 'name',
-      numeric: false,
-      disablePadding: true,
-      label: 'Dessert (100g serving)',
-    },
-    {
-      id: 'calories',
-      numeric: true,
-      disablePadding: false,
-      label: 'Calories',
-    },
-    {
-      id: 'fat',
-      numeric: true,
-      disablePadding: false,
-      label: 'Fat (g)',
-    },
-    {
-      id: 'carbs',
-      numeric: true,
-      disablePadding: false,
-      label: 'Carbs (g)',
-    },
-    {
-      id: 'protein',
-      numeric: true,
-      disablePadding: false,
-      label: 'Protein (g)',
-    },
-  ];
+import { TailSpin } from "react-loader-spinner";
+import ActionMenu from '../common/ActionMenu';
+import { useState } from 'react';
+import { StyledTableContainer, StyledTableHead, StyledTableRow } from '../../utils/sharedStyles';
 
 const PosDevicesTable = (
     { columns,
@@ -74,12 +23,45 @@ const PosDevicesTable = (
         totalPages,
         firstPage,
         lastPage,
-        heightOfTable,}
+        heightOfTable,
+        setSelected,
+        selected
+    }
 ) => {
-  return (
-    <Paper  sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
+    
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+            const newSelected = rows.map((n) => n);
+            setSelected(newSelected);
+            return;
+        }
+        setSelected([]);
+    }
 
-<StyledTableContainer>
+    const handleClick = (event, name) => {
+        const selectedIndex = selected.indexOf(name);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, name);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
+        }
+        setSelected(newSelected);
+    };
+
+    const isSelected = (name) => selected.indexOf(name) !== -1;
+    
+    return (
+        <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
+            <StyledTableContainer>
                 <Table
                     stickyHeader
                     aria-label="sticky table"
@@ -88,24 +70,29 @@ const PosDevicesTable = (
                     <StyledTableHead>
                         <TableRow>
                             <TableCell padding="checkbox">
-                             <Checkbox
-                                color="primary"
-                            
-                                inputProps={{
-                                'aria-label': 'select all desserts',
-                                }}
-                            />
-                          </TableCell>
-                          {columns.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-          >
-              {headCell.label}
-          </TableCell>
-        ))}
+                                <Checkbox
+                                    color="primary"
+                                    onChange={handleSelectAllClick}
+                                    checked={rows?.length > 0 && selected.length === rows?.length}
+                                  
+                                />
+                            </TableCell>
+                            {columns.map((headCell) => (
+                                <TableCell
+                                    key={headCell.id}
+                                >
+                                    {headCell.label}
+                                </TableCell>
+                            ))}
+                            {menuItems && (
+                                <TableCell
+                                    align={"center"}
+                                    style={{ minWidth: 30, fontWeight: 700 }}
+                                ></TableCell>
+                            )}
                         </TableRow>
                     </StyledTableHead>
-                    {/* {!loading ? (
+                    {!loading ? (
                         totalPages === 0 ? (
                             <NoRecordFound>
                                 <h4>NO RECORD FOUND 😢!</h4>
@@ -113,13 +100,24 @@ const PosDevicesTable = (
                         ) : (
                             <TableBody>
                                 {rows?.map((row) => {
+                                    const isItemSelected = isSelected(row);
                                     return (
                                         <StyledTableRow
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={row?.id}
+                                            aria-checked={isItemSelected}
+                                            sx={{ cursor: 'pointer' }}
                                         >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    onClick={(event) => handleClick(event, row)}
+                                                    key={row?.id}
+                                                    selected={isItemSelected}
+                                                    checked={isItemSelected}
+                                                />
+                                            </TableCell>
                                             {columns?.map((column) => {
                                                 const value = row[column?.id];
                                                 return (
@@ -135,13 +133,13 @@ const PosDevicesTable = (
                                                             {column?.format
                                                                 ? column?.format(value)
                                                                 : value === ""
-                                                                ? "NA"
-                                                                : value}
+                                                                    ? "NA"
+                                                                    : value}
                                                         </TableCell>
                                                     </>
                                                 );
-                                            })} */}
-                                            {/* {menuItems && (
+                                            })}
+                                            {menuItems && (
                                                 <TableCell
                                                     align={"left"}
                                                     sx={{
@@ -160,12 +158,12 @@ const PosDevicesTable = (
                                                         row={row}
                                                     />
                                                 </TableCell>
-                                            )} */}
-                                        {/* </StyledTableRow>
+                                            )}
+                                        </StyledTableRow>
                                     );
                                 })}
-                            </TableBody> */}
-                        {/* )
+                            </TableBody>
+                        )
                     ) : (
                         <div
                             style={{
@@ -187,11 +185,28 @@ const PosDevicesTable = (
                                 visible={true}
                             />
                         </div>
-                    )} */}
+                    )}
                 </Table>
             </StyledTableContainer>
         </Paper>
-  )
+    )
 }
 
 export default PosDevicesTable
+
+
+const NoRecordFound = styled.div`
+    position: absolute;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    margin-top: 10%;
+
+    h4 {
+        color: #933d0c;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.8rem;
+    }
+`;

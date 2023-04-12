@@ -60,6 +60,13 @@ export const posApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
+        assignPosDevicesToAggregator: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/aggregatort/assign",
+                method: "POST",
+                body,
+            }),
+        }),
         getAllPosActivity: builder.query({
             query: (params) => ({
                 url: "/transaction/pos/transactions/activity",
@@ -77,6 +84,8 @@ export const {
     useLazyGetAllPosRequestsQuery,
     useLazyGetAggregatorQuery,
     useLazyGetPosQuery,
+    useAssignPosDevicesToAggregatorMutation,
+    useGetPosQuery,
     useApprovePosRequestMutation,
     useDeclinePosRequestMutation,
     useMapPosToAggregatorsMutation,

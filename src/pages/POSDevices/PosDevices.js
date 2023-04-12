@@ -6,288 +6,289 @@ import {
     SearchFilters,
     SelectSearchBar,
     SelectSearchFilter,
-    DownloadButtonContainer,
-    
+    DownloadButtonContainer
+
 } from "./POSDevicesStyles.js";
 import { useState } from "react";
 import CreatePosButton from "../../components/posDevices/CreatePosButton.js";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar.js";
 import PosDevicesTable from "../../components/posDevices/PosDevicesTable.js";
-
+import { useGetPosQuery, useLazyGetPosQuery } from "../../app/services/pos.js";
+import { lazyQueryOptions } from "../../utils/queryOptions.js";
+import QueryButton from "../../components/posDevices/QueryButton.js";
+import AssignMultipleDevicesToAgg from "../../components/posDevices/AssignMultipleDevicesToAgg.js";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
     { id: "terminalId", label: "TERMINAL NO." },
-    { id: "merchantName", label: "Merchant Name" },
+    { id: "institution", label: "Merchant Name" },
     { id: "agentName", label: "Agent Name" },
     {
-        id: "agentAccount",
-        label: "Agent ACC. No.",
-    
+        id: "accountNumber",
+        label: "Agent Acc. No.",
+
     },
-    { id: "aggregatorname", label: "Aggregator Name" },
+    { id: "aggregatorName", label: "Aggregator Name" },
     { id: "state", label: "POS State" }
 ];
+
+
+
 
 const PosDevices = () => {
     const [searchFilters, setSearchFilters] = useState({
         searchFilterBy: "serialNumber",
         searchFilterValue: "",
     });
+    const [openModal, setOpenModal] = useState(false);
+    const [selected, setSelected] = useState([]);
+   const [uploadedSelectedDevice, setUploadedSelectedDevice] =  useState([])
 
-    const [posTransactionParams, setPosTransactionParams] = useState({
+    const [posDevicesParams, setPosDevicesParams] = useState({
         page: 1,
     });
+    const [activeBtn, setActiveBtn] = useState("")
 
-  return (
-   <Main>
-    <Container>
-        
-    <Header>
-                        <HeaderTitle>
-                            <div>
-                               <h1>POS </h1>
+
+
+
+    const tableMenuItems = [
+        {
+            name: "View more",
+            onClick: (id) => {
+                // setPosTransactionModalDetails(id);
+                // setOpenTransactionDetailsModal(true);
+            },
+        },
+        {
+            name: "Reassign POS",
+            onClick: (id) => {
+                // setPosTransactionModalDetails(id);
+                // setOpenTransactionDetailsModal(true);
+            },
+        },
+    ];
+
+    const [
+        triggerGetPos,
+        {
+            data: lazyQueryGetPosData,
+            isLoading: lazyQueryGetPosIsLoading,
+            // isSuccess: lazyQueryGetPosIsSuccess,
+            fulfilledTimeStamp: lazyQueryGetPosFulfilledTimeStamp,
+        },
+    ] = useLazyGetPosQuery(lazyQueryOptions);
+    const { data: posDevices, isLoading: posDevicesIsLoading } = useGetPosQuery()
+
+
+    const searchFilterOptions = {
+        ...(searchFilters?.searchFilterBy === "serialNumber" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+            serialNumber: searchFilters?.searchFilterValue,
+        }),
+        ...(searchFilters?.searchFilterBy === "terminalId" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+            terminalId: searchFilters?.searchFilterValue,
+        }),
+        ...(searchFilters?.searchFilterBy === "aggregatorName" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+            aggregatorName: searchFilters?.searchFilterValue,
+        }),
+        ...(searchFilters?.searchFilterBy === "agentAccountNumber" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+            agentAccountNumber: searchFilters?.searchFilterValue,
+        }),
+        ...(searchFilters?.searchFilterBy === "merchantName" &&
+            searchFilters?.searchFilterValue?.length > 0 && {
+            merchantName: searchFilters?.searchFilterValue,
+        }),
+    };
+
+    const openSelectedDevicesModal = () => {
+        setOpenModal(true)
+        setUploadedSelectedDevice(selected)
+        setTimeout(() => {
+          setSelected([])
+        },500)
+
+    }
+
+    return (
+        <Main>
+            <AssignMultipleDevicesToAgg
+                open={openModal}
+                handleClose={() => setOpenModal(false)}
+                setSelected={setUploadedSelectedDevice}
+                selected={uploadedSelectedDevice}
+            />
+            <Container>
+
+                <Header>
+                    <HeaderTitle>
+                        <div>
+                            <h1>POS </h1>
                             <p>
-                                1000 POS Devices
-                            </p>  
-                            </div>
-                            <DownloadButtonContainer>
-                            <CreatePosButton 
-                              text={"Create POS"}
-                              />
-                        </DownloadButtonContainer> 
-                        </HeaderTitle>
-                        
-                        <SelectSearchFilter>
-                            <SelectSearchBar>
-                                <TableSelectSearchBar
-                                    searchInputValue={searchFilters.searchFilterValue}
-                                    // placeholder={'Click "Search Icon" to search'}
-                                    options={{
-                                        "Serial Number": "serialNumber",
-                                        "Agent Acc. No.": "terminalId",
-                                        "Aggr. Acc. No..": "terminalId",
-                                        "Terminal ID.": "terminalId",
-                                        "Merchant Name.": "terminalId",
-                                        "POS State": "state",
-                                    }}
-                                    showClearSearch={
-                                        searchFilters.searchFilterValue.length > 0 ? true : false
-                                    }
-                                    selectOnChange={(e) => {
-                                        setSearchFilters({
-                                            ...searchFilters,
-                                            searchFilterBy: e.target.value,
-                                        });
-                                    }}
-                                    searchInputOnChange={(e) => {
-                                        setSearchFilters({
-                                            ...searchFilters,
-                                            searchFilterValue: e.target.value,
-                                        });
-                                    }}
-                                    onClickSearchIcon={() => {
-                                        // triggerPosTransactions({
-                                        //     ...posTransactionParams,
-                                        //     ...searchFilterOptions,
-                                        // });
-                                    }}
-                                    onClickClear={() => {
-                                        setSearchFilters({
-                                            ...searchFilters,
-                                            searchFilterValue: "",
-                                        });
-                                        // triggerPosTransactions({
-                                        //     ...posTransactionParams,
-                                        //     serialNumber: "",
-                                        //     terminalId: "",
-                                        //     transactionReference: "",
-                                        // });
-                                    }}
-                                />
-                            </SelectSearchBar>
-                            {/* <SearchFilters> */}
-                                {/* <DateRangePicker
-                                    appearance="default"
-                                    placeholder="Date Range"
-                                    style={{ width: 230 }}
-                                    readOnly={false}
-                                    onClean={() => {
-                                        const {
-                                            startDate,
-                                            endDate,
-                                            ...restOfPosTransactionParams
-                                        } = posTransactionParams;
-                                        setPosTransactionParams(restOfPosTransactionParams);
-                                        triggerPosTransactions({
-                                            ...restOfPosTransactionParams,
-                                            ...searchFilterOptions,
-                                        });
-                                    }}
-                                    onChange={(value) => {
-                                        const startDate =
-                                            value && value[0]?.toISOString()?.split("T")[0];
-                                        const endDate =
-                                            value && value[1]?.toISOString()?.split("T")[0];
+                                {lazyQueryGetPosData?.data?.totalElements
+                                    ? lazyQueryGetPosData?.data?.totalElements
+                                    : posDevices?.data?.totalElements}
+                                POS Devices
+                            </p>
+                        </div>
+                        <DownloadButtonContainer>
+                            <CreatePosButton
+                                text={"Create POS"}
+                               handleOpen={openSelectedDevicesModal}
+                            />
+                        </DownloadButtonContainer>
+                    </HeaderTitle>
 
-                                        if (startDate && endDate) {
-                                            setPosTransactionParams({
-                                                ...posTransactionParams,
-                                                startDate,
-                                                endDate,
-                                            });
-                                            triggerPosTransactions({
-                                                ...posTransactionParams,
-                                                startDate,
-                                                endDate,
-                                                ...searchFilterOptions,
-                                            });
-                                            triggerDownloadTransactions({
-                                                ...posTransactionParams,
-                                                startDate,
-                                                endDate,
-                                                ...searchFilterOptions,
-                                            });
-                                        }
-                                    }}
-                                /> */}
-                                {/* <SelectCommon
-                                    options={{
-                                        "": "Card Processor",
-                                        interswitch: "interswitch",
-                                        unifiedpayment: "unifiedpayment",
-                                    }}
-                                    value={posTransactionParams?.requestType}
-                                    onChange={(e) => {
-                                        setPosTransactionParams({
-                                            ...posTransactionParams,
-                                            processor: e.target.value,
-                                        });
-                                        triggerPosTransactions({
-                                            ...posTransactionParams,
-                                            ...searchFilterOptions,
-                                            processor: e.target.value,
-                                        });
+                    <SelectSearchFilter>
+                        <SelectSearchBar>
+                            <TableSelectSearchBar
+                                searchInputValue={searchFilters.searchFilterValue}
+                                options={{
+                                    "Serial Number": "serialNumber",
+                                    "TerminalId": "terminalId",
+                                    "Aggr. Name": "aggregatorName",
+                                    "Agent Acc. No.": "agentAccountNumber",
+                                    "Merchant Name": "merchantName"
+                                }}
+                                showClearSearch={
+                                    searchFilters.searchFilterValue.length > 0 ? true : false
+                                }
+                                selectOnChange={(e) => {
+                                    setSearchFilters({
+                                        ...searchFilters,
+                                        searchFilterBy: e.target.value,
+                                    });
+                                }}
+                                searchInputOnChange={(e) => {
+                                    setSearchFilters({
+                                        ...searchFilters,
+                                        searchFilterValue: e.target.value,
+                                    });
+                                }}
+                                onClickSearchIcon={() => {
+                                    triggerGetPos({
+                                        ...posDevicesParams,
+                                        ...searchFilterOptions,
+                                    });
+                                }}
+                                onClickClear={() => {
+                                    setSearchFilters({
+                                        ...searchFilters,
+                                        searchFilterValue: "",
+                                    });
+                                    triggerGetPos({
+                                        ...posDevicesParams,
+                                        serialNumber: "",
+                                        terminalId: "",
+                                        transactionReference: "",
+                                    });
+                                }}
+                            />
+                        </SelectSearchBar>
+                        <SearchFilters>
+                            <QueryButton text={"Assigned"} active={activeBtn === "assigned"} onChange={() => {
+                                setActiveBtn("assigned")
+                                triggerGetPos({
+                                    ...posDevicesParams,
+                                    status: "ASSIGNED"
+                                });
+                            }} />
+                            <QueryButton text={"Not assigned"} active={activeBtn === "unassigned"} onChange={() => {
+                                setActiveBtn("unassigned")
+                                triggerGetPos({
+                                    ...posDevicesParams,
+                                    status: "NOT_ASSIGNED"
+                                });
+                            }} />
+                            <QueryButton text={"All"} active={activeBtn === "all"} onChange={() => {
+                                setActiveBtn("all")
+                                triggerGetPos({
+                                    ...posDevicesParams,
+                                    status: ""
+                                });
+                            }} />
 
-                                        if (
-                                            posTransactionParams?.startDate &&
-                                            posTransactionParams?.endDate
-                                        ) {
-                                            triggerDownloadTransactions({
-                                                ...posTransactionParams,
-                                                ...searchFilterOptions,
-                                                processor: e.target.value,
-                                            });
-                                        }
-                                    }}
-                                /> */}
-                                {/* <SelectCommon
-                                    options={{
-                                        "": "CardType",
-                                        MasterCard: "MasterCard",
-                                        Visa: "Visa",
-                                        Verve: "Verve",
-                                    }}
-                                    value={posTransactionParams?.state}
-                                    onChange={(e) => {
-                                        setPosTransactionParams({
-                                            ...posTransactionParams,
-                                            cardType: e.target.value,
-                                        });
-                                        triggerPosTransactions({
-                                            ...posTransactionParams,
-                                            ...searchFilterOptions,
-                                            cardType: e.target.value,
-                                        });
+                        </SearchFilters>
+                    </SelectSearchFilter>
+                </Header>
 
-                                        if (
-                                            posTransactionParams?.startDate &&
-                                            posTransactionParams?.endDate
-                                        ) {
-                                            triggerDownloadTransactions({
-                                                ...posTransactionParams,
-                                                ...searchFilterOptions,
-                                                cardType: e.target.value,
-                                            });
-                                        }
-                                    }}
-                                /> */}
-                            {/* </SearchFilters> */}
-                        </SelectSearchFilter>
-                    </Header>
-
-                    < PosDevicesTable  
-                     heightOfTable={"420px"}
-                     columns={TableColumns}
-                    //  rows={
-                    //      lazyQueryPosTransactions?.data?.content
-                    //          ? lazyQueryPosTransactions.data.content
-                    //          : posTransactions?.data?.content
-                    //  }
-                    //  currentPageNumber={posTransactionParams.page}
+                < PosDevicesTable
+                    heightOfTable={"420px"}
+                    columns={TableColumns}
+                    rows={
+                        lazyQueryGetPosData?.data?.content
+                            ? lazyQueryGetPosData.data.content
+                            : posDevices?.data?.content
+                    }
+                    currentPageNumber={posDevicesParams.page}
                     //  onClickPrevPage={() => {
-                    //      if (posTransactionParams.page === 1) return;
-                    //      setPosTransactionParams({
-                    //          ...posTransactionParams,
-                    //          page: posTransactionParams.page - 1,
+                    //      if (posDevicesParams.page === 1) return;
+                    //      setPosDevicesParams({
+                    //          ...posDevicesParams,
+                    //          page: posDevicesParams.page - 1,
                     //      });
-                    //      triggerPosTransactions({
-                    //          ...posTransactionParams,
-                    //          page: posTransactionParams.page - 1,
+                    //      triggerposDevices({
+                    //          ...posDevicesParams,
+                    //          page: posDevicesParams.page - 1,
                     //          ...searchFilterOptions,
                     //      });
 
-                    //      if (posTransactionParams?.startDate && posTransactionParams?.endDate) {
+                    //      if (posDevicesParams?.startDate && posDevicesParams?.endDate) {
                     //          triggerDownloadTransactions({
-                    //              ...posTransactionParams,
-                    //              page: posTransactionParams.page - 1,
+                    //              ...posDevicesParams,
+                    //              page: posDevicesParams.page - 1,
                     //              ...searchFilterOptions,
                     //          });
                     //      }
                     //  }}
                     //  onClickNextPage={() => {
-                    //      const lastPageNumber = lazyQueryPosTransactions?.data?.totalPages
-                    //          ? lazyQueryPosTransactions.data.totalPages
-                    //          : posTransactions?.data?.totalPages;
+                    //      const lastPageNumber = lazyQueryGetPosData?.data?.totalPages
+                    //          ? lazyQueryGetPosData.data.totalPages
+                    //          : posDevices?.data?.totalPages;
 
-                    //      if (posTransactionParams.page === lastPageNumber) return;
-                    //      setPosTransactionParams({
-                    //          ...posTransactionParams,
-                    //          page: posTransactionParams.page + 1,
+                    //      if (posDevicesParams.page === lastPageNumber) return;
+                    //      setPosDevicesParams({
+                    //          ...posDevicesParams,
+                    //          page: posDevicesParams.page + 1,
                     //      });
-                    //      triggerPosTransactions({
-                    //          ...posTransactionParams,
-                    //          page: posTransactionParams.page + 1,
+                    //      triggerposDevices({
+                    //          ...posDevicesParams,
+                    //          page: posDevicesParams.page + 1,
                     //          ...searchFilterOptions,
                     //      });
 
-                    //      if (posTransactionParams?.startDate && posTransactionParams?.endDate) {
+                    //      if (posDevicesParams?.startDate && posDevicesParams?.endDate) {
                     //          triggerDownloadTransactions({
-                    //              ...posTransactionParams,
-                    //              page: posTransactionParams.page + 1,
+                    //              ...posDevicesParams,
+                    //              page: posDevicesParams.page + 1,
                     //              ...searchFilterOptions,
                     //          });
                     //      }
                     //  }}
-                    //  firstPage={posTransactionParams.page === 1}
-                    //  menuItems={tableMenuItems}
-                    //  lastPage={
-                    //      lazyQueryPosTransactions?.data?.totalPages
-                    //          ? lazyQueryPosTransactions.data.totalPages ===
-                    //            posTransactionParams.page
-                    //          : posTransactions?.data?.totalPages === posTransactionParams.page
-                    //  }
-                    //  loading={getQueryIsLoading || lazyQueryPosTransactionsIsLoading}
-                    //  totalPages={
-                    //      lazyQueryPosTransactions?.data?.totalPages !== undefined
-                    //          ? lazyQueryPosTransactions.data.totalPages
-                    //          : posTransactions?.data?.totalPages
-                    //  }
-                    //  showEmptyBody={posTransactions?.data?.totalElements === 0}
-                    />
-    </Container>
-   </Main>
-  )
+                    firstPage={posDevicesParams.page === 1}
+                    menuItems={tableMenuItems}
+                    lastPage={
+                        lazyQueryGetPosData?.data?.totalPages
+                            ? lazyQueryGetPosData.data.totalPages ===
+                            posDevicesParams.page
+                            : posDevices?.data?.totalPages === posDevicesParams.page
+                    }
+                    loading={posDevicesIsLoading || lazyQueryGetPosIsLoading}
+                    totalPages={
+                        lazyQueryGetPosData?.data?.totalPages !== undefined
+                            ? lazyQueryGetPosData.data.totalPages
+                            : posDevices?.data?.totalPages
+                    }
+                    setSelected={setSelected}
+                    selected={selected}
+
+                />
+            </Container>
+        </Main>
+    )
 }
 
 export default PosDevices

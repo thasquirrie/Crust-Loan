@@ -31,6 +31,7 @@ const DownloadButtonContainer = styled.div`
     width: 15%;
     margin-left: auto;
     margin-bottom: 1rem;
+    cursor: pointer
 `;
 
 const HeaderTitle = styled.div`
@@ -57,6 +58,7 @@ const HeaderTitle = styled.div`
         line-height: 16px;
         letter-spacing: -0.01em;
         margin: 0;
+        padding:0px 5px;
         color: #7a7a7a;
     }
 `;
@@ -85,15 +87,12 @@ const SearchFilters = styled.div`
     align-items: center;
     width: auto;
 
-    div:nth-child(2),
-    div:nth-child(3),
-    div:nth-child(4) {
+    button:nth-child(2),
+    button:nth-child(3){
         width: 10vw;
         margin-left: 1rem;
     }
 `;
-
-
 
 export {
     Container,
@@ -101,6 +100,7 @@ export {
     DownloadButtonContainer,
     HeaderTitle,
     SelectSearchFilter,
+   
     SelectSearchBar,
     SearchFilters,
     

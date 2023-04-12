@@ -15,6 +15,7 @@ function CreatePosButton({
     disabled,
     isLoading,
     href,
+    handleOpen,
     download,
 }) {
 
@@ -80,10 +81,10 @@ function CreatePosButton({
             
                     <MenuItem
                         // key={item.name}
-                        // onClick={(e) => {
-                        //     item.onClick(row);
-                        //     setAnchorEl(null);
-                        // }}
+                        onClick={(e) => {
+                            handleOpen()
+                            setAnchorEl(null);
+                        }}
                         sx={{
                             fontWeight: 400,
                             fontSize: "14px",
@@ -96,7 +97,7 @@ function CreatePosButton({
                             },
                         }}
                     >
-                        Create
+                        Assign Multiple Devices
                     </MenuItem>
                 
             </Menu>
