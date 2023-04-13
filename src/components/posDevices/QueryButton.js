@@ -1,16 +1,14 @@
-import styled from "styled-components"
-
+import styled from "styled-components";
 
 const QueryButton = ({ text, onChange, active }) => {
-  return (
-    <SeacrhBtn active onClick={onChange}>
-      {text}
-    </SeacrhBtn>
-  )
-}
+    return (
+        <SeacrhBtn active={active} onClick={onChange}>
+            <p>{text}</p>
+        </SeacrhBtn>
+    );
+};
 
-export default QueryButton
-
+export default QueryButton;
 
 const SeacrhBtn = styled.button`
     display: flex;
@@ -18,13 +16,21 @@ const SeacrhBtn = styled.button`
     justify-content: center;
     align-items: center;
     padding: 16px 14px;
-    width: 141px;
+    width: 8rem;
     height: 48px;
-    // background: rgba(224, 224, 224, 0.12);
-    // background-color: ${props => (props.active ? 'red' : 'green')};
- 
-    border: 0.5px solid #D3D3D3;
-`
+    border-radius: 4px;
+    background: rgba(224, 224, 224, 0.12);
+    border: 0.5px solid ${({ active }) => (active ? "#933D0C" : "#d3d3d3;")};
+    box-sizing: border-box;
+
+    p {
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.1rem;
+        color: #474747;
+        margin: 0;
+    }
+`;
 
 // import styled from 'styled-components';
 

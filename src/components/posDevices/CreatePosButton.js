@@ -18,7 +18,6 @@ function CreatePosButton({
     handleOpen,
     download,
 }) {
-
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -28,8 +27,6 @@ function CreatePosButton({
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-
 
     return (
         <ButtonContainer
@@ -43,18 +40,18 @@ function CreatePosButton({
             </Link>
 
             <IconButton
-        aria-label="more"
-        id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-        sx={{
-            color:'#fff'
-        }}
-      >
-        <MoreVertIcon />
-      </IconButton>
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+                sx={{
+                    color: "#fff",
+                }}
+            >
+                <MoreVertIcon />
+            </IconButton>
             <Menu
                 id="long-menu"
                 MenuListProps={{
@@ -78,28 +75,25 @@ function CreatePosButton({
                     },
                 }}
             >
-            
-                    <MenuItem
-                        // key={item.name}
-                        onClick={(e) => {
-                            handleOpen()
-                            setAnchorEl(null);
-                        }}
-                        sx={{
-                            fontWeight: 400,
-                            fontSize: "14px",
-                            lineHeight: "20px",
-                            color: "#474747",
+                <MenuItem
+                    onClick={(e) => {
+                        handleOpen();
+                        setAnchorEl(null);
+                    }}
+                    sx={{
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        lineHeight: "20px",
+                        color: "#474747",
 
-                            "&:hover": {
-                                backgroundColor: "#FFFAF6",
-                                color: "#933D0C",
-                            },
-                        }}
-                    >
-                        Assign Multiple Devices
-                    </MenuItem>
-                
+                        "&:hover": {
+                            backgroundColor: "#FFFAF6",
+                            color: "#933D0C",
+                        },
+                    }}
+                >
+                    Assign Multiple Devices
+                </MenuItem>
             </Menu>
         </ButtonContainer>
     );
@@ -112,8 +106,8 @@ const ButtonContainer = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    // height: 52px;
-    height: 60.74px;
+    padding: 0.7rem 1.7rem;
+    padding-left: 2.3rem;
     border-radius: 9px;
     border: none;
     font-weight: 400;

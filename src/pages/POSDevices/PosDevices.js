@@ -6,8 +6,7 @@ import {
     SearchFilters,
     SelectSearchBar,
     SelectSearchFilter,
-    DownloadButtonContainer
-
+    DownloadButtonContainer,
 } from "./POSDevicesStyles.js";
 import { useState } from "react";
 import CreatePosButton from "../../components/posDevices/CreatePosButton.js";
@@ -26,14 +25,10 @@ const TableColumns = [
     {
         id: "accountNumber",
         label: "Agent Acc. No.",
-
     },
     { id: "aggregatorName", label: "Aggregator Name" },
-    { id: "state", label: "POS State" }
+    { id: "state", label: "POS State" },
 ];
-
-
-
 
 const PosDevices = () => {
     const [searchFilters, setSearchFilters] = useState({
@@ -42,15 +37,12 @@ const PosDevices = () => {
     });
     const [openModal, setOpenModal] = useState(false);
     const [selected, setSelected] = useState([]);
-   const [uploadedSelectedDevice, setUploadedSelectedDevice] =  useState([])
+    const [uploadedSelectedDevice, setUploadedSelectedDevice] = useState([]);
 
     const [posDevicesParams, setPosDevicesParams] = useState({
         page: 1,
     });
-    const [activeBtn, setActiveBtn] = useState("")
-
-
-
+    const [activeBtn, setActiveBtn] = useState("");
 
     const tableMenuItems = [
         {
@@ -78,40 +70,38 @@ const PosDevices = () => {
             fulfilledTimeStamp: lazyQueryGetPosFulfilledTimeStamp,
         },
     ] = useLazyGetPosQuery(lazyQueryOptions);
-    const { data: posDevices, isLoading: posDevicesIsLoading } = useGetPosQuery()
-
+    const { data: posDevices, isLoading: posDevicesIsLoading } = useGetPosQuery();
 
     const searchFilterOptions = {
         ...(searchFilters?.searchFilterBy === "serialNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            serialNumber: searchFilters?.searchFilterValue,
-        }),
+                serialNumber: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "terminalId" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            terminalId: searchFilters?.searchFilterValue,
-        }),
+                terminalId: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "aggregatorName" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            aggregatorName: searchFilters?.searchFilterValue,
-        }),
+                aggregatorName: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "agentAccountNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            agentAccountNumber: searchFilters?.searchFilterValue,
-        }),
+                agentAccountNumber: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "merchantName" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            merchantName: searchFilters?.searchFilterValue,
-        }),
+                merchantName: searchFilters?.searchFilterValue,
+            }),
     };
 
     const openSelectedDevicesModal = () => {
-        setOpenModal(true)
-        setUploadedSelectedDevice(selected)
+        setOpenModal(true);
+        setUploadedSelectedDevice(selected);
         setTimeout(() => {
-          setSelected([])
-        },500)
-
-    }
+            setSelected([]);
+        }, 500);
+    };
 
     return (
         <Main>
@@ -122,7 +112,6 @@ const PosDevices = () => {
                 selected={uploadedSelectedDevice}
             />
             <Container>
-
                 <Header>
                     <HeaderTitle>
                         <div>
@@ -130,14 +119,14 @@ const PosDevices = () => {
                             <p>
                                 {lazyQueryGetPosData?.data?.totalElements
                                     ? lazyQueryGetPosData?.data?.totalElements
-                                    : posDevices?.data?.totalElements}
+                                    : posDevices?.data?.totalElements}{" "}
                                 POS Devices
                             </p>
                         </div>
                         <DownloadButtonContainer>
                             <CreatePosButton
                                 text={"Create POS"}
-                               handleOpen={openSelectedDevicesModal}
+                                handleOpen={openSelectedDevicesModal}
                             />
                         </DownloadButtonContainer>
                     </HeaderTitle>
@@ -148,10 +137,10 @@ const PosDevices = () => {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Serial Number": "serialNumber",
-                                    "TerminalId": "terminalId",
+                                    TerminalId: "terminalId",
                                     "Aggr. Name": "aggregatorName",
                                     "Agent Acc. No.": "agentAccountNumber",
-                                    "Merchant Name": "merchantName"
+                                    "Merchant Name": "merchantName",
                                 }}
                                 showClearSearch={
                                     searchFilters.searchFilterValue.length > 0 ? true : false
@@ -189,33 +178,44 @@ const PosDevices = () => {
                             />
                         </SelectSearchBar>
                         <SearchFilters>
-                            <QueryButton text={"Assigned"} active={activeBtn === "assigned"} onChange={() => {
-                                setActiveBtn("assigned")
-                                triggerGetPos({
-                                    ...posDevicesParams,
-                                    status: "ASSIGNED"
-                                });
-                            }} />
-                            <QueryButton text={"Not assigned"} active={activeBtn === "unassigned"} onChange={() => {
-                                setActiveBtn("unassigned")
-                                triggerGetPos({
-                                    ...posDevicesParams,
-                                    status: "NOT_ASSIGNED"
-                                });
-                            }} />
-                            <QueryButton text={"All"} active={activeBtn === "all"} onChange={() => {
-                                setActiveBtn("all")
-                                triggerGetPos({
-                                    ...posDevicesParams,
-                                    status: ""
-                                });
-                            }} />
-
+                            <QueryButton
+                                text={"Assigned"}
+                                active={activeBtn === "assigned"}
+                                onChange={() => {
+                                    setActiveBtn("assigned");
+                                    triggerGetPos({
+                                        ...posDevicesParams,
+                                        status: "ASSIGNED",
+                                    });
+                                }}
+                            />
+                            <QueryButton
+                                text={"Not assigned"}
+                                active={activeBtn === "unassigned"}
+                                onChange={() => {
+                                    setActiveBtn("unassigned");
+                                    triggerGetPos({
+                                        ...posDevicesParams,
+                                        status: "NOT_ASSIGNED",
+                                    });
+                                }}
+                            />
+                            <QueryButton
+                                text={"All"}
+                                active={activeBtn === "all"}
+                                onChange={() => {
+                                    setActiveBtn("all");
+                                    triggerGetPos({
+                                        ...posDevicesParams,
+                                        status: "",
+                                    });
+                                }}
+                            />
                         </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
 
-                < PosDevicesTable
+                <PosDevicesTable
                     heightOfTable={"420px"}
                     columns={TableColumns}
                     rows={
@@ -272,8 +272,7 @@ const PosDevices = () => {
                     menuItems={tableMenuItems}
                     lastPage={
                         lazyQueryGetPosData?.data?.totalPages
-                            ? lazyQueryGetPosData.data.totalPages ===
-                            posDevicesParams.page
+                            ? lazyQueryGetPosData.data.totalPages === posDevicesParams.page
                             : posDevices?.data?.totalPages === posDevicesParams.page
                     }
                     loading={posDevicesIsLoading || lazyQueryGetPosIsLoading}
@@ -284,11 +283,10 @@ const PosDevices = () => {
                     }
                     setSelected={setSelected}
                     selected={selected}
-
                 />
             </Container>
         </Main>
-    )
-}
+    );
+};
 
-export default PosDevices
+export default PosDevices;

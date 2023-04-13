@@ -1,34 +1,32 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
 import styled from "styled-components";
 import { TailSpin } from "react-loader-spinner";
-import ActionMenu from '../common/ActionMenu';
-import { useState } from 'react';
-import { StyledTableContainer, StyledTableHead, StyledTableRow } from '../../utils/sharedStyles';
+import ActionMenu from "../common/ActionMenu";
+import { useState } from "react";
+import { StyledTableContainer, StyledTableHead, StyledTableRow } from "../../utils/sharedStyles";
 
-const PosDevicesTable = (
-    { columns,
-        rows,
-        loading,
-        currentPageNumber,
-        onClickPrevPage,
-        onClickNextPage,
-        menuItems,
-        totalPages,
-        firstPage,
-        lastPage,
-        heightOfTable,
-        setSelected,
-        selected
-    }
-) => {
-    
+const PosDevicesTable = ({
+    columns,
+    rows,
+    loading,
+    currentPageNumber,
+    onClickPrevPage,
+    onClickNextPage,
+    menuItems,
+    totalPages,
+    firstPage,
+    lastPage,
+    heightOfTable,
+    setSelected,
+    selected,
+}) => {
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelected = rows.map((n) => n);
@@ -36,7 +34,7 @@ const PosDevicesTable = (
             return;
         }
         setSelected([]);
-    }
+    };
 
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
@@ -51,14 +49,14 @@ const PosDevicesTable = (
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
                 selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
+                selected.slice(selectedIndex + 1)
             );
         }
         setSelected(newSelected);
     };
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
-    
+
     return (
         <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none" }}>
             <StyledTableContainer>
@@ -74,15 +72,10 @@ const PosDevicesTable = (
                                     color="primary"
                                     onChange={handleSelectAllClick}
                                     checked={rows?.length > 0 && selected.length === rows?.length}
-                                  
                                 />
                             </TableCell>
                             {columns.map((headCell) => (
-                                <TableCell
-                                    key={headCell.id}
-                                >
-                                    {headCell.label}
-                                </TableCell>
+                                <TableCell key={headCell.id}>{headCell.label}</TableCell>
                             ))}
                             {menuItems && (
                                 <TableCell
@@ -107,7 +100,7 @@ const PosDevicesTable = (
                                             role="checkbox"
                                             tabIndex={-1}
                                             aria-checked={isItemSelected}
-                                            sx={{ cursor: 'pointer' }}
+                                            // sx={{ cursor: 'pointer' }}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
@@ -133,8 +126,8 @@ const PosDevicesTable = (
                                                             {column?.format
                                                                 ? column?.format(value)
                                                                 : value === ""
-                                                                    ? "NA"
-                                                                    : value}
+                                                                ? "NA"
+                                                                : value}
                                                         </TableCell>
                                                     </>
                                                 );
@@ -189,11 +182,10 @@ const PosDevicesTable = (
                 </Table>
             </StyledTableContainer>
         </Paper>
-    )
-}
+    );
+};
 
-export default PosDevicesTable
-
+export default PosDevicesTable;
 
 const NoRecordFound = styled.div`
     position: absolute;
