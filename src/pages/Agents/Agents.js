@@ -37,9 +37,9 @@ const TableColumns = [
                 case true:
                     return <StatusTag backgroundColor="#06C281" text="VERIFIED" />;
                 case false:
-                    return <StatusTag backgroundColor="#FF4747" text="NOT VERIFIED" />;
+                    return <StatusTag backgroundColor="#FF0000" text="NOT VERIFIED" />;
                 default:
-                    return <StatusTag backgroundColor="#FF4747" text={value} />;
+                    return <StatusTag backgroundColor="#FF0000" text={value} />;
             }
         },
     },
@@ -240,6 +240,7 @@ const Agents = () => {
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
+                                selectValue={searchFilters.searchFilterBy}
                                 searchInputValue={agentsParams.phoneOrEmailOrAccountNumber}
                                 options={{
                                     "Account Number": "phoneOrEmailOrAccountNumber",

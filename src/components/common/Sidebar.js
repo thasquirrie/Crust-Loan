@@ -22,6 +22,7 @@ function Sidebar({
     handleOpenLoansDropdown,
     openPOSManagementDropdown,
     handleOpenPOSManagementDropdown,
+    setOpenSignOutModal,
 }) {
     const location = useLocation();
 
@@ -128,12 +129,12 @@ function Sidebar({
                                 POS TMS
                             </Link>
                         </div>
-                        {/* <div className="SubMenuItem">
+                        <div className="SubMenuItem">
                             <Link to="/pos/transaction_activity">
                                 <img src={posActivity} alt="" />
                                 POS Activity
                             </Link>
-                        </div> */}
+                        </div>
                         {/* <div className="SubMenuItem">
                             <Link to="/">
                                 <img src={posManagement} alt="" />
@@ -156,7 +157,12 @@ function Sidebar({
                     </POSManagementSubMenu>
                 </POSManagement>
             </SidebarLinksContainer>
-            <SignOut openSidebar={openSidebar}>
+            <SignOut
+                openSidebar={openSidebar}
+                onClick={() => {
+                    setOpenSignOutModal(true);
+                }}
+            >
                 <img src={signOut} alt="" />
                 <p>Sign Out</p>
             </SignOut>
@@ -596,7 +602,7 @@ const SignOut = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    width: 100%;
+    width: auto;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -605,6 +611,7 @@ const SignOut = styled.div`
     z-index: ${(props) => (props.openSidebar ? "-1" : "1")};
     transition: all 0.2s ease-in-out;
     box-sizing: border-box;
+    cursor: pointer;
 
     img {
         margin-right: 1rem;

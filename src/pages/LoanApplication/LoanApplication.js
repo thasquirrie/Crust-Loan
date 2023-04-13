@@ -49,19 +49,19 @@ const TableColumns = [
                 case "ACTIVE":
                     return <StatusTag backgroundColor="#06C281" text={value} />;
                 case "DISAPPROVED":
-                    return <StatusTag backgroundColor="#FF4747" text={value} />;
+                    return <StatusTag backgroundColor="#292929" text={value} />;
                 case "APPROVED":
-                    return <StatusTag backgroundColor="#077E8C" text={value} />;
+                    return <StatusTag backgroundColor="#06C281" text={value} />;
                 case "PENDING":
-                    return <StatusTag backgroundColor="#FE822B" text={value} />;
+                    return <StatusTag backgroundColor="#FE6901" text={value} />;
                 case "OFFER_ACCEPTED":
-                    return <StatusTag backgroundColor="#31405e" text={value} />;
+                    return <StatusTag backgroundColor="#FE6901" text={value} />;
                 case "OFFER_DECLINED":
-                    return <StatusTag backgroundColor="#31405e" text={value} />;
+                    return <StatusTag backgroundColor="#292929" text={value} />;
                 case "REPAID":
-                    return <StatusTag backgroundColor="#216a10" text={value} />;
+                    return <StatusTag backgroundColor="#06C281" text={value} />;
                 default:
-                    return <StatusTag backgroundColor="#F9DEA9" text={value} />;
+                    return <StatusTag backgroundColor="#292929" text={value} />;
             }
         },
     },
