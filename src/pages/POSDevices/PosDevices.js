@@ -5,17 +5,22 @@ import {
     HeaderTitle,
     SearchFilters,
     SelectSearchBar,
+    CreatePosBtn,
     SelectSearchFilter,
-    DownloadButtonContainer,
+    CreateAssignPOSContainer,
+    AssignMultipleDeviceBtn
 } from "./POSDevicesStyles.js";
 import { useState } from "react";
-import CreatePosButton from "../../components/posDevices/CreatePosButton.js";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar.js";
-import PosDevicesTable from "../../components/posDevices/PosDevicesTable.js";
 import { useGetPosQuery, useLazyGetPosQuery } from "../../app/services/pos.js";
 import { lazyQueryOptions } from "../../utils/queryOptions.js";
 import QueryButton from "../../components/posDevices/QueryButton.js";
-import AssignMultipleDevicesToAgg from "../../components/posDevices/AssignMultipleDevicesToAgg.js";
+import AssignMultipleDevicesToAgg from "../../components/posDevices/AssignMultipleDevicesToAggModal.js";
+import CheckboxTable from "../../components/common/CheckboxTableCommon.js";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import mennIcon from "../../assets/common/Kebab.svg"
+
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -43,6 +48,16 @@ const PosDevices = () => {
         page: 1,
     });
     const [activeBtn, setActiveBtn] = useState("all");
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const tableMenuItems = [
         {
@@ -75,32 +90,29 @@ const PosDevices = () => {
     const searchFilterOptions = {
         ...(searchFilters?.searchFilterBy === "serialNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-                serialNumber: searchFilters?.searchFilterValue,
-            }),
+            serialNumber: searchFilters?.searchFilterValue,
+        }),
         ...(searchFilters?.searchFilterBy === "terminalId" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-                terminalId: searchFilters?.searchFilterValue,
-            }),
+            terminalId: searchFilters?.searchFilterValue,
+        }),
         ...(searchFilters?.searchFilterBy === "aggregatorName" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-                aggregatorName: searchFilters?.searchFilterValue,
-            }),
+            aggregatorName: searchFilters?.searchFilterValue,
+        }),
         ...(searchFilters?.searchFilterBy === "agentAccountNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-                agentAccountNumber: searchFilters?.searchFilterValue,
-            }),
+            agentAccountNumber: searchFilters?.searchFilterValue,
+        }),
         ...(searchFilters?.searchFilterBy === "merchantName" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-                merchantName: searchFilters?.searchFilterValue,
-            }),
+            merchantName: searchFilters?.searchFilterValue,
+        }),
     };
 
     const openSelectedDevicesModal = () => {
         setOpenModal(true);
-        setUploadedSelectedDevice(selected);
-        setTimeout(() => {
-            setSelected([]);
-        }, 500);
+        setUploadedSelectedDevice(selected)
     };
 
     return (
@@ -123,14 +135,60 @@ const PosDevices = () => {
                                 POS Devices
                             </p>
                         </div>
-                        <DownloadButtonContainer>
-                            <CreatePosButton
-                                text={"Create POS"}
-                                handleOpen={openSelectedDevicesModal}
-                            />
-                        </DownloadButtonContainer>
-                    </HeaderTitle>
+                        <CreateAssignPOSContainer>
+                            < CreatePosBtn>
+                                Create POS
+                            </ CreatePosBtn>
+                            <AssignMultipleDeviceBtn
+                                onClick={handleClick}
+                            >
+                                <img src={mennIcon} />
+                            </AssignMultipleDeviceBtn>
+                        </CreateAssignPOSContainer>
+                        <Menu
+                            id="long-menu"
+                            MenuListProps={{
+                                "aria-labelledby": "long-button",
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                            sx={{
+                                "& ul": {
+                                    margin: "0px",
+                                    padding: "0px",
+                                },
+                            }}
+                        >
+                            <MenuItem
+                                onClick={(e) => {
+                                    openSelectedDevicesModal()
+                                    setAnchorEl(null);
+                                }}
+                                sx={{
+                                    fontWeight: 400,
+                                    fontSize: "14px",
+                                    lineHeight: "20px",
+                                    color: "#474747",
 
+                                    "&:hover": {
+                                        backgroundColor: "#FFFAF6",
+                                        color: "#933D0C",
+                                    },
+                                }}
+                            >
+                                Assign Multiple Devices
+                            </MenuItem>
+                        </Menu>
+                    </HeaderTitle>
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
@@ -172,7 +230,10 @@ const PosDevices = () => {
                                         ...posDevicesParams,
                                         serialNumber: "",
                                         terminalId: "",
-                                        transactionReference: "",
+                                        merchantName: "",
+                                        agentAccountNumber: "",
+                                        aggregatorName: ""
+
                                     });
                                 }}
                             />
@@ -215,7 +276,7 @@ const PosDevices = () => {
                     </SelectSearchFilter>
                 </Header>
 
-                <PosDevicesTable
+                <CheckboxTable
                     heightOfTable={"420px"}
                     columns={TableColumns}
                     rows={
@@ -224,50 +285,38 @@ const PosDevices = () => {
                             : posDevices?.data?.content
                     }
                     currentPageNumber={posDevicesParams.page}
-                    //  onClickPrevPage={() => {
-                    //      if (posDevicesParams.page === 1) return;
-                    //      setPosDevicesParams({
-                    //          ...posDevicesParams,
-                    //          page: posDevicesParams.page - 1,
-                    //      });
-                    //      triggerposDevices({
-                    //          ...posDevicesParams,
-                    //          page: posDevicesParams.page - 1,
-                    //          ...searchFilterOptions,
-                    //      });
+                    onClickPrevPage={() => {
+                        if (posDevicesParams.page === 1) return;
+                        setPosDevicesParams({
+                            ...posDevicesParams,
+                            page: posDevicesParams.page - 1,
+                        });
+                        triggerGetPos({
+                            ...posDevicesParams,
+                            page: posDevicesParams.page - 1,
+                            ...searchFilterOptions,
+                        });
 
-                    //      if (posDevicesParams?.startDate && posDevicesParams?.endDate) {
-                    //          triggerDownloadTransactions({
-                    //              ...posDevicesParams,
-                    //              page: posDevicesParams.page - 1,
-                    //              ...searchFilterOptions,
-                    //          });
-                    //      }
-                    //  }}
-                    //  onClickNextPage={() => {
-                    //      const lastPageNumber = lazyQueryGetPosData?.data?.totalPages
-                    //          ? lazyQueryGetPosData.data.totalPages
-                    //          : posDevices?.data?.totalPages;
 
-                    //      if (posDevicesParams.page === lastPageNumber) return;
-                    //      setPosDevicesParams({
-                    //          ...posDevicesParams,
-                    //          page: posDevicesParams.page + 1,
-                    //      });
-                    //      triggerposDevices({
-                    //          ...posDevicesParams,
-                    //          page: posDevicesParams.page + 1,
-                    //          ...searchFilterOptions,
-                    //      });
+                    }}
+                    onClickNextPage={() => {
+                        const lastPageNumber = lazyQueryGetPosData?.data?.totalPages
+                            ? lazyQueryGetPosData.data.totalPages
+                            : posDevices?.data?.totalPages;
 
-                    //      if (posDevicesParams?.startDate && posDevicesParams?.endDate) {
-                    //          triggerDownloadTransactions({
-                    //              ...posDevicesParams,
-                    //              page: posDevicesParams.page + 1,
-                    //              ...searchFilterOptions,
-                    //          });
-                    //      }
-                    //  }}
+                        if (posDevicesParams.page === lastPageNumber) return;
+                        setPosDevicesParams({
+                            ...posDevicesParams,
+                            page: posDevicesParams.page + 1,
+                        });
+                        triggerGetPos({
+                            ...posDevicesParams,
+                            page: posDevicesParams.page + 1,
+                            ...searchFilterOptions,
+                        });
+
+
+                    }}
                     firstPage={posDevicesParams.page === 1}
                     menuItems={tableMenuItems}
                     lastPage={

@@ -9,7 +9,7 @@ import POSRequest from "./pages/POSRequest/POSRequest";
 import PosTransaction from "./pages/POSTMSTransaction/POSTMSTransaction";
 import POSTransactionActivity from "./pages/POSTransactionActivity/POSTransactionActivity";
 import Agents from "./pages/Agents/Agents";
-import PosDevices from "./pages/POSDevices/PosDevices";
+import PosDevices from "./pages/POSDevices/POSDevices";
 
 function App() {
     return (

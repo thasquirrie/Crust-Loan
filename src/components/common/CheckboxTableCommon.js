@@ -12,7 +12,7 @@ import ActionMenu from "../common/ActionMenu";
 import { useState } from "react";
 import { StyledTableContainer, StyledTableHead, StyledTableRow } from "../../utils/sharedStyles";
 
-const PosDevicesTable = ({
+const CheckboxTable = ({
     columns,
     rows,
     loading,
@@ -194,7 +194,7 @@ const PosDevicesTable = ({
     );
 };
 
-export default PosDevicesTable;
+export default CheckboxTable;
 
 const NoRecordFound = styled.div`
     position: absolute;

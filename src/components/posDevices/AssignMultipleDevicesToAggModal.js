@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import { StyledTableContainer, StyledTableHead, StyledTableRow } from "../../utils/sharedStyles";
 import { lazyQueryOptions } from "../../utils/queryOptions";
-import { useLazyGetAggregatorQuery,   useAssignPosDevicesToAggregatorMutation } from "../../app/services/pos";
+import { useLazyGetAggregatorQuery, useAssignPosDevicesToAggregatorMutation } from "../../app/services/pos";
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import GetAggregatorDetails from "../posRequests/GetAggregatorsDetails"
@@ -62,17 +62,17 @@ export default function AssignMultipleDevicesToAgg({
         {
             data: lazyQueryGetAggregatorData,
             isLoading: lazyQueryGetAggregatorIsLoading,
-            // isSuccess: lazyQueryGetAggregatorIsSuccess,
+            isSuccess: lazyQueryGetAggregatorIsSuccess,
             fulfilledTimeStamp: lazyQueryGetAggregatorFulfilledTimeStamp,
         },
     ] = useLazyGetAggregatorQuery(lazyQueryOptions);
 
-    const [triggerAssignPosDevicesToAggregator , {
+    const [triggerAssignPosDevicesToAggregator, {
         isLoading: assignPosDevicesToAggregatorIsLoading,
         isError: assignPosDevicesToAggregatorIsError,
         isSuccess: assignPosDevicesToAggregatorIsSuccess,
         error: assignPosDevicesToAggregatorError,
-    }] =   useAssignPosDevicesToAggregatorMutation()
+    }] = useAssignPosDevicesToAggregatorMutation()
 
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
@@ -94,7 +94,7 @@ export default function AssignMultipleDevicesToAgg({
     };
 
     useMemo(() => {
-        if ( assignPosDevicesToAggregatorIsSuccess) {
+        if (assignPosDevicesToAggregatorIsSuccess) {
             setSnackbarInfo({
                 open: true,
                 message: "Successfully Assigned POS to Aggregator!",
@@ -102,11 +102,9 @@ export default function AssignMultipleDevicesToAgg({
             });
             setAggregatorAccountNumber("");
         } else if (assignPosDevicesToAggregatorIsError) {
-            
-          const errorKey = Object.keys(assignPosDevicesToAggregatorError?.data?.error);
-          const errorMessage = assignPosDevicesToAggregatorError?.data?.error;
-        
-            console.log("selectedDevices", errorMessage)
+
+            const errorKey = Object.keys(assignPosDevicesToAggregatorError?.data?.error);
+            const errorMessage = assignPosDevicesToAggregatorError?.data?.error;
 
             setSnackbarInfo({
                 open: true,
@@ -140,11 +138,9 @@ export default function AssignMultipleDevicesToAgg({
         if (lazyQueryGetAggregatorFulfilledTimeStamp) {
             dispatch(setGetAggregator(lazyQueryGetAggregatorData));
         }
-    }, [lazyQueryGetAggregatorData, dispatch, lazyQueryGetAggregatorFulfilledTimeStamp, selected]);
+    }, [lazyQueryGetAggregatorData, dispatch, lazyQueryGetAggregatorFulfilledTimeStamp,  selected]);
 
-    const selectedDevices =  selected.map(device => device.id)
-
-   
+    const selectedDevices = selected.map(device => device.id)
 
     const handleSnackbarClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -160,6 +156,11 @@ export default function AssignMultipleDevicesToAgg({
         handleClose()
     };
 
+    const handleCloseModal = () => {
+        handleClose();
+        setAggregatorAccountNumber("");
+    }
+
     return (
         <div>
             <Dialog
@@ -172,18 +173,18 @@ export default function AssignMultipleDevicesToAgg({
                 aria-describedby="alert-dialog-slide-description"
             >
 
-<SnackBar
-                SnackbarMessage={snackbarInfo.message}
-                openSnackbar={snackbarInfo.open}
-                handleClose={handleSnackbarClose}
-                snackbarSeverity={snackbarInfo.severity}
-            />
+                <SnackBar
+                    SnackbarMessage={snackbarInfo.message}
+                    openSnackbar={snackbarInfo.open}
+                    handleClose={handleSnackbarClose}
+                    snackbarSeverity={snackbarInfo.severity}
+                />
                 <ModalContainer>
                     <TransactionDetailsModalHeader>
                         <h4>
                             Assign POS Devices To Aggregator
                         </h4>
-                        <img src={cancel} alt="cancel" onClick={handleClose} />
+                        <img src={cancel} alt="cancel" onClick={ handleCloseModal } />
                     </TransactionDetailsModalHeader>
 
                     <SearchFilters>
@@ -193,7 +194,7 @@ export default function AssignMultipleDevicesToAgg({
                                 loading={lazyQueryGetAggregatorIsLoading}
                                 placeHolder="Search for Aggregator by Account Number"
                                 onChange={handleAggregatorAccountNumberChange}
-                                noDataFound={getAggregatorData?.content?.length === 0}
+                                noDataFound={aggregatorAccountNumber.length >= 10 && getAggregatorData?.content?.length === 0}
                             />
                             {getAggregatorData?.content[0] && (
                                 <>
@@ -209,19 +210,19 @@ export default function AssignMultipleDevicesToAgg({
                             )}
                         </div>
                         <AssignDevicesBtn
-                        onClick={() => {
-                            triggerAssignPosDevicesToAggregator({
-                                ids:selectedDevices,
-                                accountNumber:aggregatorAccountNumber
-                            })
-                        }}
-                           disabled={!getAggregatorData?.content[0]}
+                            onClick={() => {
+                                triggerAssignPosDevicesToAggregator({
+                                    ids: selectedDevices,
+                                    accountNumber: aggregatorAccountNumber
+                                })
+                            }}
+                            disabled={!getAggregatorData?.content[0]}
                         >
                             Assign POS Devices
                         </AssignDevicesBtn>
                     </SearchFilters>
 
-                    <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none", marginTop: '55px' }}>
+                    <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none", marginTop: '20px' }}>
                         <StyledTableContainer>
                             <Table
                                 stickyHeader
@@ -263,6 +264,11 @@ export default function AssignMultipleDevicesToAgg({
                                                         key={row?.id}
                                                         selected={isItemSelected}
                                                         checked={isItemSelected}
+                                                        sx={{
+                                                            "&.Mui-checked": {
+                                                                color: "#933D0C",
+                                                            },
+                                                        }}
                                                     />
                                                 </TableCell>
                                                 {TableColumns?.map((column) => {
@@ -339,7 +345,7 @@ const SearchFilters = styled.div`
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-top:68px;
+  margin-top:2rem;
   width:100%;
 
   .aggregator-details {
@@ -377,25 +383,15 @@ const AssignDevicesBtn = styled.button`
     width: 206px;
     height: 55.74px;
     color:#fff;
+    border-radius: 4px;
     background: #933D0C;
     box-shadow: 0px 1.81212px 3.62425px 1.35909px rgba(0, 0, 0, 0.15), 0px 0.453031px 1.35909px rgba(0, 0, 0, 0.3);
+    ${(props) =>
+        props.disabled
+            ? `background-color: #D0DCE4; cursor: not-allowed;`
+            : `background-color: #933d0c; cursor: pointer;`}
 `
 
-const NoRecordFound = styled.div`
-    position: absolute;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    width: 100vw;
-    margin-top: 10%;
-
-    h4 {
-        color: #933d0c;
-        text-align: center;
-        font-weight: 700;
-        font-size: 1.8rem;
-    }
-`;
 
 
 

@@ -23,15 +23,20 @@ const Header = styled.div`
     margin-bottom: 2rem;
 `;
 
-const DownloadButtonContainer = styled.div`
+const CreateAssignPOSContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     width: auto;
+    padding:20px 0px;
     margin-left: auto;
+    height: 60.74px;
     margin-bottom: 1rem;
     cursor: pointer;
+    background: #933D0C;
+   box-shadow: 0px 1.81212px 3.62425px 1.35909px rgba(0, 0, 0, 0.15), 0px 0.453031px 1.35909px rgba(0, 0, 0, 0.3);
+   border-radius: 6px;
 `;
 
 const HeaderTitle = styled.div`
@@ -94,12 +99,27 @@ const SearchFilters = styled.div`
     }
 `;
 
+const CreatePosBtn = styled.div`
+    font-style: normal;
+    font-weight: 400;
+    padding-left:45px;
+    font-size: 16.0746px;
+    line-height: 18px;
+    color: #FFFFFF;
+`
+const AssignMultipleDeviceBtn = styled.div`
+  padding-left: 25px;
+  padding-right:25px;
+`
+
 export {
     Container,
     Header,
-    DownloadButtonContainer,
+    CreateAssignPOSContainer,
     HeaderTitle,
     SelectSearchFilter,
+    AssignMultipleDeviceBtn,
     SelectSearchBar,
     SearchFilters,
+    CreatePosBtn
 };

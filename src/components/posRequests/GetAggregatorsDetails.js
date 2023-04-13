@@ -2,6 +2,8 @@ import { CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
 const GetAggregatorDetails = ({ placeHolder, loading, onChange, value, noDataFound }) => {
+
+
     return (
         <FormContainer>
             <h3>{placeHolder}</h3>
