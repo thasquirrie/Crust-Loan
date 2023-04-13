@@ -42,7 +42,7 @@ const PosDevices = () => {
     const [posDevicesParams, setPosDevicesParams] = useState({
         page: 1,
     });
-    const [activeBtn, setActiveBtn] = useState("");
+    const [activeBtn, setActiveBtn] = useState("all");
 
     const tableMenuItems = [
         {
