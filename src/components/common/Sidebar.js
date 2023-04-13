@@ -129,12 +129,12 @@ function Sidebar({
                                 POS TMS
                             </Link>
                         </div>
-                        <div className="SubMenuItem">
+                        {/* <div className="SubMenuItem">
                             <Link to="/pos/transaction_activity">
                                 <img src={posActivity} alt="" />
                                 POS Activity
                             </Link>
-                        </div>
+                        </div> */}
                         {/* <div className="SubMenuItem">
                             <Link to="/">
                                 <img src={posManagement} alt="" />

@@ -57,9 +57,9 @@ const TableColumns = [
                 case "OFFER_ACCEPTED":
                     return <StatusTag backgroundColor="#FE6901" text={value} />;
                 case "OFFER_DECLINED":
-                    return <StatusTag backgroundColor="#292929" text={value} />;
+                    return <StatusTag backgroundColor="#FFBF00" text={value} />;
                 case "REPAID":
-                    return <StatusTag backgroundColor="#06C281" text={value} />;
+                    return <StatusTag backgroundColor="green" text={value} />;
                 default:
                     return <StatusTag backgroundColor="#292929" text={value} />;
             }
