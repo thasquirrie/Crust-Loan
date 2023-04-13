@@ -72,6 +72,11 @@ const PosDevicesTable = ({
                                     color="primary"
                                     onChange={handleSelectAllClick}
                                     checked={rows?.length > 0 && selected.length === rows?.length}
+                                    sx={{
+                                        "&.Mui-checked": {
+                                            color: "#933D0C",
+                                        },
+                                    }}
                                 />
                             </TableCell>
                             {columns.map((headCell) => (
@@ -100,7 +105,6 @@ const PosDevicesTable = ({
                                             role="checkbox"
                                             tabIndex={-1}
                                             aria-checked={isItemSelected}
-                                            // sx={{ cursor: 'pointer' }}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
@@ -109,6 +113,11 @@ const PosDevicesTable = ({
                                                     key={row?.id}
                                                     selected={isItemSelected}
                                                     checked={isItemSelected}
+                                                    sx={{
+                                                        "&.Mui-checked": {
+                                                            color: "#933D0C",
+                                                        },
+                                                    }}
                                                 />
                                             </TableCell>
                                             {columns?.map((column) => {
