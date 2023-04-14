@@ -17,7 +17,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const formattedTime = (time) => {
     const formatString = "ddd Do MMM, YYYY | hh:mm a";
-    const convertedTime = moment(time).subtract(5, "months").format(formatString);
+    const convertedTime = moment(time).format(formatString);
     return convertedTime;
 };
 

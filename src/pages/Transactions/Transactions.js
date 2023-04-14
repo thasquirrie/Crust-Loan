@@ -26,11 +26,12 @@ import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import StatusTag from "../../components/common/StatusTag";
+import formattedAmount from "../../utils/formatCurrency";
 
 const TableColumns = [
     { id: "accountName", label: "Agent Name" },
     { id: "accountNumber", label: "Account Number" },
-    { id: "amount", label: "Amount" },
+    { id: "amount", label: "Amount", format: (value) => formattedAmount(value) },
     { id: "platformTransactionRef", label: "Platform Ref." },
     { id: "crustTransactionRef", label: "TransactionRef" },
     { id: "createdAt", label: "Date and Time" },

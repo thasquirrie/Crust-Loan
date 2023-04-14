@@ -5,8 +5,6 @@ import { useSelector } from "react-redux";
 function Navbar() {
     const user = useSelector((state) => state.auth.user);
 
-    console.log("yser", user);
-
     return (
         <Container>
             <h4>Crust Infrastructure</h4>

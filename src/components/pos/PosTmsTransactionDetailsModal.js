@@ -28,7 +28,7 @@ const formattedAmount = (amount) => {
 
 const formattedTime = (time) => {
     const formatString = "ddd Do MMM, YYYY | hh:mm a";
-    const convertedTime = moment(time).subtract(5, "months").format(formatString);
+    const convertedTime = moment(time).format(formatString);
     return convertedTime;
 };
 
@@ -98,7 +98,7 @@ export default function PosTmsTransactionDetailsModal({ open, handleClose, trans
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Transaction Amount</p>
-                                <p>{formattedAmount(transaction?.amount / 100) }</p>
+                                <p>{formattedAmount(transaction?.amount / 100)}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Reference Number</p>

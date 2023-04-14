@@ -32,12 +32,12 @@ function Sidebar({
                 <img src={sideBarArrow} alt="" />
             </SidebarButton>
             <SidebarLinksContainer>
-                <AdminManagement openSidebar={openSidebar}>
+                {/* <AdminManagement openSidebar={openSidebar}>
                     <Link to="/">
                         <img src={monitor} alt="" />
                         Admin Management
                     </Link>
-                </AdminManagement>
+                </AdminManagement> */}
                 <CoreHome openSidebar={openSidebar}>
                     <Link to="/">
                         <img src={home} alt="" />
@@ -126,7 +126,7 @@ function Sidebar({
                         <div className="SubMenuItem">
                             <Link to="/pos/tms">
                                 <img src={posTMS} alt="" />
-                                POS TMS
+                                TMS Transactions
                             </Link>
                         </div>
                         {/* <div className="SubMenuItem">
