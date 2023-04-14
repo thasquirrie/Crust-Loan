@@ -99,10 +99,13 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                     </span>{" "}
                                                 </p>
                                                 <img src={Ellipse} alt={"ellips"} />
-                                                <span>{userDetails?.data?.personal.gender}</span>
+                                                <span>
+                                                    {userDetails?.data?.personal.gender ?? "NA"}
+                                                </span>
                                                 <img src={Ellipse} alt={"ellips"} />
                                                 <span>
-                                                    {userDetails?.data?.personal.maritalStatus}
+                                                    {userDetails?.data?.personal.maritalStatus ??
+                                                        "NA"}
                                                 </span>
                                                 <img src={Ellipse} alt={"ellips"} />
                                                 <span>
@@ -172,7 +175,10 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Account Number
                                                     </p>
                                                     <p>
-                                                        {userDetails?.data?.account.accountNumber}
+                                                        {userDetails?.data?.account?.accountNumber
+                                                            ? userDetails?.data?.account
+                                                                  ?.accountNumber
+                                                            : "NA"}
                                                     </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
@@ -183,7 +189,9 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Account Balance
                                                     </p>
                                                     <p>
-                                                        N{userDetails?.data?.account.accountBalance}
+                                                        {userDetails?.data?.account?.accountBalance
+                                                            ? `N${userDetails?.data?.account?.accountBalance}`
+                                                            : "NA"}
                                                     </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
@@ -193,7 +201,11 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         <img src={Cards} alt={"bank"} />
                                                         BVN
                                                     </p>
-                                                    <p>{userDetails?.data?.personal.bvn}</p>
+                                                    <p>
+                                                        {userDetails?.data?.personal.bvn
+                                                            ? userDetails?.data?.personal.bvn
+                                                            : "NA"}
+                                                    </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
                                             <TitleHeadItem>
@@ -203,10 +215,13 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Transaction Limit
                                                     </p>
                                                     <p>
-                                                        {formattedAmount(
-                                                            userDetails?.data?.account
-                                                                .dailyTransactionLimit
-                                                        )}
+                                                        {userDetails?.data?.account
+                                                            ?.transactionLimit
+                                                            ? formattedAmount(
+                                                                  userDetails?.data?.account
+                                                                      ?.dailyTransactionLimit
+                                                              )
+                                                            : "NA"}
                                                     </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
@@ -242,7 +257,12 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Identification Type
                                                     </p>
                                                     <p>
-                                                        <p>{userDetails?.data?.personal.idType}</p>
+                                                        <p>
+                                                            {userDetails?.data?.personal?.idType
+                                                                ? userDetails?.data?.personal
+                                                                      ?.idType
+                                                                : "NA"}
+                                                        </p>
                                                     </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
@@ -252,7 +272,11 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         <img src={Code} alt={"bank"} />
                                                         ID Type No.
                                                     </p>
-                                                    <p>{userDetails?.data?.personal.idNumber}</p>
+                                                    <p>
+                                                        {userDetails?.data?.personal?.idNumber
+                                                            ? userDetails?.data?.personal?.idNumber
+                                                            : "NA"}
+                                                    </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
                                         </TitleHeadItemContainer>
@@ -268,7 +292,7 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         <img src={Phone} alt={"bank"} />
                                                         Phone Number
                                                     </p>
-                                                    <p>{userDetails?.data?.personal.phone}</p>
+                                                    <p>{userDetails?.data?.personal?.phone}</p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
                                             <TitleHeadItem>
@@ -277,7 +301,11 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         <img src={Mail} alt={"bank"} />
                                                         Email Address
                                                     </p>
-                                                    <p>{userDetails?.data?.personal.email}</p>
+                                                    <p>
+                                                        {userDetails?.data?.personal?.email
+                                                            ? userDetails?.data?.personal?.email
+                                                            : "NA"}
+                                                    </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
                                             <TitleHeadItem>
@@ -290,7 +318,7 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         {userDetails?.data?.personal
                                                             .businessAddress ? (
                                                             userDetails?.data?.personal
-                                                                .businessAddress
+                                                                ?.businessAddress
                                                         ) : (
                                                             <span>NA</span>
                                                         )}
@@ -310,7 +338,11 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         <img src={Cluster} alt={"bank"} />
                                                         Cluster Name
                                                     </p>
-                                                    <p>{userDetails?.data?.personal.cluster}</p>
+                                                    <p>
+                                                        {userDetails?.data?.personal?.cluster
+                                                            ? userDetails?.data?.personal?.cluster
+                                                            : "NA"}
+                                                    </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
                                             <TitleHeadItem>
@@ -319,7 +351,12 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         <img src={Icon} alt={"bank"} />
                                                         Cluster Head
                                                     </p>
-                                                    <p>{userDetails?.data?.personal.clusterHead}</p>
+                                                    <p>
+                                                        {userDetails?.data?.personal?.clusterHead
+                                                            ? userDetails?.data?.personal
+                                                                  ?.clusterHead
+                                                            : "NA"}
+                                                    </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
                                             <TitleHeadItem>
@@ -329,10 +366,13 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Phone Number
                                                     </p>
                                                     <p>
-                                                        {
+                                                        {userDetails?.data?.personal
+                                                            .clsuterHeadPhoneNumber ? (
                                                             userDetails?.data?.personal
-                                                                .clsuterHeadPhoneNumber
-                                                        }
+                                                                ?.clsuterHeadPhoneNumber
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
                                                     </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
@@ -354,7 +394,13 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Business Name
                                                     </p>
                                                     <p>
-                                                        {userDetails?.data?.business.businessName}
+                                                        {userDetails?.data?.business
+                                                            ?.businessName ? (
+                                                            userDetails?.data?.business
+                                                                ?.businessName
+                                                        ) : (
+                                                            <span>NA</span>
+                                                        )}
                                                     </p>
                                                 </InfoContainer>
                                             </TitleHeadItem>
@@ -368,7 +414,7 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         {userDetails?.data?.business
                                                             .businessLocation ? (
                                                             userDetails?.data?.business
-                                                                .businessLocation
+                                                                ?.businessLocation
                                                         ) : (
                                                             <span>NA</span>
                                                         )}
@@ -382,7 +428,7 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Registration Status
                                                     </p>
                                                     <p>
-                                                        {userDetails?.data?.business.registered
+                                                        {userDetails?.data?.business?.registered
                                                             ? "Registered"
                                                             : "Not Registered"}
                                                     </p>
@@ -396,7 +442,7 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                     </p>
                                                     <p>
                                                         {userDetails?.data?.business.rcNumber ? (
-                                                            userDetails?.data?.business.rcNumber
+                                                            userDetails?.data?.business?.rcNumber
                                                         ) : (
                                                             <span>NA</span>
                                                         )}
