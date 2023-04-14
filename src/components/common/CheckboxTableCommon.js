@@ -190,6 +190,19 @@ const CheckboxTable = ({
                     )}
                 </Table>
             </StyledTableContainer>
+            {!loading && totalPages > 1 ? (
+                <PageCount>
+                    <Prev onClick={onClickPrevPage} firstPage={firstPage}>
+                        <img src={arrow} alt="arrow" />
+                        <span>Prev</span>
+                    </Prev>
+                    <PageNumber>{currentPageNumber}</PageNumber>
+                    <Next onClick={onClickNextPage} lastPage={lastPage}>
+                        <span>Next</span>
+                        <img src={arrow} alt="arrow" />
+                    </Next>
+                </PageCount>
+            ) : null}
         </Paper>
     );
 };
