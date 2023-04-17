@@ -25,6 +25,7 @@ import ViewAgentProfile from "../../components/agents/ViewAgentProfileModal";
 import SnackBar from "../../components/common/SnackBar";
 import ConfirmationModalWithReason from "../../components/common/ConfirmationModalWithReason";
 import StatusTag from "../../components/common/StatusTag";
+import LoanHistoryModal from "../../components/loan/LoanHistoryModal";
 const moment = require("moment");
 
 const TableColumns = [
@@ -69,8 +70,7 @@ const TableColumns = [
 
 function LoanApplication() {
     const APPROVED_LOAN = "APPROVED";
-    // const PENDING_LOAN = "PENDING";
-    // const LOAN_HISTORY = "LOAN_HISTORY";
+    const LOAN_HISTORY = "LOAN_HISTORY";
     const DISAPPROVED_LOAN = "DISAPPROVED";
     const VIEW_AGENT_DETAILS = "VIEW_AGENT_DETAILS";
 
@@ -137,12 +137,13 @@ function LoanApplication() {
 
     function generateTableMenuItems(row) {
         let tableMenuItems = [
-            // {
-            //     name: "Loan History",
-            //     onClick: () => {
-            //         setLoanModalType(LOAN_HISTORY);
-            //     },
-            // },
+            {
+                name: "Loan History",
+                onClick: () => {
+                    setLoanModalType(LOAN_HISTORY);
+                    setAgentDetails(row);
+                },
+            },
             {
                 name: "View Agent Details",
                 onClick: () => {
@@ -257,6 +258,17 @@ function LoanApplication() {
                 <ViewAgentProfile
                     open={loanModalType === VIEW_AGENT_DETAILS}
                     userId={loanModalType === VIEW_AGENT_DETAILS ? agentDetails?.userId : null}
+                    handleClose={() => {
+                        setLoanModalType("");
+                        setAgentDetails(null);
+                    }}
+                />
+            )}
+
+            {agentDetails && (
+                <LoanHistoryModal
+                    open={loanModalType === LOAN_HISTORY}
+                    agentDetails={loanModalType === LOAN_HISTORY ? agentDetails : null}
                     handleClose={() => {
                         setLoanModalType("");
                         setAgentDetails(null);
