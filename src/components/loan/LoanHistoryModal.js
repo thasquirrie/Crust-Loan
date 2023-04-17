@@ -7,7 +7,6 @@ import Ellipse from "../../assets/agents/Ellipse 207.svg";
 import { useViewLoanHistoryQuery } from "../../app/services/loan";
 import formattedAmount from "../../utils/formatCurrency";
 import moment from "moment";
-// import { TailSpin } from "react-loader-spinner";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -113,7 +112,11 @@ export default function LoanHistoryModal({ open, agentDetails, handleClose }) {
                                             </p>
                                         </CardDetails>
                                         <CardDetails>
-                                            <p>Approved</p>
+                                            <p>
+                                                {loanHistory?.data[0]?.status === "APPROVED"
+                                                    ? "Approved"
+                                                    : "Pending Loan Approval"}
+                                            </p>
                                             {loanHistory?.data[0]?.status === "APPROVED" && (
                                                 <>
                                                     <p>
