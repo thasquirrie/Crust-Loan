@@ -32,6 +32,11 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getAgent: builder.query({
+            query: (accountNumber) => ({
+                url: `/transaction/pos/agent/${accountNumber}`
+            }),
+        }),
         approvePosRequest: builder.mutation({
             query: (body) => ({
                 url: "transaction/pos/requests/approve",
@@ -66,6 +71,12 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        createAggregator:builder.mutation({
+            query:(agentId) => ({
+                url:`/user/admin/agent/upgrade/${agentId}`,
+                method:'POST'
+            })
+        })
     }),
 });
 
@@ -77,10 +88,13 @@ export const {
     useLazyGetAllPosRequestsQuery,
     useLazyGetAggregatorQuery,
     useLazyGetPosQuery,
+    useGetAggregatorQuery,
     useApprovePosRequestMutation,
     useDeclinePosRequestMutation,
     useMapPosToAggregatorsMutation,
     useAssignPosToAgentMutation,
     useGetAllPosActivityQuery,
     useLazyGetAllPosActivityQuery,
+    useLazyGetAgentQuery,
+    useCreateAggregatorMutation,
 } = posApi;

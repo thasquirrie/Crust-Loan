@@ -14,6 +14,7 @@ import posTMS from "../../assets/sidebar/posTMS.svg";
 import posActivity from "../../assets/sidebar/posActivity.svg";
 import clusterManagement from "../../assets/sidebar/clusterManagement.svg";
 import signOut from "../../assets/sidebar/signOut.svg";
+import AggregatorIcon from "../../assets/aggregatorMang/aggregatorIcon.svg";
 
 function Sidebar({
     openSidebar,
@@ -146,14 +147,13 @@ function Sidebar({
                                 <img src={posManagement} alt="" />
                                 POS Requests
                             </Link>
-                        </div>
+                        </div> */}
                         <div className="SubMenuItem">
-                            <Link to="/">
-                                <img src={posManagement} alt="" />
+                            <Link to="/pos/aggregator">
+                                <img src={AggregatorIcon} alt="" />
                                 Aggregator Management
                             </Link>
                         </div>
-                       */}
                     </POSManagementSubMenu>
                 </POSManagement>
             </SidebarLinksContainer>
