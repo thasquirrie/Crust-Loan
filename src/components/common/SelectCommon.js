@@ -35,7 +35,7 @@ const SelectContainer = styled.div`
         -moz-appearance: none;
         background-image: url(${arrowDown});
         background-repeat: no-repeat;
-        background-position-x: 91%;
+        background-position-x: 95%;
         background-position-y: 12px;
         border: 1px solid #dfdfdf;
         border-radius: 2px;

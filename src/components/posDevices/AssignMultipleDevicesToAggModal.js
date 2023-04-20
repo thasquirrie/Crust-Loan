@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useMemo, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import cancel from "../../assets/posRequests/close.svg";
+import cancel from "../../assets/pos/close.svg";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";

@@ -9,7 +9,6 @@ import Checkbox from "@mui/material/Checkbox";
 import styled from "styled-components";
 import { TailSpin } from "react-loader-spinner";
 import ActionMenu from "./ActionMenu";
-import { useState } from "react";
 import arrow from "../../assets/common/arrow-pagination.svg";
 import { StyledTableContainer, StyledTableHead, StyledTableRow } from "./tableStyles/sharedStyles";
 
@@ -106,12 +105,12 @@ const CheckboxTable = ({
                                             role="checkbox"
                                             tabIndex={-1}
                                             aria-checked={isItemSelected}
+                                            key={row?.id}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
                                                     color="primary"
                                                     onClick={(event) => handleClick(event, row)}
-                                                    key={row?.id}
                                                     selected={isItemSelected}
                                                     checked={isItemSelected}
                                                     sx={{
@@ -126,7 +125,7 @@ const CheckboxTable = ({
                                                 return (
                                                     <>
                                                         <TableCell
-                                                            key={value?.id}
+                                                            key={value}
                                                             align={"left"}
                                                             style={{
                                                                 minWidth: 150,

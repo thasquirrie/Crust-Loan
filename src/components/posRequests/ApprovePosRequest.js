@@ -2,7 +2,7 @@ import { forwardRef, useMemo, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import cancel from "../../assets/posRequests/close.svg";
+import cancel from "../../assets/pos/close.svg";
 import { useApprovePosRequestMutation } from "../../app/services/pos";
 import { CircularProgress } from "@mui/material";
 import SnackBar from "../common/SnackBar";

@@ -29,7 +29,7 @@ const CreateAssignPOSContainer = styled.div`
     justify-content: center;
     align-items: center;
     width: auto;
-    padding: 20px 0px;
+    /* padding: 20px 0px; */
     margin-left: auto;
     height: 60.74px;
     margin-bottom: 1rem;
@@ -102,13 +102,14 @@ const SearchFilters = styled.div`
 const CreatePosBtn = styled.div`
     font-style: normal;
     font-weight: 400;
-    padding-left: 45px;
+    padding: 20px;
     font-size: 16.0746px;
     line-height: 18px;
     color: #ffffff;
 `;
+
 const AssignMultipleDeviceBtn = styled.div`
-    padding-left: 25px;
+    padding-left: 0;
     padding-right: 25px;
 `;
 

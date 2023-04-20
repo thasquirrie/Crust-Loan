@@ -73,6 +73,23 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getPosHistory: builder.query({
+            query: (id) => ({
+                url: `/transaction/pos/pos-history/${id}`,
+            }),
+        }),
+        getAllMerchants: builder.query({
+            query: (id) => ({
+                url: `/user/institutions/all`,
+            }),
+        }),
+        createPos: builder.mutation({
+            query: (body) => ({
+                url: `/transaction/pos/create`,
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
@@ -92,4 +109,7 @@ export const {
     useAssignPosToAgentMutation,
     useGetAllPosActivityQuery,
     useLazyGetAllPosActivityQuery,
+    useGetPosHistoryQuery,
+    useGetAllMerchantsQuery,
+    useCreatePosMutation,
 } = posApi;

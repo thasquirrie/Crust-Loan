@@ -20,6 +20,9 @@ import CheckboxTable from "../../components/common/TableWithCheckbox.js";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import mennIcon from "../../assets/common/Kebab.svg";
+import POSHistoryModal from "../../components/posDevices/POSHistoryModal.js";
+import CreatePOS from "../../components/posDevices/CreatePOS.js";
+import ReassignPOSModal from "../../components/posDevices/ReassignPOS.js";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -35,10 +38,16 @@ const TableColumns = [
 ];
 
 const PosDevices = () => {
+    const VIEW_MORE = "VIEW_MORE";
+    const CREATE_POS = "CREATE_POS";
+    const REASSIGN_POS = "REASSIGN_POS";
+
     const [searchFilters, setSearchFilters] = useState({
         searchFilterBy: "serialNumber",
         searchFilterValue: "",
     });
+    const [posDevicesModalType, setPosDevicesModalType] = useState("");
+    const [posDevicesModalDetails, setPosDevicesModalDetails] = useState("");
     const [openModal, setOpenModal] = useState(false);
     const [selected, setSelected] = useState([]);
     const [uploadedSelectedDevice, setUploadedSelectedDevice] = useState([]);
@@ -54,6 +63,7 @@ const PosDevices = () => {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -61,9 +71,9 @@ const PosDevices = () => {
     const tableMenuItems = [
         {
             name: "View more",
-            onClick: (id) => {
-                // setPosTransactionModalDetails(id);
-                // setOpenTransactionDetailsModal(true);
+            onClick: (row) => {
+                setPosDevicesModalType(VIEW_MORE);
+                setPosDevicesModalDetails(row);
             },
         },
         {
@@ -75,15 +85,8 @@ const PosDevices = () => {
         },
     ];
 
-    const [
-        triggerGetPos,
-        {
-            data: lazyQueryGetPosData,
-            isLoading: lazyQueryGetPosIsLoading,
-            // isSuccess: lazyQueryGetPosIsSuccess,
-            fulfilledTimeStamp: lazyQueryGetPosFulfilledTimeStamp,
-        },
-    ] = useLazyGetPosQuery(lazyQueryOptions);
+    const [triggerGetPos, { data: lazyQueryGetPosData, isLoading: lazyQueryGetPosIsLoading }] =
+        useLazyGetPosQuery(lazyQueryOptions);
     const { data: posDevices, isLoading: posDevicesIsLoading } = useGetPosQuery();
 
     const searchFilterOptions = {
@@ -122,6 +125,20 @@ const PosDevices = () => {
                 setSelected={setUploadedSelectedDevice}
                 selected={uploadedSelectedDevice}
             />
+            {posDevicesModalDetails && (
+                <POSHistoryModal
+                    open={posDevicesModalType === VIEW_MORE}
+                    handleClose={() => setPosDevicesModalType("")}
+                    posDevicesModalDetails={
+                        posDevicesModalType === VIEW_MORE ? posDevicesModalDetails : null
+                    }
+                />
+            )}
+            <CreatePOS
+                open={posDevicesModalType === CREATE_POS}
+                setPosDevicesModalType={setPosDevicesModalType}
+            />
+            <ReassignPOSModal open={posDevicesModalType === REASSIGN_POS} />
             <Container>
                 <Header>
                     <HeaderTitle>
@@ -135,7 +152,9 @@ const PosDevices = () => {
                             </p>
                         </div>
                         <CreateAssignPOSContainer>
-                            <CreatePosBtn>Create POS</CreatePosBtn>
+                            <CreatePosBtn onClick={() => setPosDevicesModalType(CREATE_POS)}>
+                                Create POS
+                            </CreatePosBtn>
                             <AssignMultipleDeviceBtn onClick={handleClick}>
                                 <img src={mennIcon} alt="" />
                             </AssignMultipleDeviceBtn>
@@ -269,7 +288,6 @@ const PosDevices = () => {
                         </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
-
                 <CheckboxTable
                     heightOfTable={"420px"}
                     columns={TableColumns}
