@@ -10,7 +10,7 @@ import PosTransaction from "./pages/POSTMSTransaction/POSTMSTransaction";
 import POSTransactionActivity from "./pages/POSTransactionActivity/POSTransactionActivity";
 import Agents from "./pages/Agents/Agents";
 
-import PosDevices from "./pages/POSDevices/POSDevice";
+import PosDevices from "./pages/POSDevices/POSDevices";
 import AggregatorManagement from "./pages/AggregatorManagement/AggregatorManagement";
 
 function App() {
