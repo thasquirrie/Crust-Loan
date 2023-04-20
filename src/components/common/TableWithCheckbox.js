@@ -8,9 +8,10 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "styled-components";
 import { TailSpin } from "react-loader-spinner";
-import ActionMenu from "../common/ActionMenu";
+import ActionMenu from "./ActionMenu";
 import { useState } from "react";
-import { StyledTableContainer, StyledTableHead, StyledTableRow } from "../../utils/sharedStyles";
+import arrow from "../../assets/common/arrow-pagination.svg";
+import { StyledTableContainer, StyledTableHead, StyledTableRow } from "./tableStyles/sharedStyles";
 
 const CheckboxTable = ({
     columns,
@@ -223,4 +224,65 @@ const NoRecordFound = styled.div`
         font-weight: 700;
         font-size: 1.8rem;
     }
+`;
+
+const PageCount = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 1rem 0;
+    margin-right: 1rem;
+`;
+
+const Prev = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ${(props) => (props.firstPage ? "not-allowed" : "pointer")};
+
+    img {
+        margin-right: 0.5rem;
+    }
+
+    span {
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        color: #7a7a7a;
+    }
+`;
+
+const Next = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ${(props) => (props.lastPage ? "not-allowed" : "pointer")};
+
+    img {
+        transform: rotate(180deg);
+    }
+
+    span {
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.2rem;
+        color: #7a7a7a;
+        margin-right: 0.5rem;
+    }
+`;
+
+const PageNumber = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    color: #7a7a7a;
+    margin: 0 1.4rem;
+    width: 30px;
+    height: 30px;
+    border: 0.8px solid #dbbeae;
+    border-radius: 4px;
 `;

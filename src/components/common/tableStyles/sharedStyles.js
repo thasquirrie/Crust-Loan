@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
 import { TableRow } from "@mui/material";
-
 
 export const StyledTableHead = styled(TableHead)`
     & .MuiTableCell-root {
@@ -21,5 +20,5 @@ export const StyledTableRow = styled(TableRow)`
 `;
 
 export const StyledTableContainer = styled(TableContainer)`
-max-height: calc(100vh -  360px);
+    max-height: calc(100vh - 360px);
 `;

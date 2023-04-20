@@ -8,7 +8,7 @@ import {
     CreatePosBtn,
     SelectSearchFilter,
     CreateAssignPOSContainer,
-    AssignMultipleDeviceBtn
+    AssignMultipleDeviceBtn,
 } from "./POSDevicesStyles.js";
 import { useState } from "react";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar.js";
@@ -16,11 +16,10 @@ import { useGetPosQuery, useLazyGetPosQuery } from "../../app/services/pos.js";
 import { lazyQueryOptions } from "../../utils/queryOptions.js";
 import QueryButton from "../../components/posDevices/QueryButton.js";
 import AssignMultipleDevicesToAgg from "../../components/posDevices/AssignMultipleDevicesToAggModal.js";
-import CheckboxTable from "../../components/common/CheckboxTableCommon.js";
+import CheckboxTable from "../../components/common/TableWithCheckbox.js";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import mennIcon from "../../assets/common/Kebab.svg"
-
+import mennIcon from "../../assets/common/Kebab.svg";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -90,29 +89,29 @@ const PosDevices = () => {
     const searchFilterOptions = {
         ...(searchFilters?.searchFilterBy === "serialNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            serialNumber: searchFilters?.searchFilterValue,
-        }),
+                serialNumber: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "terminalId" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            terminalId: searchFilters?.searchFilterValue,
-        }),
+                terminalId: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "aggregatorName" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            aggregatorName: searchFilters?.searchFilterValue,
-        }),
+                aggregatorName: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "agentAccountNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            agentAccountNumber: searchFilters?.searchFilterValue,
-        }),
+                agentAccountNumber: searchFilters?.searchFilterValue,
+            }),
         ...(searchFilters?.searchFilterBy === "merchantName" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-            merchantName: searchFilters?.searchFilterValue,
-        }),
+                merchantName: searchFilters?.searchFilterValue,
+            }),
     };
 
     const openSelectedDevicesModal = () => {
         setOpenModal(true);
-        setUploadedSelectedDevice(selected)
+        setUploadedSelectedDevice(selected);
     };
 
     return (
@@ -136,13 +135,9 @@ const PosDevices = () => {
                             </p>
                         </div>
                         <CreateAssignPOSContainer>
-                            < CreatePosBtn>
-                                Create POS
-                            </ CreatePosBtn>
-                            <AssignMultipleDeviceBtn
-                                onClick={handleClick}
-                            >
-                                <img src={mennIcon} />
+                            <CreatePosBtn>Create POS</CreatePosBtn>
+                            <AssignMultipleDeviceBtn onClick={handleClick}>
+                                <img src={mennIcon} alt="" />
                             </AssignMultipleDeviceBtn>
                         </CreateAssignPOSContainer>
                         <Menu
@@ -170,7 +165,7 @@ const PosDevices = () => {
                         >
                             <MenuItem
                                 onClick={(e) => {
-                                    openSelectedDevicesModal()
+                                    openSelectedDevicesModal();
                                     setAnchorEl(null);
                                 }}
                                 sx={{
@@ -195,7 +190,7 @@ const PosDevices = () => {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Serial Number": "serialNumber",
-                                    TerminalId: "terminalId",
+                                    "Terminal ID": "terminalId",
                                     "Aggr. Name": "aggregatorName",
                                     "Agent Acc. No.": "agentAccountNumber",
                                     "Merchant Name": "merchantName",
@@ -232,8 +227,7 @@ const PosDevices = () => {
                                         terminalId: "",
                                         merchantName: "",
                                         agentAccountNumber: "",
-                                        aggregatorName: ""
-
+                                        aggregatorName: "",
                                     });
                                 }}
                             />
@@ -296,8 +290,6 @@ const PosDevices = () => {
                             page: posDevicesParams.page - 1,
                             ...searchFilterOptions,
                         });
-
-
                     }}
                     onClickNextPage={() => {
                         const lastPageNumber = lazyQueryGetPosData?.data?.totalPages
@@ -314,8 +306,6 @@ const PosDevices = () => {
                             page: posDevicesParams.page + 1,
                             ...searchFilterOptions,
                         });
-
-
                     }}
                     firstPage={posDevicesParams.page === 1}
                     menuItems={tableMenuItems}

@@ -3,26 +3,31 @@ import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
 import cancel from "../../assets/posRequests/close.svg";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import { StyledTableContainer, StyledTableHead, StyledTableRow } from "../../utils/sharedStyles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import {
+    StyledTableContainer,
+    StyledTableHead,
+    StyledTableRow,
+} from "../common/tableStyles/sharedStyles";
 import { lazyQueryOptions } from "../../utils/queryOptions";
-import { useLazyGetAggregatorQuery, useAssignPosDevicesToAggregatorMutation } from "../../app/services/pos";
+import {
+    useLazyGetAggregatorQuery,
+    useAssignPosDevicesToAggregatorMutation,
+} from "../../app/services/pos";
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import GetAggregatorDetails from "../posRequests/GetAggregatorsDetails"
+import GetAggregatorDetails from "../posRequests/GetAggregatorsDetails";
 import { setGetAggregator, resetGetAggregator } from "../../features/pos/posSlice";
 import SnackBar from "../common/SnackBar";
-
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -32,18 +37,12 @@ const TableColumns = [
     {
         id: "accountNumber",
         label: "Agent Acc. No.",
-
     },
     { id: "aggregatorName", label: "Aggregator Name" },
-    { id: "state", label: "POS State" }
+    { id: "state", label: "POS State" },
 ];
 
-export default function AssignMultipleDevicesToAgg({
-    open,
-    handleClose,
-    selected,
-    setSelected
-}) {
+export default function AssignMultipleDevicesToAgg({ open, handleClose, selected, setSelected }) {
     const [aggregatorAccountNumber, setAggregatorAccountNumber] = useState("");
     const [snackbarInfo, setSnackbarInfo] = useState({
         open: false,
@@ -55,7 +54,7 @@ export default function AssignMultipleDevicesToAgg({
 
     const getAggregatorData = useSelector((state) => state.pos.getAggregator);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const [
         triggerGetAggregator,
@@ -67,12 +66,15 @@ export default function AssignMultipleDevicesToAgg({
         },
     ] = useLazyGetAggregatorQuery(lazyQueryOptions);
 
-    const [triggerAssignPosDevicesToAggregator, {
-        isLoading: assignPosDevicesToAggregatorIsLoading,
-        isError: assignPosDevicesToAggregatorIsError,
-        isSuccess: assignPosDevicesToAggregatorIsSuccess,
-        error: assignPosDevicesToAggregatorError,
-    }] = useAssignPosDevicesToAggregatorMutation()
+    const [
+        triggerAssignPosDevicesToAggregator,
+        {
+            isLoading: assignPosDevicesToAggregatorIsLoading,
+            isError: assignPosDevicesToAggregatorIsError,
+            isSuccess: assignPosDevicesToAggregatorIsSuccess,
+            error: assignPosDevicesToAggregatorError,
+        },
+    ] = useAssignPosDevicesToAggregatorMutation();
 
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
@@ -87,7 +89,7 @@ export default function AssignMultipleDevicesToAgg({
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
                 selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
+                selected.slice(selectedIndex + 1)
             );
         }
         setSelected(newSelected);
@@ -102,7 +104,6 @@ export default function AssignMultipleDevicesToAgg({
             });
             setAggregatorAccountNumber("");
         } else if (assignPosDevicesToAggregatorIsError) {
-
             const errorKey = Object.keys(assignPosDevicesToAggregatorError?.data?.error);
             const errorMessage = assignPosDevicesToAggregatorError?.data?.error;
 
@@ -115,7 +116,7 @@ export default function AssignMultipleDevicesToAgg({
     }, [
         assignPosDevicesToAggregatorIsSuccess,
         assignPosDevicesToAggregatorIsError,
-        assignPosDevicesToAggregatorError
+        assignPosDevicesToAggregatorError,
     ]);
 
     const aggregatorAccountNumberChange = debounce((event) => {
@@ -138,9 +139,9 @@ export default function AssignMultipleDevicesToAgg({
         if (lazyQueryGetAggregatorFulfilledTimeStamp) {
             dispatch(setGetAggregator(lazyQueryGetAggregatorData));
         }
-    }, [lazyQueryGetAggregatorData, dispatch, lazyQueryGetAggregatorFulfilledTimeStamp,  selected]);
+    }, [lazyQueryGetAggregatorData, dispatch, lazyQueryGetAggregatorFulfilledTimeStamp, selected]);
 
-    const selectedDevices = selected.map(device => device.id)
+    const selectedDevices = selected.map((device) => device.id);
 
     const handleSnackbarClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -152,14 +153,14 @@ export default function AssignMultipleDevicesToAgg({
             severity: snackbarInfo.severity,
             message: "",
         });
-        setSelected([])
-        handleClose()
+        setSelected([]);
+        handleClose();
     };
 
     const handleCloseModal = () => {
         handleClose();
         setAggregatorAccountNumber("");
-    }
+    };
 
     return (
         <div>
@@ -172,7 +173,6 @@ export default function AssignMultipleDevicesToAgg({
                 onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
             >
-
                 <SnackBar
                     SnackbarMessage={snackbarInfo.message}
                     openSnackbar={snackbarInfo.open}
@@ -181,10 +181,8 @@ export default function AssignMultipleDevicesToAgg({
                 />
                 <ModalContainer>
                     <TransactionDetailsModalHeader>
-                        <h4>
-                            Assign POS Devices To Aggregator
-                        </h4>
-                        <img src={cancel} alt="cancel" onClick={ handleCloseModal } />
+                        <h4>Assign POS Devices To Aggregator</h4>
+                        <img src={cancel} alt="cancel" onClick={handleCloseModal} />
                     </TransactionDetailsModalHeader>
 
                     <SearchFilters>
@@ -194,7 +192,10 @@ export default function AssignMultipleDevicesToAgg({
                                 loading={lazyQueryGetAggregatorIsLoading}
                                 placeHolder="Search for Aggregator by Account Number"
                                 onChange={handleAggregatorAccountNumberChange}
-                                noDataFound={aggregatorAccountNumber.length >= 10 && getAggregatorData?.content?.length === 0}
+                                noDataFound={
+                                    aggregatorAccountNumber.length >= 10 &&
+                                    getAggregatorData?.content?.length === 0
+                                }
                             />
                             {getAggregatorData?.content[0] && (
                                 <>
@@ -213,8 +214,8 @@ export default function AssignMultipleDevicesToAgg({
                             onClick={() => {
                                 triggerAssignPosDevicesToAggregator({
                                     ids: selectedDevices,
-                                    accountNumber: aggregatorAccountNumber
-                                })
+                                    accountNumber: aggregatorAccountNumber,
+                                });
                             }}
                             disabled={!getAggregatorData?.content[0]}
                         >
@@ -222,7 +223,14 @@ export default function AssignMultipleDevicesToAgg({
                         </AssignDevicesBtn>
                     </SearchFilters>
 
-                    <Paper sx={{ width: "100%", overflow: "hidden", boxShadow: "none", marginTop: '20px' }}>
+                    <Paper
+                        sx={{
+                            width: "100%",
+                            overflow: "hidden",
+                            boxShadow: "none",
+                            marginTop: "20px",
+                        }}
+                    >
                         <StyledTableContainer>
                             <Table
                                 stickyHeader
@@ -236,13 +244,10 @@ export default function AssignMultipleDevicesToAgg({
                                             style={{ minWidth: 30, fontWeight: 700 }}
                                         ></TableCell>
                                         {TableColumns.map((headCell) => (
-                                            <TableCell
-                                                key={headCell.id}
-                                            >
+                                            <TableCell key={headCell.id}>
                                                 {headCell.label}
                                             </TableCell>
                                         ))}
-
                                     </TableRow>
                                 </StyledTableHead>
 
@@ -255,7 +260,7 @@ export default function AssignMultipleDevicesToAgg({
                                                 role="checkbox"
                                                 tabIndex={-1}
                                                 aria-checked={isItemSelected}
-                                                sx={{ cursor: 'pointer' }}
+                                                sx={{ cursor: "pointer" }}
                                             >
                                                 <TableCell padding="checkbox">
                                                     <Checkbox
@@ -288,17 +293,13 @@ export default function AssignMultipleDevicesToAgg({
                                                         </>
                                                     );
                                                 })}
-
                                             </StyledTableRow>
                                         );
                                     })}
                                 </TableBody>
-
                             </Table>
                         </StyledTableContainer>
                     </Paper>
-
-
                 </ModalContainer>
             </Dialog>
         </div>
@@ -342,38 +343,38 @@ const TransactionDetailsModalHeader = styled.div`
 `;
 
 const SearchFilters = styled.div`
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-top:2rem;
-  width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    width: 100%;
 
-  .aggregator-details {
-    display:flex;
-    align-items:center;
-  
-    .agg-name {
-        margin-left:28px;
-        p {
-            font-style: normal;
-            font-weight: 400;
-            margin-bottom:6px;
-            font-size: 12px;
-            line-height: 18px;
-            letter-spacing: 0.0571895px;
-            color: #474747;
-        }
-        div {
-            width: 217px;
-            height: 55px;
-            background: #FFFAF6;
-            border: 0.800654px solid #FBFBFB;
-            border-radius: 4.57516px;
-            padding:13px 18px 13px 19px; 
+    .aggregator-details {
+        display: flex;
+        align-items: center;
+
+        .agg-name {
+            margin-left: 28px;
+            p {
+                font-style: normal;
+                font-weight: 400;
+                margin-bottom: 6px;
+                font-size: 12px;
+                line-height: 18px;
+                letter-spacing: 0.0571895px;
+                color: #474747;
+            }
+            div {
+                width: 217px;
+                height: 55px;
+                background: #fffaf6;
+                border: 0.800654px solid #fbfbfb;
+                border-radius: 4.57516px;
+                padding: 13px 18px 13px 19px;
+            }
         }
     }
-  }
-`
+`;
 
 const AssignDevicesBtn = styled.button`
     display: flex;
@@ -382,24 +383,13 @@ const AssignDevicesBtn = styled.button`
     align-items: center;
     width: 206px;
     height: 55.74px;
-    color:#fff;
+    color: #fff;
     border-radius: 4px;
-    background: #933D0C;
-    box-shadow: 0px 1.81212px 3.62425px 1.35909px rgba(0, 0, 0, 0.15), 0px 0.453031px 1.35909px rgba(0, 0, 0, 0.3);
+    background: #933d0c;
+    box-shadow: 0px 1.81212px 3.62425px 1.35909px rgba(0, 0, 0, 0.15),
+        0px 0.453031px 1.35909px rgba(0, 0, 0, 0.3);
     ${(props) =>
         props.disabled
             ? `background-color: #D0DCE4; cursor: not-allowed;`
             : `background-color: #933d0c; cursor: pointer;`}
-`
-
-
-
-
-
-
-
-
-
-
-
-
+`;
