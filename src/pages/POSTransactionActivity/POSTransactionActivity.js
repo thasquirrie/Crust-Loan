@@ -10,7 +10,6 @@ import {
 } from "./POSTransactionActivityStyles";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
 import { DateRangePicker } from "rsuite";
-import SelectCommon from "../../components/common/SelectCommon";
 import { useGetAllPosActivityQuery, useLazyGetAllPosActivityQuery } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import formattedAmount from "../../utils/formatCurrency";
@@ -146,25 +145,6 @@ function POSTransactionActivity() {
                                             endDate: endDate,
                                         });
                                     }
-                                }}
-                            />
-
-                            <SelectCommon
-                                options={{
-                                    "": "All",
-                                    SUCCESSFUL: "Successful",
-                                    FAILED: "Failed",
-                                }}
-                                value={posActivityParams?.transactionStatus}
-                                onChange={(e) => {
-                                    setPosActivityParams({
-                                        ...posActivityParams,
-                                        status: e.target.value,
-                                    });
-                                    triggerPosActivity({
-                                        ...posActivityParams,
-                                        status: e.target.value,
-                                    });
                                 }}
                             />
                         </SearchFilters>
