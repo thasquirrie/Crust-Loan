@@ -9,7 +9,9 @@ import POSRequest from "./pages/POSRequest/POSRequest";
 import PosTransaction from "./pages/POSTMSTransaction/POSTMSTransaction";
 import POSTransactionActivity from "./pages/POSTransactionActivity/POSTransactionActivity";
 import Agents from "./pages/Agents/Agents";
+
 import PosDevices from "./pages/POSDevices/POSDevices";
+import AggregatorManagement from "./pages/AggregatorManagement/AggregatorManagement";
 
 function App() {
     return (
@@ -29,6 +31,7 @@ function App() {
                     <Route path="tms" element={<PosTransaction />} />
                     <Route path="transaction_activity" element={<POSTransactionActivity />} />
                     <Route path="devices" element={<PosDevices />} />
+                    <Route path="aggregator" element={<AggregatorManagement />} />
                 </Route>
             </Routes>
         </BrowserRouter>

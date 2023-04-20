@@ -15,6 +15,7 @@ import posDevices from "../../assets/sidebar/devicesIcon.svg";
 import posActivity from "../../assets/sidebar/posActivity.svg";
 import clusterManagement from "../../assets/sidebar/clusterManagement.svg";
 import signOut from "../../assets/sidebar/signOut.svg";
+import AggregatorIcon from "../../assets/aggregatorMang/aggregatorIcon.svg";
 
 function Sidebar({
     openSidebar,
@@ -23,6 +24,7 @@ function Sidebar({
     handleOpenLoansDropdown,
     openPOSManagementDropdown,
     handleOpenPOSManagementDropdown,
+    setOpenSignOutModal,
 }) {
     const location = useLocation();
 
@@ -32,12 +34,12 @@ function Sidebar({
                 <img src={sideBarArrow} alt="" />
             </SidebarButton>
             <SidebarLinksContainer>
-                <AdminManagement openSidebar={openSidebar}>
+                {/* <AdminManagement openSidebar={openSidebar}>
                     <Link to="/">
                         <img src={monitor} alt="" />
                         Admin Management
                     </Link>
-                </AdminManagement>
+                </AdminManagement> */}
                 <CoreHome openSidebar={openSidebar}>
                     <Link to="/">
                         <img src={home} alt="" />
@@ -132,7 +134,7 @@ function Sidebar({
                         <div className="SubMenuItem">
                             <Link to="/pos/tms">
                                 <img src={posTMS} alt="" />
-                                POS TMS
+                                TMS Transactions
                             </Link>
                         </div>
                       
@@ -153,18 +155,22 @@ function Sidebar({
                                 <img src={posManagement} alt="" />
                                 POS Requests
                             </Link>
-                        </div>
+                        </div> */}
                         <div className="SubMenuItem">
-                            <Link to="/">
-                                <img src={posManagement} alt="" />
+                            <Link to="/pos/aggregator">
+                                <img src={AggregatorIcon} alt="" />
                                 Aggregator Management
                             </Link>
                         </div>
-                       */}
                     </POSManagementSubMenu>
                 </POSManagement>
             </SidebarLinksContainer>
-            <SignOut openSidebar={openSidebar}>
+            <SignOut
+                openSidebar={openSidebar}
+                onClick={() => {
+                    setOpenSignOutModal(true);
+                }}
+            >
                 <img src={signOut} alt="" />
                 <p>Sign Out</p>
             </SignOut>
@@ -604,7 +610,7 @@ const SignOut = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    width: 100%;
+    width: auto;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -613,6 +619,7 @@ const SignOut = styled.div`
     z-index: ${(props) => (props.openSidebar ? "-1" : "1")};
     transition: all 0.2s ease-in-out;
     box-sizing: border-box;
+    cursor: pointer;
 
     img {
         margin-right: 1rem;

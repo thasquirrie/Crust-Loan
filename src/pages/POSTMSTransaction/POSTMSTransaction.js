@@ -22,7 +22,7 @@ import PosTmsTransactionDetailsModal from "../../components/pos/PosTmsTransactio
 import { useLazyDownloadPosTransactionQuery } from "../../app/services/pos";
 import { PosTmsStatusCodes } from "../../utils/posTmsStatus";
 import ButtonCommonLink from "../../components/common/ButtonCommonLink";
-// import StatusTag from "../../components/common/StatusTag";
+import StatusTag from "../../components/common/StatusTag";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -48,7 +48,14 @@ const TableColumns = [
         id: "responseCode",
         label: "STATUS",
         format: (status) => {
-            return PosTmsStatusCodes[status];
+            switch (PosTmsStatusCodes[status]) {
+                case "Transaction Approved":
+                    return <StatusTag backgroundColor="#06C281" text={PosTmsStatusCodes[status]} />;
+                case "Card Issuer Unavailable":
+                    return <StatusTag backgroundColor="#FE6901" text={PosTmsStatusCodes[status]} />;
+                default:
+                    return <StatusTag backgroundColor="#FF0000" text={PosTmsStatusCodes[status]} />;
+            }
         },
     },
     { id: "responseCode", label: "STATUS CODE" },

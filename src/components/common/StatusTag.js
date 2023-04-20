@@ -16,11 +16,11 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : "#FF4747")};
+    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : "#FF0000")};
 
     p {
         font-weight: 700;
         color: ${(props) => (props.textColor ? props.textColor : "#FFF")};
-        margin: 8px 0;
+        margin: 8px 6px;
     }
 `;

@@ -35,6 +35,11 @@ export const loanApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
+        viewLoanHistory: builder.query({
+            query: (id) => ({
+                url: `/loan/view-loans/${id}`,
+            }),
+        }),
     }),
 });
 
@@ -45,4 +50,5 @@ export const {
     useGetUserDetailsQuery,
     useApproveLoanMutation,
     useDisapproveLoanMutation,
+    useViewLoanHistoryQuery,
 } = loanApi;

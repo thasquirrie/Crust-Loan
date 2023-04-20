@@ -61,9 +61,10 @@ function POSTransactionActivity() {
                             <TableSelectSearchBar
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
+                                    "Agent Account Number": "agentAccountNumber",
+                                    "Aggregator Account Number": "aggregatorAccountNumber",
                                     "Serial Number": "serialNumber",
-                                    "Ref. NO.": "referenceNumber",
-                                    TerminalId: "terminalId",
+                                    "Terminal Id": "terminalId",
                                 }}
                                 selectOnChange={(e) => {
                                     setSearchFilters({
@@ -81,12 +82,17 @@ function POSTransactionActivity() {
                                 onClickSearchIcon={() => {
                                     triggerPosActivity({
                                         ...posActivityParams,
-                                        serialNumber:
-                                            searchFilters.searchFilterBy === "serialNumber"
+                                        agentAccountNumber:
+                                            searchFilters.searchFilterBy === "agentAccountNumber"
                                                 ? searchFilters.searchFilterValue
                                                 : "",
-                                        referenceNumber:
-                                            searchFilters.searchFilterBy === "referenceNumber"
+                                        aggregatorAccountNumber:
+                                            searchFilters.searchFilterBy ===
+                                            "aggregatorAccountNumber"
+                                                ? searchFilters.searchFilterValue
+                                                : "",
+                                        serialNumber:
+                                            searchFilters.searchFilterBy === "serialNumber"
                                                 ? searchFilters.searchFilterValue
                                                 : "",
                                         terminalId:

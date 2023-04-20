@@ -22,6 +22,7 @@ import ViewAgentProfile from "../../components/agents/ViewAgentProfileModal";
 import { useGetAllClusterQuery } from "../../app/services/loan";
 import SnackBar from "../../components/common/SnackBar";
 import StatusTag from "../../components/common/StatusTag";
+import { DateRangePicker } from "rsuite";
 
 const TableColumns = [
     { id: "agentName", label: "Agent Name" },
@@ -37,9 +38,9 @@ const TableColumns = [
                 case true:
                     return <StatusTag backgroundColor="#06C281" text="VERIFIED" />;
                 case false:
-                    return <StatusTag backgroundColor="#FF4747" text="NOT VERIFIED" />;
+                    return <StatusTag backgroundColor="#FF0000" text="NOT VERIFIED" />;
                 default:
-                    return <StatusTag backgroundColor="#FF4747" text={value} />;
+                    return <StatusTag backgroundColor="#FF0000" text={value} />;
             }
         },
     },
@@ -240,6 +241,7 @@ const Agents = () => {
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
+                                selectValue={searchFilters.searchFilterBy}
                                 searchInputValue={agentsParams.phoneOrEmailOrAccountNumber}
                                 options={{
                                     "Account Number": "phoneOrEmailOrAccountNumber",
@@ -288,6 +290,40 @@ const Agents = () => {
                             />
                         </SelectSearchBar>
                         <SearchFilters>
+                            <DateRangePicker
+                                appearance="default"
+                                placeholder="Date Range"
+                                style={{ width: 230 }}
+                                readOnly={false}
+                                onClean={() => {
+                                    delete agentsParams.fromDate;
+                                    delete agentsParams.toDate;
+
+                                    triggerGetAllAgents({
+                                        ...agentsParams,
+                                    });
+                                }}
+                                onChange={(value) => {
+                                    const fromDate =
+                                        value && value[0]?.toISOString()?.split("T")[0];
+                                    const toDate = value && value[1]?.toISOString()?.split("T")[0];
+
+                                    setAllAgentsParams({
+                                        ...agentsParams,
+                                        fromDate,
+                                        toDate,
+                                    });
+
+                                    if (fromDate && toDate) {
+                                        triggerGetAllAgents({
+                                            ...agentsParams,
+                                            fromDate,
+                                            toDate,
+                                        });
+                                    }
+                                }}
+                            />
+
                             <SelectCommon
                                 options={{
                                     "": "Verification Status",

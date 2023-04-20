@@ -25,6 +25,7 @@ import ViewAgentProfile from "../../components/agents/ViewAgentProfileModal";
 import SnackBar from "../../components/common/SnackBar";
 import ConfirmationModalWithReason from "../../components/common/ConfirmationModalWithReason";
 import StatusTag from "../../components/common/StatusTag";
+import LoanHistoryModal from "../../components/loan/LoanHistoryModal";
 const moment = require("moment");
 
 const TableColumns = [
@@ -49,19 +50,19 @@ const TableColumns = [
                 case "ACTIVE":
                     return <StatusTag backgroundColor="#06C281" text={value} />;
                 case "DISAPPROVED":
-                    return <StatusTag backgroundColor="#FF4747" text={value} />;
+                    return <StatusTag backgroundColor="#292929" text={value} />;
                 case "APPROVED":
-                    return <StatusTag backgroundColor="#077E8C" text={value} />;
+                    return <StatusTag backgroundColor="#06C281" text={value} />;
                 case "PENDING":
-                    return <StatusTag backgroundColor="#FE822B" text={value} />;
+                    return <StatusTag backgroundColor="#FE6901" text={value} />;
                 case "OFFER_ACCEPTED":
-                    return <StatusTag backgroundColor="#31405e" text={value} />;
+                    return <StatusTag backgroundColor="#FE6901" text={value} />;
                 case "OFFER_DECLINED":
-                    return <StatusTag backgroundColor="#31405e" text={value} />;
+                    return <StatusTag backgroundColor="#FFBF00" text={value} />;
                 case "REPAID":
-                    return <StatusTag backgroundColor="#216a10" text={value} />;
+                    return <StatusTag backgroundColor="green" text={value} />;
                 default:
-                    return <StatusTag backgroundColor="#F9DEA9" text={value} />;
+                    return <StatusTag backgroundColor="#292929" text={value} />;
             }
         },
     },
@@ -69,8 +70,7 @@ const TableColumns = [
 
 function LoanApplication() {
     const APPROVED_LOAN = "APPROVED";
-    // const PENDING_LOAN = "PENDING";
-    // const LOAN_HISTORY = "LOAN_HISTORY";
+    const LOAN_HISTORY = "LOAN_HISTORY";
     const DISAPPROVED_LOAN = "DISAPPROVED";
     const VIEW_AGENT_DETAILS = "VIEW_AGENT_DETAILS";
 
@@ -137,12 +137,13 @@ function LoanApplication() {
 
     function generateTableMenuItems(row) {
         let tableMenuItems = [
-            // {
-            //     name: "Loan History",
-            //     onClick: () => {
-            //         setLoanModalType(LOAN_HISTORY);
-            //     },
-            // },
+            {
+                name: "Loan History",
+                onClick: () => {
+                    setLoanModalType(LOAN_HISTORY);
+                    setAgentDetails(row);
+                },
+            },
             {
                 name: "View Agent Details",
                 onClick: () => {
@@ -257,6 +258,17 @@ function LoanApplication() {
                 <ViewAgentProfile
                     open={loanModalType === VIEW_AGENT_DETAILS}
                     userId={loanModalType === VIEW_AGENT_DETAILS ? agentDetails?.userId : null}
+                    handleClose={() => {
+                        setLoanModalType("");
+                        setAgentDetails(null);
+                    }}
+                />
+            )}
+
+            {agentDetails && (
+                <LoanHistoryModal
+                    open={loanModalType === LOAN_HISTORY}
+                    agentDetails={loanModalType === LOAN_HISTORY ? agentDetails : null}
                     handleClose={() => {
                         setLoanModalType("");
                         setAgentDetails(null);

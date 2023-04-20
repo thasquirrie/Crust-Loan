@@ -17,15 +17,20 @@ function ConfirmationModal({
     ConfirmationBody,
     confirmationText,
     loading,
+    customPaperPropsStyle,
+    customTransition,
 }) {
     return (
         <div>
             <Dialog
                 open={open}
-                TransitionComponent={Transition}
+                TransitionComponent={customTransition ? customTransition : Transition}
                 keepMounted
                 onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
+                PaperProps={{
+                    style: customPaperPropsStyle,
+                }}
             >
                 <ConfirmationModalContainer>
                     <ConfirmationModalHeader>
@@ -85,7 +90,7 @@ const ConfirmationModalHeader = styled.div`
 `;
 
 const ConfirmationModalBody = styled.div`
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
