@@ -102,8 +102,7 @@ export default function CreatePOS({ open, setPosDevicesModalType }) {
             <Dialog
                 open={open}
                 TransitionComponent={Transition}
-                keepMounted
-                onClose={() => {}}
+                onClose={handleClose}
                 sx={{
                     "& .MuiDialog-paper": {
                         borderRadius: "8px",
