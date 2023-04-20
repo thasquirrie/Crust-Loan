@@ -70,7 +70,7 @@ const PosDevices = () => {
 
     const tableMenuItems = [
         {
-            name: "View more",
+            name: "View More",
             onClick: (row) => {
                 setPosDevicesModalType(VIEW_MORE);
                 setPosDevicesModalDetails(row);
@@ -78,9 +78,9 @@ const PosDevices = () => {
         },
         {
             name: "Reassign POS",
-            onClick: (id) => {
-                // setPosTransactionModalDetails(id);
-                // setOpenTransactionDetailsModal(true);
+            onClick: (row) => {
+                setPosDevicesModalType(REASSIGN_POS);
+                setPosDevicesModalDetails(row);
             },
         },
     ];
@@ -138,7 +138,11 @@ const PosDevices = () => {
                 open={posDevicesModalType === CREATE_POS}
                 setPosDevicesModalType={setPosDevicesModalType}
             />
-            <ReassignPOSModal open={posDevicesModalType === REASSIGN_POS} />
+            <ReassignPOSModal
+                open={posDevicesModalType === REASSIGN_POS}
+                posDeviceDetails={posDevicesModalDetails}
+                setPosDevicesModalType={setPosDevicesModalType}
+            />
             <Container>
                 <Header>
                     <HeaderTitle>

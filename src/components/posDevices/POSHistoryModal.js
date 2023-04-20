@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import cancel from "../../assets/posRequests/close.svg";
+import cancel from "../../assets/pos/close.svg";
 import { useGetPosHistoryQuery } from "../../app/services/pos";
 import formattedTime from "../../utils/formatDate";
 
@@ -15,7 +15,7 @@ export default function POSHistoryModal({ open, handleClose, posDevicesModalDeta
         skip: !posDevicesModalDetails?.serialNumber,
     });
 
-    const posHistoryData = posHistory?.data?.content[0];
+    const posHistoryData = posHistory?.data?.content && posHistory?.data?.content[0];
 
     return (
         <div>

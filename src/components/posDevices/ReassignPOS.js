@@ -2,158 +2,288 @@ import { forwardRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import cancel from "../../../assets/posRequests/closesvg";
-import arrowRight from "../../../assets/pos/arrow-right.svg";
+import cancel from "../../assets/pos/close.svg";
+import arrowRight from "../../assets/pos/arrow-right.svg";
 import { useState } from "react";
+import {
+    useGetPosCategoryQuery,
+    useLazyGetAgentByAccountNumberQuery,
+    useLazyGetPosQuery,
+    useReassignPosMutation,
+} from "../../app/services/pos";
+import { lazyQueryOptions } from "../../utils/queryOptions";
+import SelectCommon from "../common/SelectCommon";
+import { useEffect } from "react";
+import {
+    resetGetAgentByAccountNumber,
+    setGetAgentByAccountNumber,
+} from "../../features/pos/posSlice";
+import { useDispatch, useSelector } from "react-redux";
+import SnackBar from "../common/SnackBar";
+import { CircularProgress } from "@mui/material";
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ReassignPOSModal({
-    open,
-    setReassignModal,
-    setNextModal,
-    setDesignation,
-    handleClose,
-    transaction,
-}) {
-    const [chooseAggregator, setChooseAggregator] = useState("");
-    const [chooseAgent, setChooseAgent] = useState("");
-    const [overAggregator, setOverAggregator] = useState("");
-    const [overAgent, setOverAgent] = useState("");
+export default function ReassignPOSModal({ open, setPosDevicesModalType, posDeviceDetails }) {
+    const REASSIGN_TO_AGENT = "agent";
+    const [reassignTo, setReassignTo] = useState("");
+    const [assignToAgentInput, setAssignToAgentInput] = useState({
+        accountNumber: "",
+        posCategoryId: "",
+    });
 
-    const onClickHandlerAggregator = () => {
-        setChooseAggregator("aggregator");
-        setChooseAgent("");
-        setDesignation("aggregator");
+    const [snackbarInfo, setSnackbarInfo] = useState({
+        open: false,
+        message: "",
+        severity: "",
+    });
+
+    const handleClose = () => {
+        setPosDevicesModalType("");
+        setAssignToAgentInput({
+            accountNumber: "",
+            posCategoryId: "",
+        });
+        setReassignTo("");
+        dispatch(resetGetAgentByAccountNumber());
     };
 
-    const onClickHandlerAgent = () => {
-        setChooseAggregator("");
-        setChooseAgent("agent");
-        setDesignation("agent");
-    };
+    const dispatch = useDispatch();
+    const agentDetails = useSelector((state) => state.pos.getAgentByAccountNumber);
 
-    const onMouseOverHandler = (value) => {
-        console.log("Yes");
+    const [
+        triggerGetAgent,
+        {
+            data: agentData,
+            isSuccess: agentIsSuccess,
+            isError: agentIsError,
+            error: agentError,
+            fulfilledTimeStamp: agentFulfilledTimeStamp,
+        },
+    ] = useLazyGetAgentByAccountNumberQuery(lazyQueryOptions);
 
-        // return {
-        //   background: '#fffaf6',
-        //   border: '1px solid #933d0c',
-        //   color: '#933d0c'
-        // }
-        if (value === "aggregator") {
-            setOverAggregator("aggregator");
-            // setOverAgent('');
-        } else if (value === "agent") {
-            setOverAgent("agent");
-            setOverAggregator("");
+    const [triggerGetPos] = useLazyGetPosQuery(lazyQueryOptions);
+
+    const [
+        reassignPos,
+        {
+            isLoading: reassignPosIsLoading,
+            isSuccess: reassignPosIsSuccess,
+            isError: reassignPosIsError,
+            error: reassignPosError,
+        },
+    ] = useReassignPosMutation();
+
+    const { data: poscategory } = useGetPosCategoryQuery();
+
+    const posCategoryList = poscategory?.data?.reduce((acc, category) => {
+        acc[""] = "Select Category";
+        acc[category.id] = category.name;
+        return acc;
+    }, {});
+
+    useEffect(() => {
+        if (agentFulfilledTimeStamp && agentIsSuccess) {
+            dispatch(setGetAgentByAccountNumber(agentData));
+        } else if (agentIsError) {
+            const errorKey = Object.keys(agentError?.data?.errors);
+            const errorMessage = agentError?.data?.errors[errorKey];
+
+            setSnackbarInfo({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
         }
+    }, [agentData, agentFulfilledTimeStamp, agentIsError, agentIsSuccess]);
+
+    useEffect(() => {
+        if (reassignPosIsSuccess) {
+            setSnackbarInfo({
+                open: true,
+                severity: "error",
+                message: "POS Device Reassigned Successfully",
+            });
+            triggerGetPos();
+            handleClose();
+        } else if (reassignPosIsError) {
+            const errorKey = Object.keys(reassignPosError?.data?.errors);
+            const errorMessage = reassignPosError?.data?.errors[errorKey];
+
+            setSnackbarInfo({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
+        }
+    }, [reassignPosIsError, reassignPosIsSuccess]);
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setSnackbarInfo({
+            open: false,
+            severity: snackbarInfo.severity,
+            message: snackbarInfo.message,
+        });
     };
 
-    const onMouseOutHandler = (value) => {
-        console.log("No");
-        if (value === "aggregator") {
-            setOverAggregator("");
-        } else if (value === "agent") {
-            setOverAgent("");
-        }
-    };
     return (
         <div>
+            <SnackBar
+                SnackbarMessage={snackbarInfo?.message}
+                openSnackbar={snackbarInfo.open}
+                handleClose={handleSnackbarClose}
+                snackbarSeverity={snackbarInfo.severity}
+            />
             <Dialog
                 open={open}
                 TransitionComponent={Transition}
                 keepMounted
-                onClose={() => setReassignModal(false)}
+                onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
             >
                 <ModalContainer>
                     <ModalHeader>
                         <h4>Reassign POS</h4>
-                        <img
-                            src={cancel}
-                            alt="cancel"
-                            // onClick={handleClose}
-                            onClick={() => setReassignModal(false)}
-                            style={{ color: "black" }}
-                        />
+                        <img src={cancel} alt="cancel" onClick={handleClose} />
                     </ModalHeader>
                     <ModalBody>
                         <PersonalInformation>
                             <h4>POS Information</h4>
                             <InformationDetail>
                                 <p>Serial Number</p>
-                                <p>Akudo Tunde-Musa</p>
+                                <p>{posDeviceDetails?.serialNumber}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Terminal ID</p>
-                                <p>Agrobusiness</p>
+                                <p>{posDeviceDetails?.terminalId}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Current Aggregator</p>
-                                <p>{transaction?.accountNumber}</p>
+                                <p>{posDeviceDetails?.aggregatorName ?? "NA"}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Current Agent</p>
-                                <p>Outright Sales</p>
+                                <p>{posDeviceDetails?.agentName ?? "NA"}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Current State</p>
-                                <p>69 RD along Chicken republic</p>
+                                <p>{posDeviceDetails?.state ?? "NA"}</p>
                             </InformationDetail>
                         </PersonalInformation>
-
-                        <Reassign>
-                            <h4>Reassign to</h4>
-                            <br />
-                            <Aggregator
-                                onClick={onClickHandlerAggregator}
-                                onMouseOver={() => onMouseOverHandler("aggregator")}
-                                onMouseOut={() => onMouseOutHandler("aggregator")}
-                                aggregator={chooseAggregator}
-                                overAggregator={overAggregator}
-                            >
-                                <p>Aggregator</p>
-                                <img src={arrowRight} alt={"arrow-right"} />
-                            </Aggregator>
-                            <Agent
-                                onClick={onClickHandlerAgent}
-                                onMouseOver={() => onMouseOverHandler("agent")}
-                                onMouseOut={() => onMouseOutHandler("agent")}
-                                agent={chooseAgent}
-                                overAgent={overAgent}
-                            >
-                                <p>Agent</p>
-                                <img src={arrowRight} alt={"arrow-right"} />
-                            </Agent>
-                        </Reassign>
-
-                        <ActionButton>
-                            <CancelButton>Cancel</CancelButton>
-                            <AcceptButton
-                                onClick={() => {
-                                    setReassignModal(false);
-                                    setNextModal(true);
-                                }}
-                                disabled={!chooseAgent && !chooseAggregator}
-                            >
-                                Next
-                            </AcceptButton>
-                        </ActionButton>
+                        {reassignTo === "" && (
+                            <Reassign>
+                                <h4>Reassign to</h4>
+                                <Aggregator>
+                                    <p>Aggregator</p>
+                                    <img src={arrowRight} alt={"arrow-right"} />
+                                </Aggregator>
+                                <Agent
+                                    onClick={() => {
+                                        setReassignTo(REASSIGN_TO_AGENT);
+                                    }}
+                                >
+                                    <p>To Agent</p>
+                                    <img src={arrowRight} alt={"arrow-right"} />
+                                </Agent>
+                            </Reassign>
+                        )}
+                        {reassignTo === REASSIGN_TO_AGENT && (
+                            <AgentInformation>
+                                <h4>Agent Information</h4>
+                                <Input>
+                                    <label>Account Number</label>
+                                    <input
+                                        type={"text"}
+                                        value={assignToAgentInput?.accountNumber}
+                                        onChange={(e) => {
+                                            setAssignToAgentInput({
+                                                ...assignToAgentInput,
+                                                accountNumber: e.target.value,
+                                            });
+                                            if (e.target.value.length === 10) {
+                                                triggerGetAgent(e.target.value);
+                                            } else {
+                                                dispatch(resetGetAgentByAccountNumber());
+                                            }
+                                        }}
+                                    />
+                                </Input>
+                                {agentDetails && agentFulfilledTimeStamp && (
+                                    <>
+                                        <InputWithValue>
+                                            <label>Agent Name</label>
+                                            <input
+                                                type={"text"}
+                                                value={agentDetails?.agentName}
+                                                readOnly
+                                            />
+                                        </InputWithValue>
+                                        <InputWithValue>
+                                            <label>State</label>
+                                            <input
+                                                type={"text"}
+                                                value={agentDetails?.state}
+                                                readOnly
+                                            />
+                                        </InputWithValue>
+                                        <div className="select-category">
+                                            <label>Category</label>
+                                            <SelectCommon
+                                                options={posCategoryList}
+                                                value={assignToAgentInput?.posCategoryId}
+                                                onChange={(e) => {
+                                                    setAssignToAgentInput({
+                                                        ...assignToAgentInput,
+                                                        posCategoryId: e.target.value,
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </AgentInformation>
+                        )}
+                        {reassignTo !== "" && (
+                            <ActionButton>
+                                <CancelButton onClick={handleClose}>Cancel</CancelButton>
+                                <AcceptButton
+                                    disabled={
+                                        assignToAgentInput?.posCategoryId === "" || agentError
+                                    }
+                                    onClick={() => {
+                                        reassignPos({
+                                            id: posDeviceDetails?.id,
+                                            posCategoryId: parseInt(
+                                                assignToAgentInput?.posCategoryId
+                                            ),
+                                            accountNumber: assignToAgentInput?.accountNumber,
+                                        });
+                                    }}
+                                >
+                                    {reassignPosIsLoading ? (
+                                        <CircularProgress size={20} color="inherit" />
+                                    ) : (
+                                        "Reassign POS"
+                                    )}
+                                </AcceptButton>
+                            </ActionButton>
+                        )}
                     </ModalBody>
                 </ModalContainer>
             </Dialog>
-            {console.log({ chooseAgent, chooseAggregator })}
         </div>
     );
 }
 
 const ModalContainer = styled.div`
-    width: 22rem;
+    width: 26rem;
     height: 100%;
-    /* background: #fff; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -177,7 +307,6 @@ const ModalHeader = styled.div`
         font-weight: 700;
         font-size: 1.1rem;
         line-height: 1.2rem;
-        /* color: #ffffff; */
         color: black;
         margin-right: 5rem;
     }
@@ -195,14 +324,12 @@ const ModalBody = styled.div`
     align-items: center;
     justify-content: center;
     padding: 1.8rem 0.8rem;
+    padding-bottom: 0.8rem;
     box-sizing: border-box;
 `;
 
 const Reassign = styled.div`
     width: 100%;
-    /* display: flex; */
-    /* align-items: flex-start; */
-    /* justify-content: space-between; */
     margin-top: 2rem;
 
     h4 {
@@ -217,11 +344,9 @@ const Reassign = styled.div`
         padding-bottom: 1rem;
     }
 
-    & > div {
+    div {
         display: flex;
         justify-content: space-between;
-        /* border: 1px solid #9cabb5; */
-        width: 95%;
         padding: 1rem 0.5rem;
         border-radius: 6px;
         margin: auto auto;
@@ -331,22 +456,106 @@ const CancelButton = styled.button`
 `;
 
 const Aggregator = styled.div`
-    background: ${({ aggregator, overAggregator }) =>
-        aggregator || overAggregator ? "#fffaf6" : "#fff"};
-    border: ${({ aggregator, overAggregator }) => {
-        return aggregator || overAggregator ? "1px solid #933d0c" : "1px solid #9cabb5";
-    }};
-    color: ${({ aggregator, overAggregator }) => {
-        return aggregator || overAggregator ? "#933d0c" : "#474747";
-    }};
-    font-weight: ${({ aggregator, overAggregator }) => (aggregator || overAggregator) && 800};
+    cursor: not-allowed;
+    background: #fff;
+    border: 1px solid #9cabb5;
+    color: #474747;
+    font-weight: 400;
+
+    /* &:hover {
+        background: #fffaf6;
+        border: 1px solid #933d0c;
+        color: #933d0c;
+        font-weight: 800;
+    } */
 `;
 
 const Agent = styled.div`
-    background: ${({ agent, overAgent }) => (agent || overAgent ? "#fffaf6" : "#fff")};
-    border: ${({ agent, overAgent }) => {
-        return agent || overAgent ? "1px solid #933d0c" : "1px solid #9cabb5";
-    }};
-    color: ${({ agent, overAgent }) => (agent || overAgent ? "#933d0c" : "#474747")};
-    font-weight: ${({ agent, overAgent }) => (agent || overAgent) && 800};
+    background: #fff;
+    border: 1px solid #9cabb5;
+    color: #474747;
+    font-weight: 400;
+    width: 100%;
+    cursor: pointer;
+
+    &:hover {
+        background: #fffaf6;
+        border: 1px solid #933d0c;
+        color: #933d0c;
+        font-weight: 800;
+    }
+`;
+
+const AgentInformation = styled.div`
+    width: 100%;
+    margin-top: 2rem;
+
+    h4 {
+        display: block;
+        font-weight: 700;
+        font-size: 0.9rem;
+        line-height: 1.1rem;
+        color: #000000;
+        margin: 0;
+        padding-bottom: 0.5rem;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .select-category {
+        label {
+            font-weight: 400;
+            font-size: 13.7255px;
+            line-height: 18px;
+            letter-spacing: 0.0571895px;
+            color: rgb(71, 71, 71);
+            margin-bottom: 0.3rem;
+        }
+    }
+`;
+
+const Input = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 1.2rem;
+    outline: none;
+
+    label {
+        font-weight: 400;
+        font-size: 13.7255px;
+        line-height: 18px;
+        letter-spacing: 0.0571895px;
+        color: #474747;
+        margin-bottom: 0.3rem;
+    }
+
+    input {
+        width: 100%;
+        height: 48px;
+        padding: 0px 1rem;
+        background: #ffffff;
+        border: 1px solid #d3d3d3;
+        border-radius: 4.57516px;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    input:focus {
+        border: none;
+        border: 1px solid #933d0c;
+    }
+`;
+
+const InputWithValue = styled(Input)`
+    input {
+        background: #fffaf6;
+        border: none;
+    }
+
+    input:disabled {
+        cursor: text;
+    }
 `;

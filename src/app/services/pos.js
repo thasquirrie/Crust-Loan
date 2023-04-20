@@ -75,7 +75,7 @@ export const posApi = baseApi.injectEndpoints({
         }),
         getPosHistory: builder.query({
             query: (id) => ({
-                url: `/transaction/pos/pos-history/${id}`,
+                url: `/transaction/pos/serialNumber?${id}`,
             }),
         }),
         getAllMerchants: builder.query({
@@ -86,6 +86,23 @@ export const posApi = baseApi.injectEndpoints({
         createPos: builder.mutation({
             query: (body) => ({
                 url: `/transaction/pos/create`,
+                method: "POST",
+                body,
+            }),
+        }),
+        getAgentByAccountNumber: builder.query({
+            query: (accountNumber) => ({
+                url: `/transaction/pos/agent/${accountNumber}`,
+            }),
+        }),
+        getPosCategory: builder.query({
+            query: () => ({
+                url: `/transaction/pos/category`,
+            }),
+        }),
+        reassignPos: builder.mutation({
+            query: (body) => ({
+                url: `/transaction/pos/agent/reassign`,
                 method: "POST",
                 body,
             }),
@@ -112,4 +129,7 @@ export const {
     useGetPosHistoryQuery,
     useGetAllMerchantsQuery,
     useCreatePosMutation,
+    useLazyGetAgentByAccountNumberQuery,
+    useGetPosCategoryQuery,
+    useReassignPosMutation,
 } = posApi;

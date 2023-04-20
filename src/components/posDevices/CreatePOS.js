@@ -32,8 +32,7 @@ export default function CreatePOS({ open, setPosDevicesModalType }) {
     });
 
     const { data: merchants } = useGetAllMerchantsQuery();
-    const [triggerGetPos, { data: lazyQueryGetPosData, isLoading: lazyQueryGetPosIsLoading }] =
-        useLazyGetPosQuery(lazyQueryOptions);
+    const [triggerGetPos] = useLazyGetPosQuery(lazyQueryOptions);
 
     const [
         triggerCreatePos,
