@@ -99,7 +99,7 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
         if (assignPosDevicesToAggregatorIsSuccess) {
             setSnackbarInfo({
                 open: true,
-                message: "Successfully Assigned POS to Aggregator!",
+                message: "Successfully Assigned POS Devices to Aggregator!",
                 severity: "success",
             });
             setAggregatorAccountNumber("");
@@ -154,12 +154,13 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
             message: "",
         });
         setSelected([]);
-        handleClose();
+        handleCloseModal();
     };
 
     const handleCloseModal = () => {
         handleClose();
         setAggregatorAccountNumber("");
+        dispatch(resetGetAggregator());
     };
 
     return (
@@ -188,6 +189,7 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
                     <SearchFilters>
                         <div className="aggregator-details">
                             <GetAggregatorDetails
+                            marginBottom={"0px"}
                                 value={aggregatorAccountNumber}
                                 loading={lazyQueryGetAggregatorIsLoading}
                                 placeHolder="Search for Aggregator by Account Number"
@@ -201,11 +203,11 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
                                 <>
                                     <div className="agg-name">
                                         <p>Aggregator</p>
-                                        <div>Alhaji Ibrahim</div>
+                                        <div>{getAggregatorData?.content[0].aggregatorName}</div>
                                     </div>
                                     <div className="agg-name">
                                         <p>Location</p>
-                                        <div>Abuja</div>
+                                        <div>{getAggregatorData?.content[0].aggregatorState}</div>
                                     </div>
                                 </>
                             )}
@@ -217,7 +219,7 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
                                     accountNumber: aggregatorAccountNumber,
                                 });
                             }}
-                            disabled={!getAggregatorData?.content[0]}
+                            disabled={(!getAggregatorData?.content[0] || selected.length === 0)}
                         >
                             Assign POS Devices
                         </AssignDevicesBtn>
