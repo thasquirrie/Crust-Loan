@@ -61,7 +61,7 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
         {
             data: lazyQueryGetAggregatorData,
             isLoading: lazyQueryGetAggregatorIsLoading,
-            isSuccess: lazyQueryGetAggregatorIsSuccess,
+            // isSuccess: lazyQueryGetAggregatorIsSuccess,
             fulfilledTimeStamp: lazyQueryGetAggregatorFulfilledTimeStamp,
         },
     ] = useLazyGetAggregatorQuery(lazyQueryOptions);
@@ -69,7 +69,7 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
     const [
         triggerAssignPosDevicesToAggregator,
         {
-            isLoading: assignPosDevicesToAggregatorIsLoading,
+            // isLoading: assignPosDevicesToAggregatorIsLoading,
             isError: assignPosDevicesToAggregatorIsError,
             isSuccess: assignPosDevicesToAggregatorIsSuccess,
             error: assignPosDevicesToAggregatorError,
@@ -153,8 +153,8 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
             severity: snackbarInfo.severity,
             message: "",
         });
-        setSelected([]);
-        handleCloseModal();
+        // setSelected([]);
+        // handleCloseModal();
     };
 
     const handleCloseModal = () => {
