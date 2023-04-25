@@ -62,7 +62,7 @@ export default function CreatePOS({ open, setPosDevicesModalType }) {
         if (createPosIsSuccess) {
             setSnackbarInfo({
                 open: true,
-                message: "Successfully Assigned POS to Aggregator!",
+                message: "Successfully Created POS",
                 severity: "success",
             });
             triggerGetPos();
