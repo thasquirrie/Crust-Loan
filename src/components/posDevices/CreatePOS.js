@@ -62,7 +62,7 @@ export default function CreatePOS({ open, setPosDevicesModalType }) {
         if (createPosIsSuccess) {
             setSnackbarInfo({
                 open: true,
-                message: "Successfully Created POS",
+                message: "POS Created Successfully",
                 severity: "success",
             });
             triggerGetPos();
