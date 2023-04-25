@@ -23,6 +23,7 @@ import mennIcon from "../../assets/common/Kebab.svg";
 import POSHistoryModal from "../../components/posDevices/POSHistoryModal.js";
 import CreatePOS from "../../components/posDevices/CreatePOS.js";
 import ReassignPOSModal from "../../components/posDevices/ReassignPOS.js";
+import POSDetailsModal from "../../components/posDevices/POSDetailsModal.js";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -38,7 +39,8 @@ const TableColumns = [
 ];
 
 const PosDevices = () => {
-    const VIEW_MORE = "VIEW_MORE";
+    const VIEW_POS_HISTORY = "VIEW_POS_HISTORY";
+    const VIEW_POS_DETAILS = "VIEW_POS_DETAILS";
     const CREATE_POS = "CREATE_POS";
     const REASSIGN_POS = "REASSIGN_POS";
 
@@ -70,9 +72,16 @@ const PosDevices = () => {
 
     const tableMenuItems = [
         {
-            name: "View More",
+            name: "View POS History",
             onClick: (row) => {
-                setPosDevicesModalType(VIEW_MORE);
+                setPosDevicesModalType(VIEW_POS_HISTORY);
+                setPosDevicesModalDetails(row);
+            },
+        },
+        {
+            name: "View POS Details",
+            onClick: (row) => {
+                setPosDevicesModalType(VIEW_POS_DETAILS);
                 setPosDevicesModalDetails(row);
             },
         },
@@ -127,10 +136,19 @@ const PosDevices = () => {
             />
             {posDevicesModalDetails && (
                 <POSHistoryModal
-                    open={posDevicesModalType === VIEW_MORE}
+                    open={posDevicesModalType === VIEW_POS_HISTORY}
                     handleClose={() => setPosDevicesModalType("")}
                     posDevicesModalDetails={
-                        posDevicesModalType === VIEW_MORE ? posDevicesModalDetails : null
+                        posDevicesModalType === VIEW_POS_HISTORY ? posDevicesModalDetails : null
+                    }
+                />
+            )}
+               {posDevicesModalDetails && (
+                <POSDetailsModal
+                    open={posDevicesModalType === VIEW_POS_DETAILS}
+                    handleClose={() => setPosDevicesModalType("")}
+                    posDevicesModalDetails={
+                        posDevicesModalType === VIEW_POS_DETAILS ? posDevicesModalDetails : null
                     }
                 />
             )}

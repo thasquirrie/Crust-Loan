@@ -80,7 +80,13 @@ export const posApi = baseApi.injectEndpoints({
         }),
         getPosHistory: builder.query({
             query: (id) => ({
-                url: `/transaction/pos/serialNumber?${id}`,
+                url: `/transaction/pos/pos-history/${id}`,
+            
+            }),
+        }),
+        getPosDetails: builder.query({
+            query: (id) => ({
+                   url: `/transaction/pos?serialNumber=${id}`,
             }),
         }),
         getAllMerchants: builder.query({
@@ -146,4 +152,5 @@ export const {
     useReassignPosMutation,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
+    useGetPosDetailsQuery
 } = posApi;
