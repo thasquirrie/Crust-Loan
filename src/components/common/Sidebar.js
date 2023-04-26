@@ -141,13 +141,13 @@ function Sidebar({
                                 <img src={posManagement} alt="" />
                                 POS Devices
                             </Link>
-                        </div>
+                        </div> */}
                         <div className="SubMenuItem" id="posRequest">
                             <Link to="/pos/requests">
                                 <img src={posManagement} alt="" />
                                 POS Requests
                             </Link>
-                        </div> */}
+                        </div>
                         <div className="SubMenuItem">
                             <Link to="/pos/aggregator">
                                 <img src={AggregatorIcon} alt="" />
