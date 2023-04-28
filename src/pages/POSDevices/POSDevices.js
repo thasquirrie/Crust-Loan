@@ -126,6 +126,9 @@ const PosDevices = () => {
         setUploadedSelectedDevice(selected);
     };
 
+    const handleClearSelectedPosDevices = () => {
+        setSelected([])
+    }
     return (
         <Main>
             <AssignMultipleDevicesToAgg
@@ -133,6 +136,7 @@ const PosDevices = () => {
                 handleClose={() => setOpenModal(false)}
                 setSelected={setUploadedSelectedDevice}
                 selected={uploadedSelectedDevice}
+                clearSelectedPosDevices={handleClearSelectedPosDevices}
             />
             {posDevicesModalDetails && (
                 <POSHistoryModal

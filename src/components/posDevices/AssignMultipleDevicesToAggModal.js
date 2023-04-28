@@ -42,7 +42,7 @@ const TableColumns = [
     { id: "state", label: "POS State" },
 ];
 
-export default function AssignMultipleDevicesToAgg({ open, handleClose, selected, setSelected }) {
+export default function AssignMultipleDevicesToAgg({ open, handleClose, selected, setSelected,  clearSelectedPosDevices }) {
     const [aggregatorAccountNumber, setAggregatorAccountNumber] = useState("");
     const [snackbarInfo, setSnackbarInfo] = useState({
         open: false,
@@ -76,6 +76,12 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
         },
     ] = useAssignPosDevicesToAggregatorMutation();
 
+    const handleCloseModal = () => {
+        handleClose();
+        setAggregatorAccountNumber("");
+        dispatch(resetGetAggregator());
+    };
+
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
         let newSelected = [];
@@ -102,10 +108,16 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
                 message: "Successfully Assigned POS Devices to Aggregator!",
                 severity: "success",
             });
+            setTimeout(() => {
             setAggregatorAccountNumber("");
+            clearSelectedPosDevices();
+            dispatch(resetGetAggregator());
+            handleClose()
+        },1500)
+           
         } else if (assignPosDevicesToAggregatorIsError) {
-            const errorKey = Object.keys(assignPosDevicesToAggregatorError?.data?.error);
-            const errorMessage = assignPosDevicesToAggregatorError?.data?.error;
+            const errorKey = Object.keys(assignPosDevicesToAggregatorError?.data.errors)[0];
+            const errorMessage = assignPosDevicesToAggregatorError?.data.errors[errorKey];
 
             setSnackbarInfo({
                 open: true,
@@ -157,11 +169,7 @@ export default function AssignMultipleDevicesToAgg({ open, handleClose, selected
         // handleCloseModal();
     };
 
-    const handleCloseModal = () => {
-        handleClose();
-        setAggregatorAccountNumber("");
-        dispatch(resetGetAggregator());
-    };
+  
 
     return (
         <div>

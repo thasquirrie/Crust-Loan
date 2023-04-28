@@ -67,7 +67,7 @@ export const posApi = baseApi.injectEndpoints({
         }),
         assignPosDevicesToAggregator: builder.mutation({
             query: (body) => ({
-                url: "/transaction/pos/aggregatort/assign",
+                url: "/transaction/pos/aggregator/assign",
                 method: "POST",
                 body,
             }),
@@ -81,6 +81,7 @@ export const posApi = baseApi.injectEndpoints({
         getPosHistory: builder.query({
             query: (id) => ({
                 url: `/transaction/pos/pos-history/${id}`,
+                
             
             }),
         }),

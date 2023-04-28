@@ -15,7 +15,9 @@ export default function POSHistoryModal({ open, handleClose, posDevicesModalDeta
         skip: !posDevicesModalDetails?.serialNumber,
     });
 
-    const posHistoryData = posHistory?.data?.content && posHistory?.data?.content[0];
+    const posHistoryData = posHistory && posHistory?.data;
+
+    console.log('posHistoryData', posHistoryData)
 
     return (
         <div>
@@ -38,24 +40,24 @@ export default function POSHistoryModal({ open, handleClose, posDevicesModalDeta
                             <tbody>
                                 <tr>
                                     <td>Status</td>
-                                    <td>{posHistoryData?.status ?? "-"}</td>
+                                    <td>{posHistoryData?.posDeviceInformationResponse?.status ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Created</td>
                                     <td>
                                         {formattedTime(
-                                            posHistoryData?.createdDate,
+                                            posHistoryData?.posDeviceInformationResponse?.createdAt,
                                             "ddd Do MMM, YYYY | hh:mm a"
                                         )}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>SerialNumber</td>
-                                    <td>{posHistoryData?.serialNumber ?? "-"}</td>
+                                    <td>{posHistoryData?.posDeviceInformationResponse?.serialNumber ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Terminal ID</td>
-                                    <td>{posHistoryData?.terminalId ?? "-"}</td>
+                                    <td>{posHistoryData?.posDeviceInformationResponse?.terminalId ?? "-"}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -66,22 +68,23 @@ export default function POSHistoryModal({ open, handleClose, posDevicesModalDeta
                                     <td>Date Assigned</td>
                                     <td>
                                         {formattedTime(
-                                            posHistoryData?.createdDate,
+                                            posHistoryData?.currentPosAgent?.dateAssigned
+                                            ,
                                             "ddd Do MMM, YYYY | hh:mm a"
                                         ) ?? "-"}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Agent Name</td>
-                                    <td>{posHistoryData?.agentName ?? "-"}</td>
+                                    <td>{posHistoryData?.currentPosAgent?.agentName ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Agent Account Number</td>
-                                    <td>{posHistoryData?.accountNumber ?? "-"}</td>
+                                    <td>{posHistoryData?.currentPosAgent?.agentAccountNumber ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Agent Business Address</td>
-                                    <td>{posHistoryData?.address ?? "-"}</td>
+                                    <td>{posHistoryData?.currentPosAgent?.agentBusinessAddress ?? "-"}</td>
                                 </tr>
                             </tbody>
                         </Table>
@@ -90,19 +93,23 @@ export default function POSHistoryModal({ open, handleClose, posDevicesModalDeta
                             <tbody>
                                 <tr>
                                     <td>Date Assigned</td>
-                                    <td>25th Aug 2023</td>
+                                    <td>{posHistoryData?.previousPosAgent?.dateAssigned ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Agent Name</td>
-                                    <td>123756748790</td>
+                                    <td>{posHistoryData?.previousPosAgent?.agentName ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Agent Account Number</td>
-                                    <td>P6574678387837</td>
+                                    <td>{posHistoryData?.previousPosAgent?.agentAccountNumber ?? "-"}</td>
                                 </tr>
                                 <tr>
                                     <td>Agent Business Address</td>
-                                    <td>P6574678387837</td>
+                                    <td>{posHistoryData?.previousPosAgent?.agentAccountNumber ?? "-"}</td>
+                                </tr>
+                                <tr>
+                                    <td>Agent Business Name</td>
+                                    <td>{posHistoryData?.previousPosAgent?.agentBusinessName ?? "-"}</td>
                                 </tr>
                             </tbody>
                         </Table>
