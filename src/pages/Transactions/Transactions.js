@@ -158,9 +158,6 @@ function Transactions() {
         });
     };
 
-    console.log("searchFilters", searchFilters);
-    console.log("transactionParams", transactionParams);
-
     return (
         <Main>
             <Snackbar
@@ -213,7 +210,8 @@ function Transactions() {
                             disabled={
                                 lazyQueryDownloadIsLoading ||
                                 lazyQueryDownloadIsError ||
-                                !lazyQueryDownloadTransactions?.data ||
+                                !lazyQueryDownloadTransactions?.data 
+                                ||
                                 !transactionParams?.startDate ||
                                 !transactionParams?.endDate
                             }

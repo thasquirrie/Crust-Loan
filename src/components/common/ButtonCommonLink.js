@@ -19,7 +19,7 @@ function ButtonCommonLink({
             textColor={textColor}
             disabled={disabled}
         >
-            <Link to={href} download={download ? download : undefined} target="_blank">
+            <Link to={href} download={download ? download : undefined}  disabled={disabled} target="_blank">
                 {isLoading ? <CircularProgress size={20} color="inherit" /> : text}
             </Link>
         </ButtonContainer>
@@ -52,5 +52,9 @@ const ButtonContainer = styled.div`
     a {
         text-decoration: none;
         color: #fff;
+        ${(props) =>
+            props.disabled
+                ? `pointer-events: none`
+                : `cursor: pointer;`}
     }
 `;

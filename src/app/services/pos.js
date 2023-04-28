@@ -76,7 +76,19 @@ export const posApi = baseApi.injectEndpoints({
                 url:`/user/admin/agent/upgrade/${agentId}`,
                 method:'POST'
             })
-        })
+        }),
+        downloadPosActivityRecords: builder.query({
+            query: (params) => ({
+              url: `/transaction/pos/transactions/activity/download`,
+              params,
+            })
+          }),
+        //   downloadPosActivity: builder.query({
+        //     query: (id) => ({
+        //       // url:/tran
+        //     })
+        //   })
+      
     }),
 });
 
@@ -97,4 +109,5 @@ export const {
     useLazyGetAllPosActivityQuery,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
+    useLazyDownloadPosActivityRecordsQuery
 } = posApi;
