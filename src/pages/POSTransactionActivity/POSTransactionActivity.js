@@ -7,12 +7,16 @@ import {
     SearchFilters,
     SelectSearchBar,
     SelectSearchFilter,
+    DownloadButtonContainer
 } from "./POSTransactionActivityStyles";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
 import { DateRangePicker } from "rsuite";
-import { useGetAllPosActivityQuery, useLazyGetAllPosActivityQuery } from "../../app/services/pos";
+import { useGetAllPosActivityQuery, useLazyGetAllPosActivityQuery ,  useLazyDownloadPosActivityRecordsQuery} from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import formattedAmount from "../../utils/formatCurrency";
+import ButtonCommonLink from "../../components/common/ButtonCommonLink"
+import SelectCommon from "../../components/common/SelectCommon";
+
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -47,6 +51,16 @@ function POSTransactionActivity() {
         { data: lazyQueryPosActivity, isLoading: lazyQueryPosActivityIsLoading },
     ] = useLazyGetAllPosActivityQuery(lazyQueryOptions);
 
+
+    const [
+      triggerDownloadPosActivity,
+      {
+        data: lazyQueryDownloadPosActivity,
+        isLoading: lazyQueryDownloadIsLoading,
+        isError: lazyQueryDownloadIsError,
+      },
+    ] = useLazyDownloadPosActivityRecordsQuery(lazyQueryOptions);
+
     return (
         <Main>
             <Container>
@@ -55,6 +69,23 @@ function POSTransactionActivity() {
                         <h1>POS Transactions Activity</h1>
                         {/* <p>{posActivity?.data?.totalElements} Requests</p> */}
                     </HeaderTitle>
+                    <DownloadButtonContainer>
+            <ButtonCommonLink
+              text={'Download Report'}
+               href={lazyQueryDownloadPosActivity?.data}
+               disabled={
+                   lazyQueryDownloadIsLoading ||
+                   lazyQueryDownloadIsError ||
+                   !lazyQueryDownloadPosActivity?.data 
+                    ||
+                   !posActivityParams?.startDate ||
+                   !posActivityParams?.endDate
+               }
+               isLoading={lazyQueryDownloadIsLoading}
+              download={true}
+            />
+          </DownloadButtonContainer>
+
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
@@ -81,24 +112,33 @@ function POSTransactionActivity() {
                                 onClickSearchIcon={() => {
                                     triggerPosActivity({
                                         ...posActivityParams,
-                                        agentAccountNumber:
-                                            searchFilters.searchFilterBy === "agentAccountNumber"
-                                                ? searchFilters.searchFilterValue
-                                                : "",
-                                        aggregatorAccountNumber:
-                                            searchFilters.searchFilterBy ===
-                                            "aggregatorAccountNumber"
-                                                ? searchFilters.searchFilterValue
-                                                : "",
-                                        serialNumber:
-                                            searchFilters.searchFilterBy === "serialNumber"
-                                                ? searchFilters.searchFilterValue
-                                                : "",
-                                        terminalId:
-                                            searchFilters.searchFilterBy === "terminalId"
-                                                ? searchFilters.searchFilterValue
-                                                : "",
+                                            ...(searchFilters.searchFilterBy === "agentAccountNumber" && {
+                                              agentAccountNumber: searchFilters?.searchFilterValue}),
+                                            ...(searchFilters.searchFilterBy ===
+                                            "aggregatorAccountNumber" && {
+                                              aggregatorAccountNumber:searchFilters.searchFilterValue
+                                            }),
+                                            ...(searchFilters.searchFilterBy === "serialNumber" && {
+                                              serialNumber: searchFilters.searchFilterValue}),
+                                              ...(searchFilters.searchFilterBy === "terminalId" && {
+                                                terminalId: searchFilters.searchFilterValue})
                                     });
+
+                                    if(posActivityParams?.startDate && posActivityParams?.endDate){
+                                      triggerDownloadPosActivity({
+                                        ...posActivityParams,
+                                        ...(searchFilters.searchFilterBy === "agentAccountNumber" && {
+                                          agentAccountNumber: searchFilters?.searchFilterValue}),
+                                        ...(searchFilters.searchFilterBy ===
+                                        "aggregatorAccountNumber" && {
+                                          aggregatorAccountNumber:searchFilters.searchFilterValue
+                                        }),
+                                        ...(searchFilters.searchFilterBy === "serialNumber" && {
+                                          serialNumber: searchFilters.searchFilterValue}),
+                                          ...(searchFilters.searchFilterBy === "terminalId" && {
+                                            terminalId: searchFilters.searchFilterValue})
+                                    });
+                                    }
                                 }}
                                 showClearSearch={
                                     searchFilters.searchFilterValue.length > 0 ? true : false
@@ -111,14 +151,16 @@ function POSTransactionActivity() {
                                     triggerPosActivity({
                                         ...posActivityParams,
                                         serialNumber: "",
-                                        referenceNumber: "",
+                                        agentAccountNumber: "",
                                         terminalId: "",
+                                        aggregatorAccountNumber: ""
                                     });
                                 }}
                             />
                         </SelectSearchBar>
                         <SearchFilters>
                             <DateRangePicker
+                            placement="autoHorizontalStart"
                                 appearance="default"
                                 placeholder="Date Range"
                                 style={{ width: 230 }}
@@ -143,6 +185,70 @@ function POSTransactionActivity() {
                                             ...posActivityParams,
                                             startDate,
                                             endDate: endDate,
+                                        });
+
+                                        triggerDownloadPosActivity({
+                                          ...posActivityParams,
+                                          startDate,
+                                          endDate: endDate,
+                                          ...(searchFilters.searchFilterBy === "agentAccountNumber" && {
+                                            agentAccountNumber: searchFilters?.searchFilterValue}),
+                                          ...(searchFilters.searchFilterBy ===
+                                          "aggregatorAccountNumber" && {
+                                            aggregatorAccountNumber:searchFilters.searchFilterValue
+                                          }),
+                                          ...(searchFilters.searchFilterBy === "serialNumber" && {
+                                            serialNumber: searchFilters.searchFilterValue}),
+                                            ...(searchFilters.searchFilterBy === "terminalId" && {
+                                              terminalId: searchFilters.searchFilterValue})
+                                      });
+                                    }
+                                }}
+                            />
+                               <SelectCommon
+                                options={{
+                                    "": "All",
+                                    active: "Active",
+                                    inactive:"Inactive",
+                                }}
+                                value={posActivityParams?.transactionStatus}
+                                onChange={(e) => {
+                                    setPosActivityParams({
+                                        ...posActivityParams,
+                                        status: e.target.value,
+                                    });
+                                    triggerPosActivity({
+                                        ...posActivityParams,
+                                        status: e.target.value,
+                                        ...(searchFilters.searchFilterBy === "agentAccountNumber" && {
+                                            agentAccountNumber: searchFilters?.searchFilterValue}),
+                                          ...(searchFilters.searchFilterBy ===
+                                          "aggregatorAccountNumber" && {
+                                            aggregatorAccountNumber:searchFilters.searchFilterValue
+                                          }),
+                                          ...(searchFilters.searchFilterBy === "serialNumber" && {
+                                            serialNumber: searchFilters.searchFilterValue}),
+                                            ...(searchFilters.searchFilterBy === "terminalId" && {
+                                              terminalId: searchFilters.searchFilterValue})
+                                      });
+                                    
+
+                                    if (
+                                        posActivityParams?.startDate && posActivityParams?.endDate
+                                    ) {
+                                        triggerDownloadPosActivity({
+                                            ...posActivityParams,
+                                            status: e.target.value,
+                                            ...(searchFilters.searchFilterBy === "agentAccountNumber" && {
+                                                agentAccountNumber: searchFilters?.searchFilterValue}),
+                                              ...(searchFilters.searchFilterBy ===
+                                              "aggregatorAccountNumber" && {
+                                                aggregatorAccountNumber:searchFilters.searchFilterValue
+                                              }),
+                                              ...(searchFilters.searchFilterBy === "serialNumber" && {
+                                                serialNumber: searchFilters.searchFilterValue}),
+                                                ...(searchFilters.searchFilterBy === "terminalId" && {
+                                                  terminalId: searchFilters.searchFilterValue})
                                         });
                                     }
                                 }}
