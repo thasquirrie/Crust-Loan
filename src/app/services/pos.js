@@ -34,7 +34,7 @@ export const posApi = baseApi.injectEndpoints({
         }),
         getAgent: builder.query({
             query: (accountNumber) => ({
-                url: `/transaction/pos/agent/${accountNumber}`
+                url: `/transaction/pos/agent/${accountNumber}`,
             }),
         }),
         approvePosRequest: builder.mutation({
@@ -71,24 +71,33 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
-        createAggregator:builder.mutation({
-            query:(agentId) => ({
-                url:`/user/admin/agent/upgrade/${agentId}`,
-                method:'POST'
-            })
+        createAggregator: builder.mutation({
+            query: (agentId) => ({
+                url: `/user/admin/agent/upgrade/${agentId}`,
+                method: "POST",
+            }),
+        }),
+        getAggregatorPosDevices: builder.query({
+            query: (aggregatorId) => ({
+                url: `/transaction/pos/aggregators/${aggregatorId}/pos-devices`,
+            }),
+        }),
+        getAggregatorAgent: builder.query({
+            query: (aggregatorId) => ({
+                url: `/user/admin/aggregators/${aggregatorId}/agents`,
+            }),
+        }),
+        getAggregatorTransaction: builder.query({
+            query: (aggregatorId) => ({
+                url: `/transaction/pos/aggregators/${aggregatorId}/transaction-count`,
+            }),
         }),
         downloadPosActivityRecords: builder.query({
             query: (params) => ({
-              url: `/transaction/pos/transactions/activity/download`,
-              params,
-            })
-          }),
-        //   downloadPosActivity: builder.query({
-        //     query: (id) => ({
-        //       // url:/tran
-        //     })
-        //   })
-      
+                url: `/transaction/pos/transactions/activity/download`,
+                params,
+            }),
+        }),
     }),
 });
 
@@ -109,5 +118,8 @@ export const {
     useLazyGetAllPosActivityQuery,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
-    useLazyDownloadPosActivityRecordsQuery
+    useGetAggregatorAgentQuery,
+    useGetAggregatorTransactionQuery,
+    useGetAggregatorPosDevicesQuery,
+    useLazyDownloadPosActivityRecordsQuery,
 } = posApi;
