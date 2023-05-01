@@ -462,8 +462,7 @@ const LoanManagementSubMenu = styled.div`
             text-decoration: none;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
             transition: all 0.2s ease-in-out;
-
-            width: 98%;
+            width: 99%;
             display: block;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -526,10 +525,11 @@ const POSManagementSubMenu = styled.div`
         align-items: center;
         justify-content: flex-start;
         width: 100%;
-        padding-left: 1rem;
+        padding-left: 2.2rem;
         box-sizing: border-box;
         opacity: ${(props) => (props.openSidebar ? "0" : "1")};
         transition: all 0.2s ease-in-out;
+        box-sizing: border-box;
 
         a {
             display: flex;
@@ -539,18 +539,18 @@ const POSManagementSubMenu = styled.div`
             font-weight: 700;
             font-size: 14px;
             line-height: 18px;
-            padding: 1.5rem;
+            padding: 1.5rem 0;
             letter-spacing: 0.0571895px;
             color: #474747;
             text-decoration: none;
             opacity: ${(props) => (props.openSidebar ? "0" : "1")};
             transition: all 0.2s ease-in-out;
-
-            width: 98%;
+            width: 90%;
             display: block;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+            box-sizing: border-box;
 
             img {
                 margin-right: 1rem;

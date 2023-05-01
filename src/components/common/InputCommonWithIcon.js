@@ -66,5 +66,6 @@ const Container = styled.div`
     input:focus {
         border: none;
         border: 1px solid #933d0c;
+        outline: none;
     }
 `;
