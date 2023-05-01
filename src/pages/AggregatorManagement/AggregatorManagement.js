@@ -39,7 +39,7 @@ const AggregatorManagement = () => {
     const [aggregatorSearchParams, setAggregatorSearchParams] = useState({
         page: 1,
     });
-    const [aggregatorDetails, setAggregatorDetails] = useState(null)
+    const [aggregatorDetails, setAggregatorDetails] = useState(null);
 
     const searchFilterOptions = {
         ...(searchFilters?.searchFilterBy === "accountNumber" &&
@@ -60,7 +60,6 @@ const AggregatorManagement = () => {
         { data: lazyQueryAggregators, isLoading: lazyQueryAggregatorsIsLoading },
     ] = useLazyGetAggregatorQuery(lazyQueryOptions);
 
-    
     function generateTableMenuItems(row) {
         let tableMenuItems = [
             {
@@ -71,19 +70,19 @@ const AggregatorManagement = () => {
                 },
             },
         ];
-   
+
         return tableMenuItems;
     }
 
     return (
         <Main>
             <ViewAggregatorSummary
-             open={aggregatorModalType === VIEW_AGENT_DETAILS}
-             aggregatorDetails={aggregatorDetails}
-             handleClose={() => {
-                 setAggregatorModalType("");
-                 setAggregatorDetails(null);
-             }}
+                open={aggregatorModalType === VIEW_AGENT_DETAILS}
+                aggregatorDetails={aggregatorDetails}
+                handleClose={() => {
+                    setAggregatorModalType("");
+                    setAggregatorDetails(null);
+                }}
             />
             <CreateAggrgatorModal
                 handleClose={() => setOpenCreateAggregatorModal(false)}
@@ -148,7 +147,6 @@ const AggregatorManagement = () => {
                     </SelectSearchFilter>
                 </Header>
                 <Table
-                    heightOfTable={"420px"}
                     columns={TableColumns}
                     rows={
                         lazyQueryAggregators?.data?.content

@@ -11,20 +11,12 @@ import { CircularProgress } from "@mui/material";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { PosTmsStatusCodes } from "../../utils/posTmsStatus";
+import formattedAmount from "../../utils/formatCurrency";
 const moment = require("moment");
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-const formattedAmount = (amount) => {
-    const formattedAmount = new Intl.NumberFormat("en-NG", {
-        style: "currency",
-        currency: "NGN",
-    }).format(amount);
-
-    return formattedAmount;
-};
 
 const formattedTime = (time) => {
     const formatString = "ddd Do MMM, YYYY | hh:mm a";
