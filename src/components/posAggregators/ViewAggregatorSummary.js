@@ -1,4 +1,4 @@
-import { forwardRef,useEffect, useState} from "react";
+import { forwardRef, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
@@ -8,9 +8,14 @@ import {
     useGetAggregatorTransactionQuery,
     useGetAggregatorPosDevicesQuery,
 } from "../../app/services/pos";
-import Table from "../../components/common/Table"
-import Avatar from 'react-avatar';
-import { setAggregatorAgents,  resetAggregatorAgents, resetAggregatorPos, setAggregatorPos } from "../../features/pos/posSlice";
+import Table from "../../components/common/Table";
+import Avatar from "react-avatar";
+import {
+    setAggregatorAgents,
+    resetAggregatorAgents,
+    resetAggregatorPos,
+    setAggregatorPos,
+} from "../../features/pos/posSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -33,49 +38,47 @@ const AggregatorAgentTableColumns = [
     { id: "dateAdded", label: "Date Added" },
 ];
 
-export default function ViewAggregatorSummary({ open, handleClose, aggregatorDetails}) {
+export default function ViewAggregatorSummary({ open, handleClose, aggregatorDetails }) {
     const [tab, setTab] = useState("posdevices");
 
-    const {   aggregatorPosDevices,
-        aggregatorAgents,
-        aggregatorTransactionCount } =  useSelector((state) => state.pos)
+    const { aggregatorPosDevices, aggregatorAgents, aggregatorTransactionCount } = useSelector(
+        (state) => state.pos
+    );
     const dispatch = useDispatch();
 
-    const { data: aggregatorPosDeviceDetails, fulfilledTimeStamp: posDevicesTimestamp } = useGetAggregatorPosDevicesQuery(aggregatorDetails?.id, {
-        skip:!aggregatorDetails?.id
-    })
-  
-    const { data: lazyQueryAggregatorAgents, fulfilledTimeStamp: agentsTimestamp  } = useGetAggregatorAgentQuery(aggregatorDetails?.id, {
-        skip:!aggregatorDetails?.id
-    })
+    const { data: aggregatorPosDeviceDetails, fulfilledTimeStamp: posDevicesTimestamp } =
+        useGetAggregatorPosDevicesQuery(aggregatorDetails?.id, {
+            skip: !aggregatorDetails?.id,
+        });
 
+    const { data: lazyQueryAggregatorAgents, fulfilledTimeStamp: agentsTimestamp } =
+        useGetAggregatorAgentQuery(aggregatorDetails?.id, {
+            skip: !aggregatorDetails?.id,
+        });
 
-    const 
-        { data: lazyQueryTransactionCount, fulfilledTimeStamp: transactionCountTimestamp 
-        } = useGetAggregatorTransactionQuery(aggregatorDetails?.id, {
-            skip:!aggregatorDetails?.id
-        })
+    const { data: lazyQueryTransactionCount, fulfilledTimeStamp: transactionCountTimestamp } =
+        useGetAggregatorTransactionQuery(aggregatorDetails?.id, {
+            skip: !aggregatorDetails?.id,
+        });
 
-        useEffect(() => {
-         if(posDevicesTimestamp){
-           dispatch(setAggregatorPos(aggregatorPosDeviceDetails))
-         }
-        },[aggregatorPosDevices, dispatch, posDevicesTimestamp])
+    useEffect(() => {
+        if (posDevicesTimestamp) {
+            dispatch(setAggregatorPos(aggregatorPosDeviceDetails));
+        }
+    }, [aggregatorPosDevices, dispatch, posDevicesTimestamp]);
 
+    useEffect(() => {
+        if (agentsTimestamp) {
+            dispatch(setAggregatorAgents(lazyQueryAggregatorAgents));
+        }
+    }, [lazyQueryAggregatorAgents, dispatch, agentsTimestamp]);
 
-        useEffect(() => {
-            if(agentsTimestamp ){
-              dispatch(setAggregatorAgents(lazyQueryAggregatorAgents))
-            }
-           },[lazyQueryAggregatorAgents, dispatch, agentsTimestamp])
-           
-
-            const hanldeCloseModal = () => {
-                handleClose()
-                setTab("posdevices")
-                dispatch(resetAggregatorPos())
-                dispatch( resetAggregatorAgents())
-            }
+    const hanldeCloseModal = () => {
+        handleClose();
+        setTab("posdevices");
+        dispatch(resetAggregatorPos());
+        dispatch(resetAggregatorAgents());
+    };
     return (
         <div>
             <Dialog
@@ -87,115 +90,138 @@ export default function ViewAggregatorSummary({ open, handleClose, aggregatorDet
                 aria-describedby="alert-dialog-slide-description"
             >
                 <ModalContainer>
-                  
-                        <>
-                            <ModalHeader>
-                                <AggregatorHeader>
-                                    <h4>
-                                        Aggregator Summary
-                                    </h4>
+                    <>
+                        <ModalHeader>
+                            <AggregatorHeader>
+                                <h4>Aggregator Summary</h4>
 
-                                    <img onClick={ hanldeCloseModal} src={closeModalIcon} alt='close modal' />
-                                </AggregatorHeader>
+                                <img
+                                    onClick={hanldeCloseModal}
+                                    src={closeModalIcon}
+                                    alt="close modal"
+                                />
+                            </AggregatorHeader>
 
-                                <AggregatorInfo> 
-                                    <Avatar name={aggregatorDetails?.aggregatorName} round color='#933D0C' />
-                                   
-                                    <h4>{aggregatorDetails?.aggregatorName}</h4>
+                            <AggregatorInfo>
+                                <Avatar
+                                    name={aggregatorDetails?.aggregatorName}
+                                    round
+                                    color="#933D0C"
+                                />
 
-                                    <ul className="aggregator-details">
-                                        <li>Account NO: <span>{aggregatorDetails?.aggregatorName}</span></li>
-                                        <li>Phone Number: <span>{aggregatorDetails?.aggregatorPhoneNumber}</span></li>
-                                        <li>State: <span>{aggregatorDetails?.aggregatorState}</span></li>
-                                    </ul>
-                                </AggregatorInfo>
-                                <PillsContainer>
-                                
-                                    <Pills
-                                        onClick={() => {
-                                            setTab("posdevices")
-                                        }}
-                                        active={tab === "posdevices"}
-                                    >
-                                        <p>POS Devices</p>
-                                    </Pills>
-                                  
-                                    <Pills
-                                        onClick={() => {
-                                            setTab("agents");
-                                        }}
-                                        active={tab === "agents"}
-                                    >
-                                        <p>Agents</p>
-                                    </Pills>
-                                  
-                                    <Pills
-                                        onClick={() => {
-                                            setTab("postransactions")
-                                        }}
-                                        active={tab === "postransactions"}
-                                    >
-                                        <p>POS Transactions</p>
-                                    </Pills>
-                                
-                                </PillsContainer>
-                            </ModalHeader>
-                            <ModalBody>
-                                {tab === "posdevices" &&  (
-                                    <>
-                                        <TableContainer>
-                                            {( aggregatorPosDevices) &&
-                                              <ListOfItems>
-                                                 {aggregatorPosDevices.length  } Assigned POS Devices
+                                <h4>{aggregatorDetails?.aggregatorName}</h4>
+
+                                <ul className="aggregator-details">
+                                    <li>
+                                        Account No: <span>{aggregatorDetails?.aggregatorName}</span>
+                                    </li>
+                                    <li>
+                                        Phone Number:{" "}
+                                        <span>{aggregatorDetails?.aggregatorPhoneNumber}</span>
+                                    </li>
+                                    <li>
+                                        State: <span>{aggregatorDetails?.aggregatorState}</span>
+                                    </li>
+                                </ul>
+                            </AggregatorInfo>
+                            <PillsContainer>
+                                <Pills
+                                    onClick={() => {
+                                        setTab("posdevices");
+                                    }}
+                                    active={tab === "posdevices"}
+                                >
+                                    <p>POS Devices</p>
+                                </Pills>
+
+                                <Pills
+                                    onClick={() => {
+                                        setTab("agents");
+                                    }}
+                                    active={tab === "agents"}
+                                >
+                                    <p>Agents</p>
+                                </Pills>
+
+                                <Pills
+                                    onClick={() => {
+                                        setTab("postransactions");
+                                    }}
+                                    active={tab === "postransactions"}
+                                >
+                                    <p>POS Transactions</p>
+                                </Pills>
+                            </PillsContainer>
+                        </ModalHeader>
+                        <ModalBody>
+                            {tab === "posdevices" && (
+                                <>
+                                    <TableContainer>
+                                        {aggregatorPosDevices && (
+                                            <ListOfItems>
+                                                {aggregatorPosDevices.length} Assigned POS Devices
                                             </ListOfItems>
-                                            }
-                                          
-                                            <Table
+                                        )}
+
+                                        <Table
                                             heightOfTable={"420px"}
-                                                columns={PosDevicesTableColumns}
-                                                rows={aggregatorPosDevices}
-                                            />
-                                        </TableContainer>
-
-                                    </>
-                                )}
-                                 {tab === "agents"  && (
-                                    <>
-                                        <TableContainer>
-                                        {  aggregatorAgents &&
-                                              <ListOfItems>
-                                                 {  aggregatorAgents?.length } Mapped Agents
+                                            columns={PosDevicesTableColumns}
+                                            rows={aggregatorPosDevices}
+                                        />
+                                    </TableContainer>
+                                </>
+                            )}
+                            {tab === "agents" && (
+                                <>
+                                    <TableContainer>
+                                        {aggregatorAgents && (
+                                            <ListOfItems>
+                                                {aggregatorAgents?.length} Mapped Agents
                                             </ListOfItems>
-                                            }
-                                          
-                                            <Table
-                                               heightOfTable={"420px"}
-                                                columns={AggregatorAgentTableColumns}
-                                                rows={aggregatorAgents}
-                                            />
-                                        </TableContainer>
-                                    </>
-                                )} 
-                                {tab === "postransactions" && (
-                                    <>
-                                                  <POSTransactionContainer>
-                                                    <POSTransactionCard>
-                                                        <div className="card-header">Total POS Transactions</div>
-                                                        <div className="card-amount">{lazyQueryTransactionCount?.data?.totalPosTransactions}</div>
-                                                    </POSTransactionCard>
-                                                    <POSTransactionCard>
-                                                        <div className="card-header">POS Transfer Count</div>
-                                                        <div className="card-amount">{lazyQueryTransactionCount?.data?.posTransferCount}</div>
-                                                    </POSTransactionCard>
-                                                    <POSTransactionCard>
-                                                        <div className="card-header">POS Withdrawal Count</div>
-                                                        <div className="card-amount">{lazyQueryTransactionCount?.data?.posWithdrawalCount}</div>
-                                                    </POSTransactionCard>
-                                                </POSTransactionContainer>
-                                    </>
-                                )}
-                            </ModalBody>
-                        </>
+                                        )}
+
+                                        <Table
+                                            heightOfTable={"420px"}
+                                            columns={AggregatorAgentTableColumns}
+                                            rows={aggregatorAgents}
+                                        />
+                                    </TableContainer>
+                                </>
+                            )}
+                            {tab === "postransactions" && (
+                                <>
+                                    <POSTransactionContainer>
+                                        <POSTransactionCard>
+                                            <div className="card-header">
+                                                Total POS Transactions
+                                            </div>
+                                            <div className="card-amount">
+                                                {
+                                                    lazyQueryTransactionCount?.data
+                                                        ?.totalPosTransactions
+                                                }
+                                            </div>
+                                        </POSTransactionCard>
+                                        <POSTransactionCard>
+                                            <div className="card-header">POS Transfer Count</div>
+                                            <div className="card-amount">
+                                                {lazyQueryTransactionCount?.data?.posTransferCount}
+                                            </div>
+                                        </POSTransactionCard>
+                                        <POSTransactionCard>
+                                            <div className="card-header">POS Withdrawal Count</div>
+                                            <div className="card-amount">
+                                                {
+                                                    lazyQueryTransactionCount?.data
+                                                        ?.posWithdrawalCount
+                                                }
+                                            </div>
+                                        </POSTransactionCard>
+                                    </POSTransactionContainer>
+                                </>
+                            )}
+                        </ModalBody>
+                    </>
                 </ModalContainer>
             </Dialog>
         </div>
@@ -233,7 +259,6 @@ const AggregatorHeader = styled.div`
     background: #fff;
     box-sizing: border-box;
 
-
     h4 {
         font-weight: 700;
         font-size: 1.1rem;
@@ -260,18 +285,17 @@ const AggregatorInfo = styled.div`
         font-weight: 700;
         font-size: 20px;
         line-height: 12px;
-        color: #933D0C;
+        color: #933d0c;
         margin-top: 23px;
     }
 
     .aggregator-details {
-        display:flex;
+        display: flex;
         margin-top: 29px;
         flex-direction: row;
         align-items: center;
 
-
-         li {
+        li {
             font-style: normal;
             font-weight: 500;
             font-size: 12px;
@@ -322,9 +346,9 @@ const Pills = styled.div`
 `;
 
 const TableContainer = styled.div`
-  margin-top: 69px;
-  width: 100%;
-`
+    margin-top: 69px;
+    width: 100%;
+`;
 
 const ListOfItems = styled.h2`
     font-style: normal;
@@ -333,21 +357,21 @@ const ListOfItems = styled.h2`
     line-height: 16px;
     color: #292929;
     margin-bottom: 37px;
-`
+`;
 
 const POSTransactionContainer = styled.div`
-  display:flex;
-  align-items: center;
-  flex-direction: row;
-  margin-top:60px;
-`
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 60px;
+`;
 
 const POSTransactionCard = styled.div`
-    background: #FFFFFF;
-    border: 0.5px solid #D3D3D3;
+    background: #ffffff;
+    border: 0.5px solid #d3d3d3;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.03);
     border-radius: 6px;
-    padding-left:20px;
+    padding-left: 20px;
     padding-top: 20px;
     margin-right: 16px;
     width: 337px;
@@ -364,10 +388,7 @@ const POSTransactionCard = styled.div`
         font-weight: 400;
         font-size: 48.8197px;
         line-height: 58px;
-        margin-top:6px;
-        color: #0C0400;
+        margin-top: 6px;
+        color: #0c0400;
     }
-`
-
-
-
+`;
