@@ -36,6 +36,11 @@ const TableColumns = [
     { id: "crustTransactionRef", label: "TransactionRef" },
     { id: "createdAt", label: "Date and Time" },
     { id: "fee", label: "Fee" },
+    {
+        id: "aggregatorCommission",
+        label: "Aggregator Commision",
+        format: (value) => formattedAmount(value),
+    },
     { id: "transactionType", label: "Type" },
     {
         id: "transactionStatus",
@@ -210,8 +215,7 @@ function Transactions() {
                             disabled={
                                 lazyQueryDownloadIsLoading ||
                                 lazyQueryDownloadIsError ||
-                                !lazyQueryDownloadTransactions?.data 
-                                ||
+                                !lazyQueryDownloadTransactions?.data ||
                                 !transactionParams?.startDate ||
                                 !transactionParams?.endDate
                             }
