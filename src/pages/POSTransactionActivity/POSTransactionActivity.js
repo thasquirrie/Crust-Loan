@@ -32,6 +32,11 @@ const TableColumns = [
     { id: "withdrawAmount", label: "WITHDRAWAL AMOUNT", format: formattedAmount },
     { id: "numberOfWithdrawals", label: "WITHDRAWAL COUNT" },
     {
+        id: "aggregatorCommission",
+        label: "Aggregator Commision",
+        format: (value) => formattedAmount(value),
+    },
+    {
         id: "status",
         label: "STATUS",
         format: (value) => {
@@ -83,7 +88,7 @@ function POSTransactionActivity() {
                 <Header>
                     <HeaderTitle>
                         <h1>POS Transactions Activity</h1>
-                        {/* <p>{posActivity?.data?.totalElements} Requests</p> */}
+                        <p>{posActivity?.data?.totalElements} total POS</p>
                     </HeaderTitle>
                     <DownloadButtonContainer>
                         <ButtonCommonLink

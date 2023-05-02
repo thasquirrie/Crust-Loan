@@ -4,6 +4,10 @@ const formattedAmount = (amount) => {
         currency: "NGN",
     }).format(amount);
 
+    if (isNaN(formattedAmount)) {
+        return "N/A";
+    }
+
     return formattedAmount;
 };
 
