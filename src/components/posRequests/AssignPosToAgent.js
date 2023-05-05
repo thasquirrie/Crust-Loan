@@ -183,7 +183,7 @@ export default function AssignPosToAgent({ open, setPosModalType, posRequestDeta
                                 onChange={handlePosSerialNumberChange}
                                 noDataFound={getPosData?.content?.length === 0}
                             />
-                            {getPosData?.content[0] && (
+                            {getPosData?.content[0] && posSerialNumber?.length > 0 && (
                                 <>
                                     <PosDetailsContainer>
                                         <AggregatorDetail>
@@ -212,7 +212,11 @@ export default function AssignPosToAgent({ open, setPosModalType, posRequestDeta
                                     serialNumber: posSerialNumber,
                                 });
                             }}
-                            disabled={!getPosData?.content[0] || assignPosToAgentIsLoading}
+                            disabled={
+                                !getPosData?.content[0] ||
+                                assignPosToAgentIsLoading ||
+                                posSerialNumber?.length === 0
+                            }
                         >
                             {assignPosToAgentIsLoading ? (
                                 <CircularProgress size={20} color="inherit" />
