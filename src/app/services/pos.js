@@ -74,7 +74,7 @@ export const posApi = baseApi.injectEndpoints({
         }),
         getAllPosActivity: builder.query({
             query: (params) => ({
-                url: "/transaction/pos/transactions/activity",
+                url: "/transaction/pos/transaction/activity",
                 params,
             }),
         }),
@@ -101,7 +101,7 @@ export const posApi = baseApi.injectEndpoints({
         }),
         downloadPosActivityRecords: builder.query({
             query: (params) => ({
-                url: `/transaction/pos/transactions/activity/download`,
+                url: `/transaction/pos/transaction/activity/download`,
                 params,
             }),
         }),
