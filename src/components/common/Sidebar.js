@@ -11,6 +11,7 @@ import accordionClose from "../../assets/sidebar/accordionClose.svg";
 import dashboard from "../../assets/sidebar/dashboard.svg";
 import posManagement from "../../assets/sidebar/posManagement.svg";
 import posTMS from "../../assets/sidebar/posTMS.svg";
+import posDevices from "../../assets/sidebar/devicesIcon.svg";
 import posActivity from "../../assets/sidebar/posActivity.svg";
 import clusterManagement from "../../assets/sidebar/clusterManagement.svg";
 import signOut from "../../assets/sidebar/signOut.svg";
@@ -124,13 +125,20 @@ function Sidebar({
                                 Dashboard
                             </Link>
                         </div> */}
+                          <div className="SubMenuItem">
+                            <Link to="/pos/devices">
+                                <img src={posDevices} alt="" />
+                                POS Devices
+                            </Link>
+                        </div>
                         <div className="SubMenuItem">
                             <Link to="/pos/tms">
                                 <img src={posTMS} alt="" />
                                 TMS Transactions
                             </Link>
                         </div>
-                        <div className="SubMenuItem">
+                      
+                        {/* <div className="SubMenuItem">
                             <Link to="/pos/transaction_activity">
                                 <img src={posActivity} alt="" />
                                 POS Activity
@@ -141,13 +149,13 @@ function Sidebar({
                                 <img src={posManagement} alt="" />
                                 POS Devices
                             </Link>
-                        </div>
+                        </div> */}
                         <div className="SubMenuItem" id="posRequest">
                             <Link to="/pos/requests">
                                 <img src={posManagement} alt="" />
                                 POS Requests
                             </Link>
-                        </div> */}
+                        </div>
                         <div className="SubMenuItem">
                             <Link to="/pos/aggregator">
                                 <img src={AggregatorIcon} alt="" />

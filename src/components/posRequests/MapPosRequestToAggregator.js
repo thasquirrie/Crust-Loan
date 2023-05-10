@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useMemo } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import cancel from "../../assets/posRequests/close.svg";
+import cancel from "../../assets/pos/close.svg";
 
 import { CircularProgress } from "@mui/material";
 import GetAggregatorDetails from "./GetAggregatorsDetails";

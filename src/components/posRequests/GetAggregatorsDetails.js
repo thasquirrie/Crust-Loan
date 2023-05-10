@@ -1,9 +1,11 @@
 import { CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
-const GetAggregatorDetails = ({ placeHolder, loading, onChange, value, noDataFound }) => {
+const GetAggregatorDetails = ({ placeHolder, loading, onChange, value, marginBottom, noDataFound }) => {
+
+
     return (
-        <FormContainer>
+        <FormContainer marginBottom={marginBottom}>
             <h3>{placeHolder}</h3>
             <div className="input_container">
                 <input type="tel" value={value} onChange={onChange} placeholder={placeHolder} />
@@ -23,11 +25,12 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     margin-bottom: 32px;
+    margin-bottom: ${(props) => (props.marginBottom ? "0px" : "32px")};
 
     h3 {
         font-style: normal;
         font-weight: 400;
-        font-size: 13.7255px;
+        font-size: 11px;
         line-height: 18px;
         letter-spacing: 0.0571895px;
         color: #474747;

@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useState, useMemo } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import cancel from "../../assets/posRequests/close.svg";
+import cancel from "../../assets/pos/close.svg";
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import GetPosDetails from "./GetPosDetails";
@@ -183,7 +183,7 @@ export default function AssignPosToAgent({ open, setPosModalType, posRequestDeta
                                 onChange={handlePosSerialNumberChange}
                                 noDataFound={getPosData?.content?.length === 0}
                             />
-                            {getPosData?.content[0] && (
+                            {getPosData?.content[0] && posSerialNumber?.length > 0 && (
                                 <>
                                     <PosDetailsContainer>
                                         <AggregatorDetail>
@@ -212,7 +212,11 @@ export default function AssignPosToAgent({ open, setPosModalType, posRequestDeta
                                     serialNumber: posSerialNumber,
                                 });
                             }}
-                            disabled={!getPosData?.content[0] || assignPosToAgentIsLoading}
+                            disabled={
+                                !getPosData?.content[0] ||
+                                assignPosToAgentIsLoading ||
+                                posSerialNumber?.length === 0
+                            }
                         >
                             {assignPosToAgentIsLoading ? (
                                 <CircularProgress size={20} color="inherit" />

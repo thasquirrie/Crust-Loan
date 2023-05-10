@@ -88,7 +88,7 @@ export default function CreateAggrgatorModal({ open, handleClose }) {
         if (createAggregatorIsSuccess) {
             setSnackbarInfo({
                 open: true,
-                message: "User successfully upgraded",
+                message: "Aggregator Created Successfully",
                 severity: "success",
             });
             setAgentAccountNumber("");
