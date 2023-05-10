@@ -34,7 +34,7 @@ export const posApi = baseApi.injectEndpoints({
         }),
         getAgent: builder.query({
             query: (accountNumber) => ({
-                url: `/transaction/pos/agent/${accountNumber}`
+                url: `/transaction/pos/agent/${accountNumber}`,
             }),
         }),
         approvePosRequest: builder.mutation({
@@ -81,13 +81,11 @@ export const posApi = baseApi.injectEndpoints({
         getPosHistory: builder.query({
             query: (id) => ({
                 url: `/transaction/pos/pos-history/${id}`,
-                
-            
             }),
         }),
         getPosDetails: builder.query({
             query: (id) => ({
-                   url: `/transaction/pos?serialNumber=${id}`,
+                url: `/transaction/pos?serialNumber=${id}`,
             }),
         }),
         getAllMerchants: builder.query({
@@ -119,12 +117,18 @@ export const posApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
-        createAggregator:builder.mutation({
-            query:(agentId) => ({
-                url:`/user/admin/agent/upgrade/${agentId}`,
-                method:'POST'
-            })
-        })
+        createAggregator: builder.mutation({
+            query: (agentId) => ({
+                url: `/user/admin/agent/upgrade/${agentId}`,
+                method: "POST",
+            }),
+        }),
+        downloadPosActivityRecords: builder.query({
+            query: (params) => ({
+                url: `/transaction/pos/transactions/activity/download`,
+                params,
+            }),
+        }),
     }),
 });
 
@@ -153,5 +157,6 @@ export const {
     useReassignPosMutation,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
-    useGetPosDetailsQuery
+    useLazyDownloadPosActivityRecordsQuery,
+    useGetPosDetailsQuery,
 } = posApi;
