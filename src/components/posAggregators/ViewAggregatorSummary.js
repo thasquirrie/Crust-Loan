@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import Slide from "@mui/material/Slide";
 import styled from "styled-components";
-import closeModalIcon from "../../assets/posRequests/close.svg";
+import closeModalIcon from "../../assets/pos/close.svg";
 import {
     useGetAggregatorAgentQuery,
     useGetAggregatorTransactionQuery,
