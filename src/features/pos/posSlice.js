@@ -9,8 +9,7 @@ const posSlice = createSlice({
         getAgentByAccountNumber: null,
         aggregatorPosDevices: null,
         aggregatorAgents: null,
-        aggregatorTransactionCount:null
-        getAgentByAccountNumber: null,
+        aggregatorTransactionCount: null,
     },
     reducers: {
         setAllPosRequests: (state, action) => {
