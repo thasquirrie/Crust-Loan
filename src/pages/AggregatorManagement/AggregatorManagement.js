@@ -13,6 +13,7 @@ import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
 import { useGetAggregatorQuery, useLazyGetAggregatorQuery } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import CreateAggrgatorModal from "../../components/posAggregators/CreateAggregatorModal";
+import ViewAggregatorSummary from "../../components/posAggregators/ViewAggregatorSummary";
 
 const TableColumns = [
     { id: "aggregatorName", label: "Aggregator Name" },
@@ -26,6 +27,9 @@ const TableColumns = [
 ];
 
 const AggregatorManagement = () => {
+    const VIEW_AGENT_DETAILS = "VIEW_AGENT_DETAILS";
+
+    const [aggregatorModalType, setAggregatorModalType] = useState(false);
     const [searchFilters, setSearchFilters] = useState({
         searchFilterBy: "accountNumber",
         searchFilterValue: "",
@@ -35,6 +39,7 @@ const AggregatorManagement = () => {
     const [aggregatorSearchParams, setAggregatorSearchParams] = useState({
         page: 1,
     });
+    const [aggregatorDetails, setAggregatorDetails] = useState(null)
 
     const searchFilterOptions = {
         ...(searchFilters?.searchFilterBy === "accountNumber" &&
@@ -55,17 +60,31 @@ const AggregatorManagement = () => {
         { data: lazyQueryAggregators, isLoading: lazyQueryAggregatorsIsLoading },
     ] = useLazyGetAggregatorQuery(lazyQueryOptions);
 
-    const tableMenuItems = [
-        {
-            name: "View Summary",
-            onClick: (id) => {
-                console.log("open menu");
+    
+    function generateTableMenuItems(row) {
+        let tableMenuItems = [
+            {
+                name: "View Aggregator Summary",
+                onClick: () => {
+                    setAggregatorModalType(VIEW_AGENT_DETAILS);
+                    setAggregatorDetails(row);
+                },
             },
-        },
-    ];
+        ];
+   
+        return tableMenuItems;
+    }
 
     return (
         <Main>
+            <ViewAggregatorSummary
+             open={aggregatorModalType === VIEW_AGENT_DETAILS}
+             aggregatorDetails={aggregatorDetails}
+             handleClose={() => {
+                 setAggregatorModalType("");
+                 setAggregatorDetails(null);
+             }}
+            />
             <CreateAggrgatorModal
                 handleClose={() => setOpenCreateAggregatorModal(false)}
                 open={openCreateAggregatorModal}
@@ -172,7 +191,7 @@ const AggregatorManagement = () => {
                         });
                     }}
                     firstPage={aggregatorSearchParams.page === 1}
-                    menuItems={tableMenuItems}
+                    menuItems={generateTableMenuItems}
                 />
             </Container>
         </Main>

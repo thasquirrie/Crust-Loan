@@ -6,6 +6,9 @@ const posSlice = createSlice({
         posRequests: null,
         getAggregator: null,
         getPos: null,
+        aggregatorPosDevices:null,
+        aggregatorAgents: null,
+        aggregatorTransactionCount:null
         getAgentByAccountNumber: null,
     },
     reducers: {
@@ -24,6 +27,24 @@ const posSlice = createSlice({
         resetGetPos: (state) => {
             state.getPos = null;
         },
+        setAggregatorPos: (state, action) => {
+            state.aggregatorPosDevices = action.payload.data;
+        },
+        resetAggregatorPos: (state, action) => {
+            state.aggregatorPosDevices = null;
+        },
+        setAggregatorAgents: (state, action) => {
+            state.aggregatorAgents = action.payload.data;
+        },
+        resetAggregatorAgents: (state, action) => {
+            state.aggregatorAgents = null;
+        },
+        setAggregatorTransactionCount: (state, action) => {
+            state.aggregatorTransactionCount = action.payload.data;
+        },
+        resetAggregatorTransactionCount: (state, action) => {
+            state.aggregatorTransactionCount = null;
+        },
         setGetAgentByAccountNumber: (state, action) => {
             state.getAgentByAccountNumber = action.payload.data;
         },
@@ -35,7 +56,7 @@ const posSlice = createSlice({
 });
 
 export const {
-    setAllPosRequests,
+    setAllPosRequests,  setAggregatorPos,   setAggregatorTransactionCount,  resetAggregatorTransactionCount, resetAggregatorPos, resetAggregatorAgents,  setAggregatorAgents,
     setGetAggregator,
     resetGetAggregator,
     setGetPos,
