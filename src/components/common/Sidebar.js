@@ -125,7 +125,7 @@ function Sidebar({
                                 Dashboard
                             </Link>
                         </div> */}
-                          <div className="SubMenuItem">
+                        <div className="SubMenuItem">
                             <Link to="/pos/devices">
                                 <img src={posDevices} alt="" />
                                 POS Devices
@@ -137,19 +137,12 @@ function Sidebar({
                                 TMS Transactions
                             </Link>
                         </div>
-                      
-                        {/* <div className="SubMenuItem">
+                        <div className="SubMenuItem">
                             <Link to="/pos/transaction_activity">
                                 <img src={posActivity} alt="" />
                                 POS Activity
                             </Link>
                         </div>
-                        {/* <div className="SubMenuItem">
-                            <Link to="/">
-                                <img src={posManagement} alt="" />
-                                POS Devices
-                            </Link>
-                        </div> */}
                         <div className="SubMenuItem" id="posRequest">
                             <Link to="/pos/requests">
                                 <img src={posManagement} alt="" />
