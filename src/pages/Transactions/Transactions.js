@@ -215,7 +215,8 @@ function Transactions() {
                             disabled={
                                 lazyQueryDownloadIsLoading ||
                                 lazyQueryDownloadIsError ||
-                                !lazyQueryDownloadTransactions?.data ||
+                                !lazyQueryDownloadTransactions?.data 
+                                ||
                                 !transactionParams?.startDate ||
                                 !transactionParams?.endDate
                             }
