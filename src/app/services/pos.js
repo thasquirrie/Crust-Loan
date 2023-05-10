@@ -105,6 +105,45 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getPosHistory: builder.query({
+            query: (id) => ({
+                url: `/transaction/pos/pos-history/${id}`,
+            }),
+        }),
+        getPosDetails: builder.query({
+            query: (id) => ({
+                url: `/transaction/pos?serialNumber=${id}`,
+            }),
+        }),
+        getAllMerchants: builder.query({
+            query: (id) => ({
+                url: `/user/institutions/all`,
+            }),
+        }),
+        createPos: builder.mutation({
+            query: (body) => ({
+                url: `/transaction/pos/create`,
+                method: "POST",
+                body,
+            }),
+        }),
+        getAgentByAccountNumber: builder.query({
+            query: (accountNumber) => ({
+                url: `/transaction/pos/agent/${accountNumber}`,
+            }),
+        }),
+        getPosCategory: builder.query({
+            query: () => ({
+                url: `/transaction/pos/category`,
+            }),
+        }),
+        reassignPos: builder.mutation({
+            query: (body) => ({
+                url: `/transaction/pos/agent/reassign`,
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
@@ -137,4 +176,5 @@ export const {
     useGetAggregatorTransactionQuery,
     useGetAggregatorPosDevicesQuery,
     useLazyDownloadPosActivityRecordsQuery,
+    useGetPosDetailsQuery,
 } = posApi;

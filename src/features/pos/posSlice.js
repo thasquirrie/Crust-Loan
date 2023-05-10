@@ -6,7 +6,8 @@ const posSlice = createSlice({
         posRequests: null,
         getAggregator: null,
         getPos: null,
-        aggregatorPosDevices:null,
+        getAgentByAccountNumber: null,
+        aggregatorPosDevices: null,
         aggregatorAgents: null,
         aggregatorTransactionCount:null
         getAgentByAccountNumber: null,
@@ -56,7 +57,13 @@ const posSlice = createSlice({
 });
 
 export const {
-    setAllPosRequests,  setAggregatorPos,   setAggregatorTransactionCount,  resetAggregatorTransactionCount, resetAggregatorPos, resetAggregatorAgents,  setAggregatorAgents,
+    setAllPosRequests,
+    setAggregatorPos,
+    setAggregatorTransactionCount,
+    resetAggregatorTransactionCount,
+    resetAggregatorPos,
+    resetAggregatorAgents,
+    setAggregatorAgents,
     setGetAggregator,
     resetGetAggregator,
     setGetPos,
