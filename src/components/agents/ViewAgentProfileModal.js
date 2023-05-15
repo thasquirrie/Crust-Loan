@@ -406,7 +406,7 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                 <InfoContainer>
                                                     <p>
                                                         <img src={Map} alt={"bank"} />
-                                                        Location
+                                                        Business Address
                                                     </p>
                                                     <p>
                                                         {userDetails?.data?.business.location ? (
