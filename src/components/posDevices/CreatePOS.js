@@ -148,7 +148,6 @@ export default function CreatePOS({ open, setPosDevicesModalType }) {
                                         }}
                                         value={CreatePOSInput.serialNumber}
                                     />
-                                    {/* <p className="errorMessage">Serial Number already exists</p> */}
                                 </Input>
                                 <br />
                                 <br />

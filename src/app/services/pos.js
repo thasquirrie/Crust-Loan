@@ -144,33 +144,6 @@ export const posApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
-        createAggregator: builder.mutation({
-            query: (agentId) => ({
-                url: `/user/admin/agent/upgrade/${agentId}`,
-                method: "POST",
-            }),
-        }),
-        getAggregatorPosDevices: builder.query({
-            query: (aggregatorId) => ({
-                url: `/transaction/pos/aggregators/${aggregatorId}/pos-devices`,
-            }),
-        }),
-        getAggregatorAgent: builder.query({
-            query: (aggregatorId) => ({
-                url: `/user/admin/aggregators/${aggregatorId}/agents`,
-            }),
-        }),
-        getAggregatorTransaction: builder.query({
-            query: (aggregatorId) => ({
-                url: `/transaction/pos/aggregators/${aggregatorId}/transaction-count`,
-            }),
-        }),
-        downloadPosActivityRecords: builder.query({
-            query: (params) => ({
-                url: `/transaction/pos/transactions/activity/download`,
-                params,
-            }),
-        }),
     }),
 });
 

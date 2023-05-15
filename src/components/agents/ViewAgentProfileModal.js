@@ -312,13 +312,11 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                 <InfoContainer>
                                                     <p>
                                                         <img src={House} alt={"bank"} />
-                                                        Business Address
+                                                        Personal Address
                                                     </p>
                                                     <p>
-                                                        {userDetails?.data?.personal
-                                                            .businessAddress ? (
-                                                            userDetails?.data?.personal
-                                                                ?.businessAddress
+                                                        {userDetails?.data?.personal.address ? (
+                                                            userDetails?.data?.personal?.address
                                                         ) : (
                                                             <span>NA</span>
                                                         )}
@@ -411,10 +409,8 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
                                                         Location
                                                     </p>
                                                     <p>
-                                                        {userDetails?.data?.business
-                                                            .businessLocation ? (
-                                                            userDetails?.data?.business
-                                                                ?.businessLocation
+                                                        {userDetails?.data?.business.location ? (
+                                                            userDetails?.data?.business?.location
                                                         ) : (
                                                             <span>NA</span>
                                                         )}
