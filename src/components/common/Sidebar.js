@@ -61,6 +61,15 @@ function Sidebar({
                         Transactions
                     </Link>
                 </Transactions>
+                <Transactions
+                    openSidebar={openSidebar}
+                    isActive={location.pathname === "/transaction"}
+                >
+                    <Link to="/transaction/nip">
+                        <img src={transaction} alt="" />
+                        NIP Transactions
+                    </Link>
+                </Transactions>
                 <LoanManagement
                     openSidebar={openSidebar}
                     openLoansDropdown={

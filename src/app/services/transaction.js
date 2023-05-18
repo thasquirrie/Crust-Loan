@@ -11,6 +11,12 @@ export const transactionApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getAllNIPTransactions: builder.query({
+            query: (params) => ({
+                url: "/transaction/nip/credit",
+                params,
+            }),
+        }),
         downloadTransactionRecords: builder.query({
             query: (params) => ({
                 url: "/transaction/records/download",
@@ -29,14 +35,24 @@ export const transactionApi = baseApi.injectEndpoints({
                 body: { transactionId: id },
             }),
         }),
+        retryNIPTransaction: builder.mutation({
+            query: (id) => ({
+                url: `/transaction/credit/single/retry`,
+                method: "POST",
+                body: { transactionId: id },
+            }),
+        }),
     }),
 });
 
 export const {
     useGetAllTransactionServicesQuery,
+    useGetAllNIPTransactionsQuery,
+    useLazyGetAllNIPTransactionsQuery,
     useGetAllTransactionsQuery,
     useDownloadTransactionQuery,
     useReverseTransactionMutation,
+    useRetryNIPTransactionMutation,
     useLazyGetAllTransactionsQuery,
     useLazyGetAllTransactionServicesQuery,
     useLazyDownloadTransactionRecordsQuery,
