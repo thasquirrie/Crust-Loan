@@ -169,13 +169,13 @@ function NIPTransactions() {
                 handleClose={() => setOpenReverseTransactionModal(false)}
                 loading={reverseTransactionIsLoading}
                 onClickConfirm={() => {
-                    reverseTransaction(transactionModalDetails.id);
+                    reverseTransaction(transactionModalDetails.sessionId);
                 }}
             />
             <Container>
                 <Header>
                     <HeaderTitle>
-                        <h1>Transactions</h1>
+                        <h1>NIP Transactions</h1>
                         <p>
                             {lazyQueryTransactions?.data?.totalElements !== undefined
                                 ? lazyQueryTransactions?.data?.totalElements
@@ -189,6 +189,7 @@ function NIPTransactions() {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Session ID": "sessionId",
+                                    "Account Number": "beneficiaryAccountNumber",
                                 }}
                                 selectOnChange={(e) => {
                                     setSearchFilters({
@@ -209,6 +210,10 @@ function NIPTransactions() {
                                         ...(searchFilters?.searchFilterBy === "sessionId" && {
                                             sessionId: searchFilters?.searchFilterValue,
                                         }),
+                                        ...(searchFilters?.searchFilterBy ===
+                                            "beneficiaryAccountNumber" && {
+                                            accountNumber: searchFilters?.searchFilterValue,
+                                        }),
                                     });
                                 }}
                                 showClearSearch={
@@ -221,55 +226,10 @@ function NIPTransactions() {
                                     });
                                     triggerGetAllTransactions({
                                         ...transactionParams,
-                                        accountNumber: "",
-                                        platformRef: "",
-                                        transactionRef: "",
                                     });
                                 }}
                             />
                         </SelectSearchBar>
-                        <SearchFilters>
-                            <DateRangePicker
-                                appearance="default"
-                                placeholder="Date Range"
-                                style={{ width: 230 }}
-                                readOnly={false}
-                                onClean={() => {
-                                    delete transactionParams.startDate;
-                                    delete transactionParams.endDate;
-                                    triggerGetAllTransactions(transactionParams);
-                                }}
-                                onChange={(value) => {
-                                    const startDate =
-                                        value && value[0]?.toISOString()?.split("T")[0];
-                                    const endDate = value && value[1]?.toISOString()?.split("T")[0];
-
-                                    if (startDate && endDate) {
-                                        setAllTransactionParams({
-                                            ...transactionParams,
-                                            startDate,
-                                            endDate,
-                                        });
-                                        triggerGetAllTransactions({
-                                            ...transactionParams,
-                                            startDate,
-                                            endDate: endDate,
-                                            ...(searchFilters?.searchFilterBy ===
-                                                "accountNumber" && {
-                                                accountNumber: searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters?.searchFilterBy === "platformRef" && {
-                                                platformRef: searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters?.searchFilterBy ===
-                                                "transactionRef" && {
-                                                transactionRef: searchFilters?.searchFilterValue,
-                                            }),
-                                        });
-                                    }
-                                }}
-                            />
-                        </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
                 <Table

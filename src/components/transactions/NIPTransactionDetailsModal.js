@@ -37,7 +37,7 @@ export default function NIPTransactionModalDetails({
             >
                 <TransactionModalContainer>
                     <TransactionDetailsModalHeader>
-                        <h4>POS Withdrawal Transaction Details</h4>
+                        <h4>NIP Transaction Details</h4>
                         <img src={cancel} alt="cancel" onClick={handleClose} />
                     </TransactionDetailsModalHeader>
                     <TransactionDetaailsModalBody>
