@@ -34,7 +34,7 @@ const TableColumns = [
     { id: "amount", label: "Amount", format: (value) => formattedAmount(value) },
     { id: "platformTransactionRef", label: "Platform Ref." },
     { id: "crustTransactionRef", label: "TransactionRef" },
-    { id: "serviceProvider", label: "Processing Provider" },
+    { id: "platform", label: "Processing Provider" },
     { id: "createdAt", label: "Date and Time" },
     { id: "fee", label: "Fee" },
     {
