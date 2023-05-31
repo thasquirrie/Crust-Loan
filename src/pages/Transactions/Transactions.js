@@ -34,6 +34,7 @@ const TableColumns = [
     { id: "amount", label: "Amount", format: (value) => formattedAmount(value) },
     { id: "platformTransactionRef", label: "Platform Ref." },
     { id: "crustTransactionRef", label: "TransactionRef" },
+    { id: "platform", label: "Processing Provider" },
     { id: "createdAt", label: "Date and Time" },
     { id: "fee", label: "Fee" },
     {
@@ -215,8 +216,7 @@ function Transactions() {
                             disabled={
                                 lazyQueryDownloadIsLoading ||
                                 lazyQueryDownloadIsError ||
-                                !lazyQueryDownloadTransactions?.data 
-                                ||
+                                !lazyQueryDownloadTransactions?.data ||
                                 !transactionParams?.startDate ||
                                 !transactionParams?.endDate
                             }

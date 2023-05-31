@@ -39,16 +39,15 @@ export const posApi = baseApi.injectEndpoints({
         }),
         approvePosRequest: builder.mutation({
             query: (body) => ({
-                url: "transaction/pos/requests/approve",
+                url: "/transaction/pos/requests/approve",
                 method: "POST",
                 body,
             }),
         }),
         declinePosRequest: builder.mutation({
-            query: (body) => ({
-                url: "transaction/pos/requests/decline",
+            query: (id) => ({
+                url: `/transaction/pos/reject/${id}`,
                 method: "POST",
-                body,
             }),
         }),
         mapPosToAggregators: builder.mutation({
