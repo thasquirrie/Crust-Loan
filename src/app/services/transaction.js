@@ -37,9 +37,8 @@ export const transactionApi = baseApi.injectEndpoints({
         }),
         retryNIPTransaction: builder.mutation({
             query: (id) => ({
-                url: `/transaction/credit/single/retry`,
+                url: `/transaction/nip/fund-transfer-credit/retry/${id}`,
                 method: "POST",
-                body: { transactionId: id },
             }),
         }),
     }),
