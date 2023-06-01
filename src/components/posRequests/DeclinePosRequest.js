@@ -117,7 +117,7 @@ export default function DeclinePosRequest({ open, setPosModalType, posRequestDet
                             </CancelButton>
                             <AcceptButton
                                 onClick={() => {
-                                    triggerDeclinePosRequest(posRequestDetails.id);
+                                    triggerDeclinePosRequest(posRequestDetails.agentUserId);
                                 }}
                                 disabled={declinePosRequestIsLoading || rejectPosReason === ""}
                             >
