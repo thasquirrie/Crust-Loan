@@ -32,6 +32,7 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+
         getAgent: builder.query({
             query: (accountNumber) => ({
                 url: `/transaction/pos/agent/${accountNumber}`,
@@ -74,6 +75,12 @@ export const posApi = baseApi.injectEndpoints({
         getAllPosActivity: builder.query({
             query: (params) => ({
                 url: "/transaction/pos/activity",
+                params,
+            }),
+        }),
+        getInactivePOSActivity: builder.query({
+            query: (params) => ({
+                url: "/transaction/pos/activity/inactive",
                 params,
             }),
         }),
@@ -163,6 +170,8 @@ export const {
     useAssignPosToAgentMutation,
     useGetAllPosActivityQuery,
     useLazyGetAllPosActivityQuery,
+    useGetInactivePOSActivityQuery,
+    useLazyGetInactivePOSActivityQuery,
     useGetPosHistoryQuery,
     useGetAllMerchantsQuery,
     useCreatePosMutation,
