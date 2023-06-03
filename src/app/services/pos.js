@@ -111,6 +111,12 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        downloadInactivePosActivityRecords: builder.query({
+            query: (params) => ({
+                url: `/transaction/pos/activity/inactive/download`,
+                params,
+            }),
+        }),
         getPosHistory: builder.query({
             query: (id) => ({
                 url: `/transaction/pos/pos-history/${id}`,
@@ -184,5 +190,6 @@ export const {
     useGetAggregatorTransactionQuery,
     useGetAggregatorPosDevicesQuery,
     useLazyDownloadPosActivityRecordsQuery,
+    useLazyDownloadInactivePosActivityRecordsQuery,
     useGetPosDetailsQuery,
 } = posApi;
