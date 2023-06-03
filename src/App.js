@@ -12,6 +12,8 @@ import Agents from "./pages/Agents/Agents";
 
 import PosDevices from "./pages/POSDevices/POSDevices";
 import AggregatorManagement from "./pages/AggregatorManagement/AggregatorManagement";
+// import NIPTransactions from "./pages/NIPTransactions/NIPTransactions";
+import POSDispute from './pages/POSDisputes/POSDispute';
 
 function App() {
     return (
@@ -19,6 +21,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="transaction" element={<Transactions />} />
+                {/* <Route path="transaction/nip" element={<NIPTransactions />} /> */}
                 <Route path="agent" element={<Agents />} />
                 <Route path="auth">
                     <Route path="login" element={<Login />} />
@@ -32,6 +35,7 @@ function App() {
                     <Route path="transaction_activity" element={<POSTransactionActivity />} />
                     <Route path="devices" element={<PosDevices />} />
                     <Route path="aggregator" element={<AggregatorManagement />} />
+                    <Route path='disputes' element={<POSDispute />} />
                 </Route>
             </Routes>
         </BrowserRouter>
