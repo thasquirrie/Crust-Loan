@@ -12,9 +12,9 @@ import {
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
 import { DateRangePicker } from "rsuite";
 import {
-    useLazyDownloadPosActivityRecordsQuery,
     useLazyGetInactivePOSActivityQuery,
     useGetInactivePOSActivityQuery,
+    useLazyDownloadInactivePosActivityRecordsQuery,
 } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import ButtonCommonLink from "../../components/common/ButtonCommonLink";
@@ -51,7 +51,7 @@ function InactivePOS() {
             isLoading: lazyQueryDownloadIsLoading,
             isError: lazyQueryDownloadIsError,
         },
-    ] = useLazyDownloadPosActivityRecordsQuery(lazyQueryOptions);
+    ] = useLazyDownloadInactivePosActivityRecordsQuery(lazyQueryOptions);
 
     return (
         <Main>
