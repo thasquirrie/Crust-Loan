@@ -156,6 +156,13 @@ export const posApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
+        reassignPosToAggregator: builder.mutation({
+            query: (body) => ({
+                url: `/transaction/pos/aggregator/reassign`,
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
@@ -184,6 +191,7 @@ export const {
     useLazyGetAgentByAccountNumberQuery,
     useGetPosCategoryQuery,
     useReassignPosMutation,
+    useReassignPosToAggregatorMutation,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
     useGetAggregatorAgentQuery,
