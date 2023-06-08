@@ -4,4 +4,4 @@ const lazyQueryOptions = {
     refreshOnWindowFocus: true,
 };
 
-export {lazyQueryOptions}
+export { lazyQueryOptions };

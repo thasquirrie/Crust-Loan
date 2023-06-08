@@ -33,7 +33,7 @@ function Sidebar({
             <SidebarButton onClick={handleOpenSidebar} openSidebar={openSidebar}>
                 <img src={sideBarArrow} alt="" />
             </SidebarButton>
-            <SidebarLinksContainer>
+            <SidebarLinksContainer style={openSidebar ? { display: "none" } : { display: "flex" }}>
                 {/* <AdminManagement openSidebar={openSidebar}>
                     <Link to="/">
                         <img src={monitor} alt="" />
@@ -152,6 +152,12 @@ function Sidebar({
                                 POS Activity
                             </Link>
                         </div>
+                        <div className="SubMenuItem">
+                            <Link to="/pos/inactive">
+                                <img src={posActivity} alt="" />
+                                Inactive POS
+                            </Link>
+                        </div>
                         <div className="SubMenuItem" id="posRequest">
                             <Link to="/pos/requests">
                                 <img src={posManagement} alt="" />
@@ -203,7 +209,8 @@ const SidebarLinksContainer = styled.div`
     justify-content: flex-start;
     width: 100%;
     height: 90%;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     box-sizing: border-box;
 `;
 

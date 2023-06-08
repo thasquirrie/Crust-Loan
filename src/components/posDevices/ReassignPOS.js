@@ -8,8 +8,10 @@ import { useState } from "react";
 import {
     useGetPosCategoryQuery,
     useLazyGetAgentByAccountNumberQuery,
+    useLazyGetAggregatorQuery,
     useLazyGetPosQuery,
-    useReassignPosMutation,
+    useReassignPosToAgentMutation,
+    useReassignPosToAggregatorMutation,
 } from "../../app/services/pos";
 import { lazyQueryOptions } from "../../utils/queryOptions";
 import SelectCommon from "../common/SelectCommon";
@@ -28,6 +30,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export default function ReassignPOSModal({ open, setPosDevicesModalType, posDeviceDetails }) {
     const REASSIGN_TO_AGENT = "agent";
+    const REASSIGN_TO_AGGREGATOR = "aggregator";
+
     const [reassignTo, setReassignTo] = useState("");
     const [assignToAgentInput, setAssignToAgentInput] = useState({
         accountNumber: "",
@@ -64,17 +68,38 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
         },
     ] = useLazyGetAgentByAccountNumberQuery(lazyQueryOptions);
 
+    const [
+        triggerGetAggregator,
+        {
+            data: aggregatorData,
+            isSuccess: aggregatorIsSuccess,
+            isError: aggregatorIsError,
+            error: aggregatorError,
+            fulfilledTimeStamp: aggregatorFulfilledTimeStamp,
+        },
+    ] = useLazyGetAggregatorQuery(lazyQueryOptions);
+
     const [triggerGetPos] = useLazyGetPosQuery(lazyQueryOptions);
 
     const [
-        reassignPos,
+        reassignPosToAgent,
         {
-            isLoading: reassignPosIsLoading,
-            isSuccess: reassignPosIsSuccess,
-            isError: reassignPosIsError,
-            error: reassignPosError,
+            isLoading: reassignPosToAgentIsLoading,
+            isSuccess: reassignPosToAgentIsSuccess,
+            isError: reassignPosToAgentIsError,
+            error: reassignPosToAgentError,
         },
-    ] = useReassignPosMutation();
+    ] = useReassignPosToAgentMutation();
+
+    const [
+        reassignPosToAggregator,
+        {
+            isLoading: reassignPosToAggregatorIsLoading,
+            isSuccess: reassignPosToAggregatorIsSuccess,
+            isError: reassignPosToAggregatorIsError,
+            error: reassignPosToAggregatorError,
+        },
+    ] = useReassignPosToAggregatorMutation();
 
     const { data: poscategory } = useGetPosCategoryQuery();
 
@@ -100,17 +125,18 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
     }, [agentData, agentFulfilledTimeStamp, agentIsError, agentIsSuccess]);
 
     useEffect(() => {
-        if (reassignPosIsSuccess) {
-            setSnackbarInfo({
-                open: true,
-                severity: "error",
-                message: "POS Device Reassigned Successfully",
-            });
-            triggerGetPos();
-            handleClose();
-        } else if (reassignPosIsError) {
-            const errorKey = Object.keys(reassignPosError?.data?.errors);
-            const errorMessage = reassignPosError?.data?.errors[errorKey];
+        if (aggregatorFulfilledTimeStamp && aggregatorIsSuccess) {
+            dispatch(setGetAgentByAccountNumber(aggregatorData));
+            if (aggregatorData?.data?.totalElements === 0) {
+                setSnackbarInfo({
+                    open: true,
+                    severity: "error",
+                    message: "No Aggregator Found",
+                });
+            }
+        } else if (aggregatorIsError) {
+            const errorKey = Object.keys(aggregatorError?.data?.errors);
+            const errorMessage = aggregatorError?.data?.errors[errorKey];
 
             setSnackbarInfo({
                 open: true,
@@ -118,7 +144,49 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                 message: errorMessage,
             });
         }
-    }, [reassignPosIsError, reassignPosIsSuccess]);
+    }, [aggregatorData, aggregatorFulfilledTimeStamp, aggregatorIsError, aggregatorIsSuccess]);
+
+    useEffect(() => {
+        if (reassignPosToAgentIsSuccess) {
+            setSnackbarInfo({
+                open: true,
+                severity: "success",
+                message: "POS Device Reassigned Successfully",
+            });
+            triggerGetPos();
+            handleClose();
+        } else if (reassignPosToAgentIsError) {
+            const errorKey = Object.keys(reassignPosToAgentError?.data?.errors);
+            const errorMessage = reassignPosToAgentError?.data?.errors[errorKey];
+
+            setSnackbarInfo({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
+        }
+    }, [reassignPosToAgentIsError, reassignPosToAgentIsSuccess]);
+
+    useEffect(() => {
+        if (reassignPosToAggregatorIsSuccess) {
+            setSnackbarInfo({
+                open: true,
+                severity: "success",
+                message: "POS Device Reassigned Successfully",
+            });
+            triggerGetPos();
+            handleClose();
+        } else if (reassignPosToAggregatorIsError) {
+            const errorKey = Object.keys(reassignPosToAggregatorError?.data?.errors);
+            const errorMessage = reassignPosToAggregatorError?.data?.errors[errorKey];
+
+            setSnackbarInfo({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
+        }
+    }, [reassignPosToAggregatorIsError, reassignPosToAggregatorIsSuccess]);
 
     const handleSnackbarClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -179,7 +247,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                         {reassignTo === "" && (
                             <Reassign>
                                 <h4>Reassign to</h4>
-                                <Aggregator>
+                                <Aggregator onClick={() => setReassignTo(REASSIGN_TO_AGGREGATOR)}>
                                     <p>Aggregator</p>
                                     <img src={arrowRight} alt={"arrow-right"} />
                                 </Aggregator>
@@ -249,7 +317,55 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                                 )}
                             </AgentInformation>
                         )}
-                        {reassignTo !== "" && (
+                        {reassignTo === REASSIGN_TO_AGGREGATOR && (
+                            <AgentInformation>
+                                <h4>Aggregator Information</h4>
+                                <Input>
+                                    <label>Account Number</label>
+                                    <input
+                                        type={"text"}
+                                        value={assignToAgentInput?.accountNumber}
+                                        onChange={(e) => {
+                                            setAssignToAgentInput({
+                                                ...assignToAgentInput,
+                                                accountNumber: e.target.value,
+                                            });
+                                            if (e.target.value.length === 10) {
+                                                triggerGetAggregator({
+                                                    accountNumber: e.target.value,
+                                                });
+                                            } else {
+                                                dispatch(resetGetAgentByAccountNumber());
+                                            }
+                                        }}
+                                    />
+                                </Input>
+                                {agentDetails?.totalElements > 0 &&
+                                    aggregatorFulfilledTimeStamp && (
+                                        <>
+                                            <InputWithValue>
+                                                <label>Agent Name</label>
+                                                <input
+                                                    type={"text"}
+                                                    value={agentDetails?.content[0]?.aggregatorName}
+                                                    readOnly
+                                                />
+                                            </InputWithValue>
+                                            <InputWithValue>
+                                                <label>State</label>
+                                                <input
+                                                    type={"text"}
+                                                    value={
+                                                        agentDetails?.content[0]?.aggregatorState
+                                                    }
+                                                    readOnly
+                                                />
+                                            </InputWithValue>
+                                        </>
+                                    )}
+                            </AgentInformation>
+                        )}
+                        {reassignTo !== "" && reassignTo === REASSIGN_TO_AGENT && (
                             <ActionButton>
                                 <CancelButton onClick={handleClose}>Cancel</CancelButton>
                                 <AcceptButton
@@ -257,7 +373,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                                         assignToAgentInput?.posCategoryId === "" || agentError
                                     }
                                     onClick={() => {
-                                        reassignPos({
+                                        reassignPosToAgent({
                                             id: posDeviceDetails?.id,
                                             posCategoryId: parseInt(
                                                 assignToAgentInput?.posCategoryId
@@ -266,7 +382,32 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                                         });
                                     }}
                                 >
-                                    {reassignPosIsLoading ? (
+                                    {reassignPosToAgentIsLoading ? (
+                                        <CircularProgress size={20} color="inherit" />
+                                    ) : (
+                                        "Reassign POS"
+                                    )}
+                                </AcceptButton>
+                            </ActionButton>
+                        )}
+
+                        {reassignTo !== "" && reassignTo === REASSIGN_TO_AGGREGATOR && (
+                            <ActionButton>
+                                <CancelButton onClick={handleClose}>Cancel</CancelButton>
+                                <AcceptButton
+                                    disabled={
+                                        aggregatorError ||
+                                        assignToAgentInput?.accountNumber === "" ||
+                                        agentDetails?.totalElements === 0
+                                    }
+                                    onClick={() => {
+                                        reassignPosToAggregator({
+                                            id: posDeviceDetails?.id,
+                                            accountNumber: assignToAgentInput?.accountNumber,
+                                        });
+                                    }}
+                                >
+                                    {reassignPosToAggregatorIsLoading ? (
                                         <CircularProgress size={20} color="inherit" />
                                     ) : (
                                         "Reassign POS"
@@ -456,18 +597,18 @@ const CancelButton = styled.button`
 `;
 
 const Aggregator = styled.div`
-    cursor: not-allowed;
+    cursor: pointer;
     background: #fff;
     border: 1px solid #9cabb5;
     color: #474747;
     font-weight: 400;
 
-    /* &:hover {
+    &:hover {
         background: #fffaf6;
         border: 1px solid #933d0c;
         color: #933d0c;
         font-weight: 800;
-    } */
+    }
 `;
 
 const Agent = styled.div`

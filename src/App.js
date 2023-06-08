@@ -13,6 +13,7 @@ import Agents from "./pages/Agents/Agents";
 import PosDevices from "./pages/POSDevices/POSDevices";
 import AggregatorManagement from "./pages/AggregatorManagement/AggregatorManagement";
 import NIPTransactions from "./pages/NIPTransactions/NIPTransactions";
+import InactivePOS from "./pages/InactivePOS/InactivePOS";
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
                     <Route path="transaction_activity" element={<POSTransactionActivity />} />
                     <Route path="devices" element={<PosDevices />} />
                     <Route path="aggregator" element={<AggregatorManagement />} />
+                    <Route path="inactive" element={<InactivePOS />} />
                 </Route>
             </Routes>
         </BrowserRouter>
