@@ -10,7 +10,7 @@ import {
     useLazyGetAgentByAccountNumberQuery,
     useLazyGetAggregatorQuery,
     useLazyGetPosQuery,
-    useReassignPosMutation,
+    useReassignPosToAgentMutation,
     useReassignPosToAggregatorMutation,
 } from "../../app/services/pos";
 import { lazyQueryOptions } from "../../utils/queryOptions";
@@ -31,6 +31,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function ReassignPOSModal({ open, setPosDevicesModalType, posDeviceDetails }) {
     const REASSIGN_TO_AGENT = "agent";
     const REASSIGN_TO_AGGREGATOR = "aggregator";
+
     const [reassignTo, setReassignTo] = useState("");
     const [assignToAgentInput, setAssignToAgentInput] = useState({
         accountNumber: "",
@@ -81,14 +82,14 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
     const [triggerGetPos] = useLazyGetPosQuery(lazyQueryOptions);
 
     const [
-        reassignPos,
+        reassignPosToAgent,
         {
-            isLoading: reassignPosIsLoading,
-            isSuccess: reassignPosIsSuccess,
-            isError: reassignPosIsError,
-            error: reassignPosError,
+            isLoading: reassignPosToAgentIsLoading,
+            isSuccess: reassignPosToAgentIsSuccess,
+            isError: reassignPosToAgentIsError,
+            error: reassignPosToAgentError,
         },
-    ] = useReassignPosMutation();
+    ] = useReassignPosToAgentMutation();
 
     const [
         reassignPosToAggregator,
@@ -146,7 +147,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
     }, [aggregatorData, aggregatorFulfilledTimeStamp, aggregatorIsError, aggregatorIsSuccess]);
 
     useEffect(() => {
-        if (reassignPosIsSuccess) {
+        if (reassignPosToAgentIsSuccess) {
             setSnackbarInfo({
                 open: true,
                 severity: "success",
@@ -154,9 +155,9 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
             });
             triggerGetPos();
             handleClose();
-        } else if (reassignPosIsError) {
-            const errorKey = Object.keys(reassignPosError?.data?.errors);
-            const errorMessage = reassignPosError?.data?.errors[errorKey];
+        } else if (reassignPosToAgentIsError) {
+            const errorKey = Object.keys(reassignPosToAgentError?.data?.errors);
+            const errorMessage = reassignPosToAgentError?.data?.errors[errorKey];
 
             setSnackbarInfo({
                 open: true,
@@ -164,7 +165,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                 message: errorMessage,
             });
         }
-    }, [reassignPosIsError, reassignPosIsSuccess]);
+    }, [reassignPosToAgentIsError, reassignPosToAgentIsSuccess]);
 
     useEffect(() => {
         if (reassignPosToAggregatorIsSuccess) {
@@ -372,7 +373,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                                         assignToAgentInput?.posCategoryId === "" || agentError
                                     }
                                     onClick={() => {
-                                        reassignPos({
+                                        reassignPosToAgent({
                                             id: posDeviceDetails?.id,
                                             posCategoryId: parseInt(
                                                 assignToAgentInput?.posCategoryId
@@ -381,7 +382,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                                         });
                                     }}
                                 >
-                                    {reassignPosIsLoading ? (
+                                    {reassignPosToAgentIsLoading ? (
                                         <CircularProgress size={20} color="inherit" />
                                     ) : (
                                         "Reassign POS"
