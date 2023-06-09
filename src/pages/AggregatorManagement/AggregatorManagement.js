@@ -17,7 +17,8 @@ import ViewAggregatorSummary from "../../components/posAggregators/ViewAggregato
 
 const TableColumns = [
     { id: "aggregatorName", label: "Aggregator Name" },
-    { id: "aggregatorAccountNumber", label: "Aggregator Account Number" },
+    { id: "savingsAccountNumber", label: "Savings Account Number" },
+    { id: "commissionsAccountNumber", label: "Commission Aggregator Email" },
     { id: "aggregatorPhoneNumber", label: "Aggregator Phone Number" },
     { id: "aggregatorState", label: "Aggregator State" },
     {
@@ -31,7 +32,7 @@ const AggregatorManagement = () => {
 
     const [aggregatorModalType, setAggregatorModalType] = useState(false);
     const [searchFilters, setSearchFilters] = useState({
-        searchFilterBy: "accountNumber",
+        searchFilterBy: "savingsAccountNumber",
         searchFilterValue: "",
     });
     const [openCreateAggregatorModal, setOpenCreateAggregatorModal] = useState(false);
@@ -42,9 +43,9 @@ const AggregatorManagement = () => {
     const [aggregatorDetails, setAggregatorDetails] = useState(null);
 
     const searchFilterOptions = {
-        ...(searchFilters?.searchFilterBy === "accountNumber" &&
+        ...(searchFilters?.searchFilterBy === "savingsAccountNumber" &&
             searchFilters?.searchFilterValue?.length > 0 && {
-                accountNumber: searchFilters?.searchFilterValue,
+                savingsAccountNumber: searchFilters?.searchFilterValue,
             }),
     };
 
@@ -109,7 +110,7 @@ const AggregatorManagement = () => {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 placeholder={'Click "Search Icon" to search'}
                                 options={{
-                                    "Account Number": "accountNumber",
+                                    "Account Number": "savingsAccountNumber",
                                 }}
                                 showClearSearch={
                                     searchFilters.searchFilterValue.length > 0 ? true : false
@@ -139,7 +140,7 @@ const AggregatorManagement = () => {
                                     });
                                     triggerAggregators({
                                         ...aggregatorSearchParams,
-                                        accountNumber: "",
+                                        savingsAccountNumber: "",
                                     });
                                 }}
                             />
