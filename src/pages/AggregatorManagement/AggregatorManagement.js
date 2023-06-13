@@ -18,7 +18,7 @@ import ViewAggregatorSummary from "../../components/posAggregators/ViewAggregato
 const TableColumns = [
     { id: "aggregatorName", label: "Aggregator Name" },
     { id: "savingsAccountNumber", label: "Savings Account Number" },
-    { id: "commissionsAccountNumber", label: "Commission Aggregator Email" },
+    { id: "commissionsAccountNumber", label: "Commission Account Number" },
     { id: "aggregatorPhoneNumber", label: "Aggregator Phone Number" },
     { id: "aggregatorState", label: "Aggregator State" },
     {
