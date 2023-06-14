@@ -224,7 +224,6 @@ function Transactions() {
                     onClickReverseTransaction={() => {
                         setOpenReverseTransactionModal(true);
                         setOpenTransactionDetailsModal(false);
-                        console.log(transactionModalDetails);
                     }}
                 />
             )}
