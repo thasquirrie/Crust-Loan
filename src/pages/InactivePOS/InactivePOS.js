@@ -15,10 +15,12 @@ import {
     useLazyGetInactivePOSActivityQuery,
     useGetInactivePOSActivityQuery,
     useLazyDownloadInactivePosActivityRecordsQuery,
+    useGetAggregatorQuery,
 } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import ButtonCommonLink from "../../components/common/ButtonCommonLink";
 import { lazyQueryOptions } from "../../utils/queryOptions";
+import SelectCommon from "../../components/common/SelectCommon";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -53,6 +55,14 @@ function InactivePOS() {
         },
     ] = useLazyDownloadInactivePosActivityRecordsQuery(lazyQueryOptions);
 
+    const { data: aggregatorList } = useGetAggregatorQuery();
+
+    const aggregatorNameList = aggregatorList?.data?.content?.reduce((acc, aggregator) => {
+        acc[""] = "Select Aggregator";
+        acc[aggregator.id] = aggregator.aggregatorName;
+        return acc;
+    }, {});
+
     return (
         <Main>
             <Container>
@@ -82,7 +92,6 @@ function InactivePOS() {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Agent Account Number": "agentAccountNumber",
-                                    "Aggregator Account Number": "aggregatorAccountNumber",
                                     "Serial Number": "serialNumber",
                                     "Terminal Id": "terminalId",
                                 }}
@@ -106,11 +115,6 @@ function InactivePOS() {
                                             "agentAccountNumber" && {
                                             agentAccountNumber: searchFilters?.searchFilterValue,
                                         }),
-                                        ...(searchFilters.searchFilterBy ===
-                                            "aggregatorAccountNumber" && {
-                                            aggregatorAccountNumber:
-                                                searchFilters.searchFilterValue,
-                                        }),
                                         ...(searchFilters.searchFilterBy === "serialNumber" && {
                                             serialNumber: searchFilters.searchFilterValue,
                                         }),
@@ -129,11 +133,6 @@ function InactivePOS() {
                                                 "agentAccountNumber" && {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
                                             }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,
@@ -157,12 +156,35 @@ function InactivePOS() {
                                         serialNumber: "",
                                         agentAccountNumber: "",
                                         terminalId: "",
-                                        aggregatorAccountNumber: "",
                                     });
                                 }}
                             />
                         </SelectSearchBar>
                         <SearchFilters>
+                            <SelectCommon
+                                options={aggregatorNameList}
+                                value={posActivityParams?.aggregatorId || ""}
+                                onChange={(e) => {
+                                    setPosActivityParams({
+                                        ...posActivityParams,
+                                        aggregatorId: e.target.value,
+                                    });
+                                    triggerPosActivity({
+                                        ...posActivityParams,
+                                        aggregatorId: e.target.value,
+                                    });
+
+                                    if (
+                                        posActivityParams?.startDate &&
+                                        posActivityParams?.endDate
+                                    ) {
+                                        triggerDownloadPosActivity({
+                                            ...posActivityParams,
+                                            aggregatorId: e.target.value,
+                                        });
+                                    }
+                                }}
+                            />
                             <DateRangePicker
                                 placement="autoHorizontalStart"
                                 appearance="default"
@@ -199,11 +221,6 @@ function InactivePOS() {
                                                 "agentAccountNumber" && {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
                                             }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,

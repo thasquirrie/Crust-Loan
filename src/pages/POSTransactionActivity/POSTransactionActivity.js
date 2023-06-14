@@ -15,6 +15,7 @@ import {
     useGetAllPosActivityQuery,
     useLazyGetAllPosActivityQuery,
     useLazyDownloadPosActivityRecordsQuery,
+    useGetAggregatorQuery,
 } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import formattedAmount from "../../utils/formatCurrency";
@@ -82,6 +83,14 @@ function POSTransactionActivity() {
         },
     ] = useLazyDownloadPosActivityRecordsQuery(lazyQueryOptions);
 
+    const { data: aggregatorList } = useGetAggregatorQuery();
+
+    const aggregatorNameList = aggregatorList?.data?.content?.reduce((acc, aggregator) => {
+        acc[""] = "Select Aggregator";
+        acc[aggregator.id] = aggregator.aggregatorName;
+        return acc;
+    }, {});
+
     return (
         <Main>
             <Container>
@@ -112,7 +121,6 @@ function POSTransactionActivity() {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Agent Account Number": "agentAccountNumber",
-                                    "Aggregator Account Number": "aggregatorAccountNumber",
                                     "Serial Number": "serialNumber",
                                     "Terminal Id": "terminalId",
                                 }}
@@ -136,11 +144,6 @@ function POSTransactionActivity() {
                                             "agentAccountNumber" && {
                                             agentAccountNumber: searchFilters?.searchFilterValue,
                                         }),
-                                        ...(searchFilters.searchFilterBy ===
-                                            "aggregatorAccountNumber" && {
-                                            aggregatorAccountNumber:
-                                                searchFilters.searchFilterValue,
-                                        }),
                                         ...(searchFilters.searchFilterBy === "serialNumber" && {
                                             serialNumber: searchFilters.searchFilterValue,
                                         }),
@@ -159,11 +162,6 @@ function POSTransactionActivity() {
                                                 "agentAccountNumber" && {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
                                             }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,
@@ -187,12 +185,35 @@ function POSTransactionActivity() {
                                         serialNumber: "",
                                         agentAccountNumber: "",
                                         terminalId: "",
-                                        aggregatorAccountNumber: "",
                                     });
                                 }}
                             />
                         </SelectSearchBar>
                         <SearchFilters>
+                            <SelectCommon
+                                options={aggregatorNameList}
+                                value={posActivityParams?.aggregatorId || ""}
+                                onChange={(e) => {
+                                    setPosActivityParams({
+                                        ...posActivityParams,
+                                        aggregatorId: e.target.value,
+                                    });
+                                    triggerPosActivity({
+                                        ...posActivityParams,
+                                        aggregatorId: e.target.value,
+                                    });
+
+                                    if (
+                                        posActivityParams?.startDate &&
+                                        posActivityParams?.endDate
+                                    ) {
+                                        triggerDownloadPosActivity({
+                                            ...posActivityParams,
+                                            aggregatorId: e.target.value,
+                                        });
+                                    }
+                                }}
+                            />
                             <DateRangePicker
                                 placement="autoHorizontalStart"
                                 appearance="default"
@@ -230,11 +251,6 @@ function POSTransactionActivity() {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
                                             }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
-                                            }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,
                                             }),
@@ -264,11 +280,6 @@ function POSTransactionActivity() {
                                             "agentAccountNumber" && {
                                             agentAccountNumber: searchFilters?.searchFilterValue,
                                         }),
-                                        ...(searchFilters.searchFilterBy ===
-                                            "aggregatorAccountNumber" && {
-                                            aggregatorAccountNumber:
-                                                searchFilters.searchFilterValue,
-                                        }),
                                         ...(searchFilters.searchFilterBy === "serialNumber" && {
                                             serialNumber: searchFilters.searchFilterValue,
                                         }),
@@ -288,11 +299,6 @@ function POSTransactionActivity() {
                                                 "agentAccountNumber" && {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
                                             }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,
