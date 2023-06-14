@@ -92,7 +92,6 @@ function InactivePOS() {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Agent Account Number": "agentAccountNumber",
-                                    "Aggregator Account Number": "aggregatorAccountNumber",
                                     "Serial Number": "serialNumber",
                                     "Terminal Id": "terminalId",
                                 }}
@@ -116,11 +115,6 @@ function InactivePOS() {
                                             "agentAccountNumber" && {
                                             agentAccountNumber: searchFilters?.searchFilterValue,
                                         }),
-                                        ...(searchFilters.searchFilterBy ===
-                                            "aggregatorAccountNumber" && {
-                                            aggregatorAccountNumber:
-                                                searchFilters.searchFilterValue,
-                                        }),
                                         ...(searchFilters.searchFilterBy === "serialNumber" && {
                                             serialNumber: searchFilters.searchFilterValue,
                                         }),
@@ -139,11 +133,6 @@ function InactivePOS() {
                                                 "agentAccountNumber" && {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
                                             }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,
@@ -167,7 +156,6 @@ function InactivePOS() {
                                         serialNumber: "",
                                         agentAccountNumber: "",
                                         terminalId: "",
-                                        aggregatorAccountNumber: "",
                                     });
                                 }}
                             />
@@ -233,11 +221,6 @@ function InactivePOS() {
                                                 "agentAccountNumber" && {
                                                 agentAccountNumber:
                                                     searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy ===
-                                                "aggregatorAccountNumber" && {
-                                                aggregatorAccountNumber:
-                                                    searchFilters.searchFilterValue,
                                             }),
                                             ...(searchFilters.searchFilterBy === "serialNumber" && {
                                                 serialNumber: searchFilters.searchFilterValue,
