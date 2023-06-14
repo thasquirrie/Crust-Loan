@@ -155,7 +155,7 @@ function Sidebar({
                         <div className="SubMenuItem">
                             <Link to="/pos/inactive">
                                 <img src={posActivity} alt="" />
-                                Inactive POS
+                                Dormant POS
                             </Link>
                         </div>
                         <div className="SubMenuItem" id="posRequest">

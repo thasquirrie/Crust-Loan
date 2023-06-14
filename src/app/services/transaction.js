@@ -41,6 +41,13 @@ export const transactionApi = baseApi.injectEndpoints({
                 method: "POST",
             }),
         }),
+        retryPOSCreditTransaction: builder.mutation({
+            query: (id) => ({
+                url: `/transaction/credit/single/retry`,
+                method: "POST",
+                body: { transactionId: id },
+            }),
+        }),
     }),
 });
 
@@ -52,6 +59,7 @@ export const {
     useDownloadTransactionQuery,
     useReverseTransactionMutation,
     useRetryNIPTransactionMutation,
+    useRetryPOSCreditTransactionMutation,
     useLazyGetAllTransactionsQuery,
     useLazyGetAllTransactionServicesQuery,
     useLazyDownloadTransactionRecordsQuery,
