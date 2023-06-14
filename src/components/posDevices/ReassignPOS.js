@@ -332,7 +332,7 @@ export default function ReassignPOSModal({ open, setPosDevicesModalType, posDevi
                                             });
                                             if (e.target.value.length === 10) {
                                                 triggerGetAggregator({
-                                                    accountNumber: e.target.value,
+                                                    savingsAccountNumber: e.target.value,
                                                 });
                                             } else {
                                                 dispatch(resetGetAgentByAccountNumber());

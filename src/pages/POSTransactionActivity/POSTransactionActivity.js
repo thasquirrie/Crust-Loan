@@ -15,6 +15,7 @@ import {
     useGetAllPosActivityQuery,
     useLazyGetAllPosActivityQuery,
     useLazyDownloadPosActivityRecordsQuery,
+    useGetAggregatorQuery,
 } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import formattedAmount from "../../utils/formatCurrency";
@@ -81,6 +82,8 @@ function POSTransactionActivity() {
             isError: lazyQueryDownloadIsError,
         },
     ] = useLazyDownloadPosActivityRecordsQuery(lazyQueryOptions);
+
+    const { data: aggregatorList, isLoading: aggregatorIsLoading } = useGetAggregatorQuery();
 
     return (
         <Main>

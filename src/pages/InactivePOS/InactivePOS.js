@@ -15,10 +15,12 @@ import {
     useLazyGetInactivePOSActivityQuery,
     useGetInactivePOSActivityQuery,
     useLazyDownloadInactivePosActivityRecordsQuery,
+    useGetAggregatorQuery,
 } from "../../app/services/pos";
 import Table from "../../components/common/Table";
 import ButtonCommonLink from "../../components/common/ButtonCommonLink";
 import { lazyQueryOptions } from "../../utils/queryOptions";
+import SelectCommon from "../../components/common/SelectCommon";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -52,6 +54,14 @@ function InactivePOS() {
             isError: lazyQueryDownloadIsError,
         },
     ] = useLazyDownloadInactivePosActivityRecordsQuery(lazyQueryOptions);
+
+    const { data: aggregatorList } = useGetAggregatorQuery();
+
+    const aggregatorNameList = aggregatorList?.data?.content?.reduce((acc, aggregator) => {
+        acc[""] = "Select Aggregator";
+        acc[aggregator.id] = aggregator.aggregatorName;
+        return acc;
+    }, {});
 
     return (
         <Main>
@@ -163,6 +173,30 @@ function InactivePOS() {
                             />
                         </SelectSearchBar>
                         <SearchFilters>
+                            <SelectCommon
+                                options={aggregatorNameList}
+                                value={posActivityParams?.aggregatorId || ""}
+                                onChange={(e) => {
+                                    setPosActivityParams({
+                                        ...posActivityParams,
+                                        aggregatorId: e.target.value,
+                                    });
+                                    triggerPosActivity({
+                                        ...posActivityParams,
+                                        aggregatorId: e.target.value,
+                                    });
+
+                                    if (
+                                        posActivityParams?.startDate &&
+                                        posActivityParams?.endDate
+                                    ) {
+                                        triggerDownloadPosActivity({
+                                            ...posActivityParams,
+                                            aggregatorId: e.target.value,
+                                        });
+                                    }
+                                }}
+                            />
                             <DateRangePicker
                                 placement="autoHorizontalStart"
                                 appearance="default"
