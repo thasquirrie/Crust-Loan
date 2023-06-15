@@ -229,12 +229,20 @@ function Transactions() {
             )}
             <ConfirmationModal
                 open={openReverseTransactionModal}
-                HeaderText={"Reverse Transaction"}
-                ConfirmationBody={"Are you sure you want to reverse this transaction?"}
+                HeaderText={`${
+                    transactionModalDetails?.transactionType === "POS_CASH_WITHDRAWAL"
+                        ? "Retry"
+                        : "Reverse"
+                } Transaction`}
+                ConfirmationBody={`Are you sure you want to ${
+                    transactionModalDetails?.transactionType === "POS_CASH_WITHDRAWAL"
+                        ? "retry"
+                        : "reverse"
+                } this transaction?`}
                 confirmationText={"Yes, Reverse"}
                 handleClose={() => setOpenReverseTransactionModal(false)}
                 loading={reverseTransactionIsLoading || retryPOSCreditTransactionIsLoading}
-                onClickConfirm={onClickReverseTransaction}
+                onClickConfirm={onClickReverseTransaction(transactionModalDetails)}
             />
             <Container>
                 <Header>
