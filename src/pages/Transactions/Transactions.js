@@ -194,7 +194,7 @@ function Transactions() {
     };
 
     const onClickReverseTransaction = (transaction) => {
-        switch (transaction.transactionType) {
+        switch (transaction?.transactionType) {
             case "POS_CASH_WITHDRAWAL":
                 retryPOSCreditTransaction(transaction?.id);
                 break;
@@ -239,10 +239,14 @@ function Transactions() {
                         ? "retry"
                         : "reverse"
                 } this transaction?`}
-                confirmationText={"Yes, Reverse"}
+                confirmationText={`${
+                    transactionModalDetails?.transactionType === "POS_CASH_WITHDRAWAL"
+                        ? "Retry"
+                        : "Reverse"
+                } Transaction`}
                 handleClose={() => setOpenReverseTransactionModal(false)}
                 loading={reverseTransactionIsLoading || retryPOSCreditTransactionIsLoading}
-                onClickConfirm={onClickReverseTransaction(transactionModalDetails)}
+                onClickConfirm={() => onClickReverseTransaction(transactionModalDetails)}
             />
             <Container>
                 <Header>
