@@ -132,7 +132,7 @@ function Transactions() {
             setOpenSnackbar({
                 open: true,
                 severity: "success",
-                message: "Transaction reversed successfully",
+                message: "Transaction retried successfully",
             });
         } else if (retryPOSCreditTransactionError) {
             const errorKey = Object.keys(retryPOSCreditTransactionError?.data.errors)[0];
@@ -212,7 +212,11 @@ function Transactions() {
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 autoHideDuration={4000}
             >
-                <Alert onClose={handleSnackbarClose} severity={"error"} sx={{ width: "100%" }}>
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity={openSnackbar.severity}
+                    sx={{ width: "100%" }}
+                >
                     {openSnackbar?.message}
                 </Alert>
             </Snackbar>
