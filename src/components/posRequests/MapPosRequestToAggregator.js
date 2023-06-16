@@ -57,7 +57,7 @@ export default function MapPosRequestToAggregator({ open, posRequestDetails, set
     const aggregatorAccountNumberChange = debounce((event) => {
         const value = event.target.value;
         triggerGetAggregator({
-            accountNumber: value,
+            savingsAccountNumber: value,
         });
     }, 500);
 
