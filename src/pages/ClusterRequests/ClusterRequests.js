@@ -4,29 +4,26 @@ import {
   HeaderTitle,
   SelectSearchFilter,
   SelectSearchBar,
-  SearchFilters,
 } from './ClusterRequestsStyles';
-import { useEffect, useState } from 'react';
+import {  useMemo, useState } from 'react';
 import Main from '../../components/common/Main';
-import SelectCommon from '../../components/common/SelectCommon';
 import Table from '../../components/common/Table';
 import {
-  useGetAllAgentsQuery,
   useLazyGetAllAgentsQuery,
-  useLockAgentMutation,
-  useUnlockAgentMutation,
 } from '../../app/services/agents';
 import TableSelectSearchBar from '../../components/common/TableSelectSearchBar';
-import ConfirmationModal from '../../components/common/ConfirmationModal';
+
 import ClusterRequestDetailsModal from '../../components/clusters/ClusterRequestDetailsModal';
 import { useGetAllClusterQuery } from '../../app/services/loan';
 import SnackBar from '../../components/common/SnackBar';
 import StatusTag from '../../components/common/StatusTag';
-import { DateRangePicker } from 'rsuite';
 import {
+  useApproveClusterRequestMutation,
+  useDisapproveClusterRequestMutation,
   useGetAllClusterRequestsQuery,
   useLazyGetAllClusterRequestsQuery,
 } from '../../app/services/clusters';
+import DisapproveRequest from '../../components/clusters/DisapproveRequest';
 
 const TableColumns = [
   { id: 'name', label: 'Agent Name' },
@@ -74,9 +71,9 @@ const TableColumns = [
 
 const ClusterRequests = () => {
   const [clusterRequestsParams, setClusterRequestsParams] = useState({
-    page: 0,
+    page: 1,
   });
-
+  const [disapproveModal, setDisapproveModal] = useState(false);
   const [agentDetails, setAgentDetails] = useState(null);
   const [clusterRequestsModal, setClusterRequestsModal] = useState(false);
   const [searchFilters, setSearchFilters] = useState({
@@ -90,18 +87,26 @@ const ClusterRequests = () => {
     message: '',
   });
 
+  const [approvalInput, setApprovalInput] = useState({
+    userId: '',
+    clusterName: '',
+    clusterRequestId: '',
+  });
+
+  const [disapproveInput, setDisapproveInput] = useState({
+    userId: '',
+    reason: '',
+    clusterRequestId: ''
+  })
+
   const lazyQueryOptions = {
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
     refreshOnWindowFocus: true,
   };
 
-  const { data: agents, isLoading: getQueryIsLoading } = useGetAllAgentsQuery();
-
-  const { data: clusterRequests } = useGetAllClusterRequestsQuery();
-  const {data: clusters } = useGetAllClusterQuery();
-
-  console.log({ clusterRequests });
+  const { data: clusterRequests, isLoading: getClusterIsLoading } = useGetAllClusterRequestsQuery();
+  const { data: clusters } = useGetAllClusterQuery();
 
   const [
     triggerGetAllAgents,
@@ -127,7 +132,6 @@ const ClusterRequests = () => {
   // ] = useUnlockAgentMutation();
 
   function generateTableMenuItems(row) {
-    console.log({ row });
     let tableMenuItems = [
       {
         name: 'Cluster Agent Details',
@@ -141,11 +145,93 @@ const ClusterRequests = () => {
     return tableMenuItems;
   }
 
-//   const clusterNameList = clusterRequests?.data?.reduce((acc, cluster) => {
-//     acc[''] = 'Cluster';
-//     acc[cluster.name] = cluster.name;
-//     return acc;
-//   }, {});
+  const [
+    triggerApproveClusterRequest,
+    {
+      isLoading: approveClusterRequestIsLoading,
+      isSuccess: approveClusterRequestIsSuccess,
+      isError: approveClusterRequestIsError,
+      error: approveClusterRequestError,
+    },
+  ] = useApproveClusterRequestMutation(lazyQueryOptions);
+
+  const [triggerDisapproveClusterRequest, {
+    isLoading: disapproveClusterRequestIsLoading,
+    isSuccess: disapproveClusterRequestIsSuccess,
+    isError: disapproveClusterRequestIsError,
+    error: disapproveClusterRequestError,
+  }] = useDisapproveClusterRequestMutation(lazyQueryOptions)
+
+
+  useMemo(() => {
+    if (approveClusterRequestIsSuccess) {
+      triggerGetAllClusters(clusterRequestsParams);
+      setClusterRequestsModal(false);
+
+      setOpenSnackbar({
+        open: true,
+        message: 'Cluster Request Approved Successfully',
+        severity: 'success',
+      });
+    } else if (approveClusterRequestIsError) {
+      triggerGetAllClusters(clusterRequestsParams);
+      setClusterRequestsModal(false);
+      setApprovalInput({
+        userId: '',
+        clusterRequestId: '',
+        clusterName: '',
+      });
+      const errorMessage = approveClusterRequestError.data.message;
+
+      setOpenSnackbar({
+        open: true,
+        message: errorMessage,
+        severity: 'error',
+      });
+    }
+  }, [
+    approveClusterRequestIsError,
+    approveClusterRequestError,
+    approveClusterRequestIsSuccess,
+  ]);
+
+  useMemo(() => {
+    if (disapproveClusterRequestIsSuccess) {
+      triggerGetAllClusters(clusterRequestsParams);
+      setDisapproveModal(false);
+
+      setOpenSnackbar({
+        open: true,
+        message: 'Cluster Request Disapproved Successfully',
+        severity: 'success',
+      });
+    } else if (disapproveClusterRequestIsError) {
+      triggerGetAllClusters(clusterRequestsParams);
+      setDisapproveModal(false);
+      setApprovalInput({
+        userId: '',
+        clusterRequestId: '',
+        clusterName: '',
+      });
+      const errorMessage = disapproveClusterRequestError.data.message;
+
+      setOpenSnackbar({
+        open: true,
+        message: errorMessage,
+        severity: 'error',
+      });
+    }
+  }, [
+    disapproveClusterRequestIsError,
+    disapproveClusterRequestError,
+    disapproveClusterRequestIsSuccess,
+  ]);
+
+  //   const clusterNameList = clusterRequests?.data?.reduce((acc, cluster) => {
+  //     acc[''] = 'Cluster';
+  //     acc[cluster.name] = cluster.name;
+  //     return acc;
+  //   }, {});
 
   // useEffect(() => {
   //     if (lockAgentIsSuccess) {
@@ -202,27 +288,70 @@ const ClusterRequests = () => {
     });
   };
 
+  const handleCloseDisapprove = () => {
+    setDisapproveModal(false);
+  };
+
+  const handleClickDisapprove = () => {
+    setDisapproveModal(true);
+    setClusterRequestsModal(false);
+  };
+
   return (
     <Main>
+      {disapproveModal && (
+        <DisapproveRequest
+          HeaderText={'Reason for Disapproval'}
+          confirmationBody={'Select reason for disaaproving cluster request'}
+          open={disapproveModal}
+          clickConfirmation={() => {
+            triggerDisapproveClusterRequest(disapproveInput)
+          }}
+          disableConfirmButton={!disapproveInput.reason} 
+          confirmationText={'Disapprove'}
+          close={handleCloseDisapprove}
+          disapproveInput={disapproveInput}
+          setDisapproveInput={setDisapproveInput}
+          userId={agentDetails && agentDetails.userId}
+          clusterRequestId={agentDetails && agentDetails.id}
+        />
+      )}
       {agentDetails && (
         <ClusterRequestDetailsModal
           open={clusterRequestsModal}
-          userId={agentDetails && agentDetails?.id}
+          userId={agentDetails && agentDetails?.userId}
+          clusterRequestId={agentDetails && agentDetails.id}
           handleClose={() => {
             setClusterRequestsModal(false);
-            // setAgentDetails(null);
+            setApprovalInput({
+              userId: '',
+              clusterName: '',
+              clusterRequestId: '',
+            });
           }}
           agentDetails={agentDetails}
           clusters={clusters}
+          clickConfirmation={() => {
+            triggerApproveClusterRequest(approvalInput);
+          }}
+          clickDisapprove={handleClickDisapprove}
+          loading={approveClusterRequestIsLoading}
+          setApprovalInput={setApprovalInput}
+          disabled={
+            !approvalInput.userId ||
+            !approvalInput.clusterName ||
+            !approvalInput.clusterRequestId ||
+            agentDetails.status !== 'PENDING'
+          }
         />
       )}
-      <SnackBar
-        openSnackbar={openSnackbar?.open}
-        handleClose={handleSnackbarClose}
-        snackbarSeverity={openSnackbar?.severity}
-        SnackbarMessage={openSnackbar?.message}
-      />
       <Container>
+        <SnackBar
+          openSnackbar={openSnackbar?.open}
+          handleClose={handleSnackbarClose}
+          snackbarSeverity={openSnackbar?.severity}
+          SnackbarMessage={openSnackbar?.message}
+        />
         <Header>
           <HeaderTitle>
             <h1>Cluster Requests</h1>
@@ -231,7 +360,9 @@ const ClusterRequests = () => {
             <SelectSearchBar>
               <TableSelectSearchBar
                 selectValue={searchFilters.searchFilterBy}
-                searchInputValue={clusterRequestsParams.phoneOrEmailOrAccountNumber}
+                searchInputValue={
+                  clusterRequestsParams.phoneOrEmailOrAccountNumber
+                }
                 options={{
                   'Account Number': 'phoneOrEmailOrAccountNumber',
                   'Phone Number': 'phoneOrEmailOrAccountNumber',
@@ -287,7 +418,7 @@ const ClusterRequests = () => {
               ? lazyGetClusterRequests.data.content
               : clusterRequests?.data?.content
           }
-          loading={getQueryIsLoading || lazyQueryIsLoading}
+          loading={getClusterIsLoading || lazyQueryIsLoading}
           currentPageNumber={clusterRequestsParams.page}
           onClickPrevPage={() => {
             if (clusterRequestsParams.page === 1) return;
@@ -307,10 +438,10 @@ const ClusterRequests = () => {
 
             if (clusterRequestsParams.page === lastPageNumber) return;
             setClusterRequestsParams({
-                ...clusterRequestsParams,
-                page: clusterRequestsParams.page + 1,
+              ...clusterRequestsParams,
+              page: clusterRequestsParams.page + 1,
             });
-            console.log({clusterRequestsParams})
+            console.log({ clusterRequestsParams });
             triggerGetAllClusters({
               ...clusterRequestsParams,
               page: clusterRequestsParams.page + 1,

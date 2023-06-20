@@ -13,19 +13,22 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function DisapproveRequest({
     open,
     HeaderText,
-    onClickConfirmButton,
+    clickConfirmation,
     disableConfirmButton,
     loading,
     close,
     confirmationBody,
     confirmationText,
-    onChangeReasonBody,
-    reason,
+    setDisapproveInput,
+    userId,
+    clusterRequestId
 }) {
     const options = [
+        'Select a reason',
         'Agent is not a mobile money operator',
         'Agent business address cannot be verified'
     ]
+
 
     return (
         <div>
@@ -46,12 +49,17 @@ export default function DisapproveRequest({
                         <PersonalInformation>
                            
                             {/* <InputField value={reason} onChange={onChangeReasonBody} /> */}
-                            <SelectCommon options={options}  />
+                            <SelectCommon options={options} onChange={(e) => {
+                                setDisapproveInput({
+                                userId: userId,
+                                reason: e.target.value,
+                                clusterRequestId: clusterRequestId
+                            })}} />
                         </PersonalInformation>
                         <ActionButton>
                             <CancelButton onClick={close}>Cancel</CancelButton>
                             <AcceptButton
-                                onClick={onClickConfirmButton}
+                                onClick={clickConfirmation}
                                 disabled={disableConfirmButton}
                             >
                                 {loading ? (

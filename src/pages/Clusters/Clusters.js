@@ -15,12 +15,12 @@ import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import SearchForUser from '../../components/common/SearchForUser';
 import ButtonCommon from '../../components/common/ButtonCommon';
-import { useGetAllClustersQuery, useLazyGetAllClustersQuery } from '../../app/services/clusters';
+import { useGetAllClusterRequestsQuery, useGetAllClustersQuery, useLazyGetAllClustersQuery } from '../../app/services/clusters';
 
 const TableColumns = [
   { id: 'name', label: 'Cluster Name' },
   { id: 'numberOfMembers', label: 'Members' },
-  { id: 'clusterHeads', label: 'Cluster Head' },
+  { id: 'headName', label: 'Cluster Head' },
   { id: 'growthAssociate', label: 'Growth Associate' },
 ];
 
@@ -59,7 +59,19 @@ function Clusters() {
     { data: lazyQueryClusters, isLoading: lazyQueryIsLoading },
   ] = useLazyGetAllClustersQuery(lazyQueryOptions);
 
+  const {data: clusterRequests} = useGetAllClusterRequestsQuery();
+  // console.log({clusterRequests})
 
+  // const pendingRequests = [];
+  const pendingRequests = clusterRequests && clusterRequests.data.content.map(request => {
+    console.log(request.status !== 'PENDING')
+    if (request.status === 'PENDING') {
+      console.log(request)
+      return request
+    }
+  });
+
+  console.log({pendingRequests})
   const tableMenuItems = [
     {
       name: 'View Cluster Members',
@@ -114,7 +126,8 @@ function Clusters() {
               <p>
                 {lazyQueryClusters?.data?.length !== undefined
                   ? lazyQueryClusters?.data?.length
-                  : clusters?.data?.length}{' '}
+                  : clusters?.data?.length}
+                  {' '} 
                 pending requests
               </p>
               <a href='/clusters/requests' style={{color: '#933d0c', marginLeft: '.5rem', borderBottom: '1px solid #933d0c', fontWeight: 500, textDecoration: 'none'}}>View requests</a>

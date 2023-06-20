@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import styled from 'styled-components';
@@ -7,8 +7,6 @@ import StatusTag from '../common/StatusTag';
 import ViewAgentProfile from '../agents/ViewAgentProfileModal';
 import { useGetAllClusterQuery } from '../../app/services/loan';
 import SelectCommonModified from '../common/SelectCommonModified';
-import SnackBar from '../common/SnackBar';
-import { CircularProgress } from '@mui/material';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
@@ -19,36 +17,23 @@ export default function ClusterRequestDetailsModal({
   handleClose,
   agentDetails,
   userId,
-  clusterRequestId,
-  clusters,
-  clickConfirmation,
-  clickDisapprove,
-  loading,
-  setApprovalInput,
-  disabled,
+  clusters
 }) {
   
+  const [tab, setTab] = useState('posdevices');
+  const [disapproveModal, setDisapproveModal] = useState(false);
   const [agentDetailsModal, setAgentDetailsModal] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [cluster, setCluster] = useState('');
+  const [approvalInput, setApprovalInput] = useState({
+    userId: '',
+    clusterName: '',
+    clusterRequestId: ''
+  })
 
-  const [snackbarInfo, setSnackbarInfo] = useState({
-    open: false,
-    message: '',
-    severity: '',
-  });
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSnackbarInfo({
-      open: false,
-      message: snackbarInfo.message,
-      severity: snackbarInfo.severity,
-    });
+  const handleCloseDisapprove = () => {
+    setDisapproveModal(false);
+    handleClose();
   };
- 
 
   const formatStatus = (value) => {
     switch (value) {
@@ -87,29 +72,33 @@ export default function ClusterRequestDetailsModal({
     return new Date(date).toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric',
-    });
-  };
+      year: 'numeric'
+    })
+  }
 
-  const formatTime = (date) =>
-    new Date(date).toLocaleTimeString('en-Us', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
+  const formatTime = (date) => new Date(date).toLocaleTimeString('en-Us', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  })
 
   return (
     <div>
+      {disapproveModal && (
+        <DisapproveRequest
+          HeaderText={'Reason for Disapproval'}
+          confirmationBody={'Select reason for disaaproving cluster request'}
+          open={disapproveModal}
+          confirmationText={'Disapprove'}
+          close={handleCloseDisapprove}
+        />
+      )}
+
       {agentDetailsModal && (
         <ViewAgentProfile
           open={agentDetailsModal}
           handleClose={() => {
             setAgentDetailsModal(false);
-            setApprovalInput({
-              clusterName: '',
-              clusterRequestId: '',
-              userId: '',
-            });
             handleClose();
           }}
           userId={userId}
@@ -124,12 +113,6 @@ export default function ClusterRequestDetailsModal({
         aria-describedby='alert-dialog-slide-description'
       >
         <ModalContainer>
-          <SnackBar
-            SnackbarMessage={snackbarInfo?.message}
-            openSnackbar={snackbarInfo.open}
-            handleClose={handleSnackbarClose}
-            snackbarSeverity={snackbarInfo.severity}
-          />
           <>
             <ModalHeader>
               <div>
@@ -167,12 +150,12 @@ export default function ClusterRequestDetailsModal({
                 </DetailsTile>
                 <DetailsTile>
                   <span>Phone number</span>
-                  <span>{agentDetails.phone}</span>
+                  <span>081234567</span>
                 </DetailsTile>
               </AgentInformation>
               <BusinessAddress>
                 <span>Business Address</span>
-                <span>{agentDetails.businessAddress}</span>
+                <span>{agentDetails.address}</span>
 
                 <span onClick={() => setAgentDetailsModal(true)}>
                   See more details
@@ -181,37 +164,25 @@ export default function ClusterRequestDetailsModal({
               <AddAgentToClusterContainer>
                 <h4>Select a cluster to add agent</h4>
                 <span>Cluster name</span>
-                <SelectCommonModified
-                  options={clusters.data}
-                  onChange={(e) => {
-                    setApprovalInput({
-                      clusterRequestId: clusterRequestId,
-                      clusterName: e.target[e.target.selectedIndex].text,
-                      userId: userId,
-                    });
-                    setSelectedOption(e.target.value);
-                  }}
-                  // value={selectedOption}
-                  disabled={agentDetails.status !== 'PENDING'}
-                />
+                <SelectCommonModified options={clusters.data} onChange={(e) => {
+                  console.log(e.target[e.target.selectedIndex].text, approvalInput);
+                  setApprovalInput({
+                    clusterRequestId: e.target.value,
+                    clusterName: e.target[e.target.selectedIndex].text
+                  })
+                }} value={approvalInput.clusterName} />
               </AddAgentToClusterContainer>
               <ActionContainer>
                 <ButtonContainerWithBorder
-                  onClick={clickDisapprove}
-                  disabled={false}
+                  onClick={() => {
+                    setDisapproveModal(true);
+                    console.log({ disapproveModal });
+                    handleClose();
+                  }}
                 >
                   Disapprove
                 </ButtonContainerWithBorder>
-                <ButtonContainer
-                  onClick={clickConfirmation}
-                  disabled={disabled}
-                >
-                  {loading ? (
-                    <CircularProgress size={20} color='inherit' />
-                  ) : (
-                    'Approve'
-                  )}
-                </ButtonContainer>
+                <ButtonContainer>Approve</ButtonContainer>
               </ActionContainer>
             </ModalBody>
           </>
@@ -291,12 +262,6 @@ const ButtonContainerWithBorder = styled(ButtonContainer)`
   color: #933d0c;
   background: #ffffff;
   border: 1px solid #933D0C;
-
-  &:disabled {
-    background-color: white;
-    cursor: not-allowed;
-    border: 1px solid #98a2b3;
-    color: #98a2b3;
 `;
 
 const AgentName = styled.div`

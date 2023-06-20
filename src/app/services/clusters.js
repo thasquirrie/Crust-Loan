@@ -12,10 +12,24 @@ export const clusterApi = baseApi.injectEndpoints({
             query: (params) => {
               console.log({params});
               return ({
-                url: "/loan/cluster/request/all?page=0&size=3",
+                url: "/loan/cluster/request/all?size=4",
                 params,
             })},
         }),
+        approveClusterRequest: builder.mutation({
+          query: (body) => ({
+            url: '/loan/cluster/request/approve',
+            method: 'POST',
+            body
+          })
+        }),
+        disapproveClusterRequest: builder.mutation({
+          query: (body) => ({
+            url: '/loan/cluster/request/disapprove',
+            method: 'POST',
+            body
+          })
+        })
     }),
 });
 
@@ -23,5 +37,7 @@ export const {
     useGetAllClustersQuery,
     useGetAllClusterRequestsQuery,
     useLazyGetAllClustersQuery,
-    useLazyGetAllClusterRequestsQuery
+    useLazyGetAllClusterRequestsQuery,
+    useApproveClusterRequestMutation,
+    useDisapproveClusterRequestMutation
 } = clusterApi;

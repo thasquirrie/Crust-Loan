@@ -1,18 +1,19 @@
 import styled from 'styled-components';
 import arrowDown from '../../assets/common/arrow-down.svg';
 
-function SelectCommonModified({ options, onChange, value }) {
+function SelectCommonModified({ options, onChange, value, disabled }) {
   return (
     <SelectContainer>
-      <select onChange={onChange} value={value}>
-        {console.log('Value Here:', {value})}
+      <select onChange={onChange} value={value} disabled={disabled}>
         <option>Select a cluster</option>
         {options &&
-          options.map((option) => (
-            <option>
-              {option.name}
-            </option>
-          ))}
+          Object.keys(options).map((key) => {
+            return (
+              <option key={key} value={options[key].name}>
+                {options[key].name}
+              </option>
+            );
+          })}
       </select>
     </SelectContainer>
   );
