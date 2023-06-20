@@ -12,7 +12,7 @@ export const clusterApi = baseApi.injectEndpoints({
             query: (params) => {
               console.log({params});
               return ({
-                url: "/loan/cluster/request/all?size=4",
+                url: "/loan/cluster/request/all",
                 params,
             })},
         }),

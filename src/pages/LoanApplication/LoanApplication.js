@@ -91,6 +91,7 @@ function LoanApplication() {
     page: 1,
     size: 50,
   });
+  const [updateLoanModal, setUpdateLoadnModal] = useState(false);
 
   const [searchFilters, setSearchFilters] = useState({
     searchFilterBy: 'accountNumber',
@@ -152,12 +153,12 @@ function LoanApplication() {
 
   function generateTableMenuItems(row) {
     let tableMenuItems = [
-        {
-            name: 'Loan Insights',
-            onClick: () => {
-                console.log('Clicked')
-            },
+      {
+        name: 'Loan Insights',
+        onClick: () => {
+          console.log('Clicked');
         },
+      },
       {
         name: 'Loan History',
         onClick: () => {
@@ -165,12 +166,7 @@ function LoanApplication() {
           setAgentDetails(row);
         },
       },
-      {
-        name: 'Update Loan',
-        onClick: () => {
-            
-        }
-      },
+
       {
         name: 'View Agent Details',
         onClick: () => {
@@ -197,6 +193,14 @@ function LoanApplication() {
             },
           }
         );
+        break;
+      case 'REPAID':
+        tableMenuItems.push({
+          name: 'Update Loan',
+          onClick: () => {
+            setUpdateLoadnModal(true);
+          },
+        });
         break;
       default:
         break;
