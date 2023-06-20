@@ -30,6 +30,8 @@ function App() {
         </Route>
         <Route path='loan'>
           <Route path='application' element={<LoanApplication />} />
+          <Route path='clusters' element={<Clusters />} />
+            <Route path='clusters/requests' element={<ClusterRequests />} />
         </Route>
         <Route path='pos'>
           <Route path='requests' element={<POSRequest />} />
@@ -42,10 +44,10 @@ function App() {
           <Route path='aggregator' element={<AggregatorManagement />} />
           <Route path='disputes' element={<POSDispute />} />
         </Route>
-        <Route path='clusters'>
+        {/* <Route path='clusters'>
             <Route path='clusters' element={<Clusters />} />
             <Route path='requests' element={<ClusterRequests />} />
-        </Route>
+        </Route> */}
       </Routes>
     </BrowserRouter>
   );

@@ -16,6 +16,7 @@ import MuiAlert from '@mui/material/Alert';
 import SearchForUser from '../../components/common/SearchForUser';
 import ButtonCommon from '../../components/common/ButtonCommon';
 import { useGetAllClusterRequestsQuery, useGetAllClustersQuery, useLazyGetAllClustersQuery } from '../../app/services/clusters';
+import { Link } from 'react-router-dom';
 
 const TableColumns = [
   { id: 'name', label: 'Cluster Name' },
@@ -130,7 +131,7 @@ function Clusters() {
                   {' '} 
                 pending requests
               </p>
-              <a href='/clusters/requests' style={{color: '#933d0c', marginLeft: '.5rem', borderBottom: '1px solid #933d0c', fontWeight: 500, textDecoration: 'none'}}>View requests</a>
+              <Link to='requests' style={{color: '#933d0c', marginLeft: '.5rem', borderBottom: '1px solid #933d0c', fontWeight: 500, textDecoration: 'none'}}>View requests</Link>
               </div>
             </HeaderTitle>
             <div>
