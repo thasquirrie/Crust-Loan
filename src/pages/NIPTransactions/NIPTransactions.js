@@ -2,13 +2,19 @@ import {
     Container,
     Header,
     HeaderTitle,
+<<<<<<< HEAD
     SearchFilters,
+=======
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
     SelectSearchBar,
     SelectSearchFilter,
 } from "./NIPTransactionsStyles";
 import Main from "../../components/common/Main";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
+<<<<<<< HEAD
 import { DateRangePicker } from "rsuite";
+=======
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
 import Table from "../../components/common/Table";
 import {
     useGetAllNIPTransactionsQuery,
@@ -67,7 +73,11 @@ function NIPTransactions() {
         message: "",
     });
     const [searchFilters, setSearchFilters] = useState({
+<<<<<<< HEAD
         searchFilterBy: "accountNumber",
+=======
+        searchFilterBy: "sessionId",
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
         searchFilterValue: "",
     });
 
@@ -189,7 +199,10 @@ function NIPTransactions() {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Session ID": "sessionId",
+<<<<<<< HEAD
                                     "Account Number": "beneficiaryAccountNumber",
+=======
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
                                 }}
                                 selectOnChange={(e) => {
                                     setSearchFilters({
@@ -210,11 +223,16 @@ function NIPTransactions() {
                                         ...(searchFilters?.searchFilterBy === "sessionId" && {
                                             sessionId: searchFilters?.searchFilterValue,
                                         }),
+<<<<<<< HEAD
                                         ...(searchFilters?.searchFilterBy ===
                                             "beneficiaryAccountNumber" && {
                                             accountNumber: searchFilters?.searchFilterValue,
                                         }),
                                     });
+=======
+                                    });
+                                    console.log(searchFilters);
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
                                 }}
                                 showClearSearch={
                                     searchFilters.searchFilterValue.length > 0 ? true : false
@@ -250,6 +268,7 @@ function NIPTransactions() {
                         triggerGetAllTransactions({
                             ...transactionParams,
                             page: transactionParams.page - 1,
+<<<<<<< HEAD
                             ...(searchFilters?.searchFilterBy === "accountNumber" && {
                                 accountNumber: searchFilters?.searchFilterValue,
                             }),
@@ -259,6 +278,11 @@ function NIPTransactions() {
                             ...(searchFilters?.searchFilterBy === "transactionRef" && {
                                 transactionRef: searchFilters?.searchFilterValue,
                             }),
+=======
+                            ...(searchFilters?.searchFilterBy === "sessionId" && {
+                                accountNumber: searchFilters?.searchFilterValue,
+                            }),
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
                         });
                     }}
                     onClickNextPage={() => {
@@ -274,6 +298,7 @@ function NIPTransactions() {
                         triggerGetAllTransactions({
                             ...transactionParams,
                             page: transactionParams.page + 1,
+<<<<<<< HEAD
                             ...(searchFilters?.searchFilterBy === "accountNumber" && {
                                 accountNumber: searchFilters?.searchFilterValue,
                             }),
@@ -283,6 +308,11 @@ function NIPTransactions() {
                             ...(searchFilters?.searchFilterBy === "transactionRef" && {
                                 transactionRef: searchFilters?.searchFilterValue,
                             }),
+=======
+                            ...(searchFilters?.searchFilterBy === "sessionId" && {
+                                accountNumber: searchFilters?.searchFilterValue,
+                            }),
+>>>>>>> a588253a9d2f5aa3b007e639b705bf012b641a85
                         });
                     }}
                     menuItems={tableMenuItems}

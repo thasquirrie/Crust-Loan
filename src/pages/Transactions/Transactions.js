@@ -17,6 +17,7 @@ import {
     useGetAllTransactionsQuery,
     useLazyDownloadTransactionRecordsQuery,
     useLazyGetAllTransactionsQuery,
+    useRetryPOSCreditTransactionMutation,
     useReverseTransactionMutation,
 } from "../../app/services/transaction";
 import { forwardRef, useEffect, useState } from "react";
@@ -34,6 +35,7 @@ const TableColumns = [
     { id: "amount", label: "Amount", format: (value) => formattedAmount(value) },
     { id: "platformTransactionRef", label: "Platform Ref." },
     { id: "crustTransactionRef", label: "TransactionRef" },
+    { id: "platform", label: "Processing Provider" },
     { id: "createdAt", label: "Date and Time" },
     { id: "fee", label: "Fee" },
     {
@@ -116,6 +118,34 @@ function Transactions() {
         },
     ] = useReverseTransactionMutation();
 
+    const [
+        retryPOSCreditTransaction,
+        {
+            isLoading: retryPOSCreditTransactionIsLoading,
+            isSuccess: retryPOSCreditTransactionIsSuccess,
+            error: retryPOSCreditTransactionError,
+        },
+    ] = useRetryPOSCreditTransactionMutation();
+
+    useEffect(() => {
+        if (retryPOSCreditTransactionIsSuccess) {
+            setOpenSnackbar({
+                open: true,
+                severity: "success",
+                message: "Transaction retried successfully",
+            });
+        } else if (retryPOSCreditTransactionError) {
+            const errorKey = Object.keys(retryPOSCreditTransactionError?.data.errors)[0];
+            const errorMessage = retryPOSCreditTransactionError?.data.errors[errorKey];
+            setOpenSnackbar({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
+        }
+        setOpenReverseTransactionModal(false);
+    }, [retryPOSCreditTransactionIsSuccess, retryPOSCreditTransactionError]);
+
     useEffect(() => {
         if (reverseTransactionIsSuccess) {
             setOpenSnackbar({
@@ -163,6 +193,17 @@ function Transactions() {
         });
     };
 
+    const onClickReverseTransaction = (transaction) => {
+        switch (transaction?.transactionType) {
+            case "POS_CASH_WITHDRAWAL":
+                retryPOSCreditTransaction(transaction?.id);
+                break;
+            default:
+                reverseTransaction(transaction?.id);
+                break;
+        }
+    };
+
     return (
         <Main>
             <Snackbar
@@ -171,7 +212,11 @@ function Transactions() {
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 autoHideDuration={4000}
             >
-                <Alert onClose={handleSnackbarClose} severity={"error"} sx={{ width: "100%" }}>
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity={openSnackbar.severity}
+                    sx={{ width: "100%" }}
+                >
                     {openSnackbar?.message}
                 </Alert>
             </Snackbar>
@@ -188,14 +233,24 @@ function Transactions() {
             )}
             <ConfirmationModal
                 open={openReverseTransactionModal}
-                HeaderText={"Reverse Transaction"}
-                ConfirmationBody={"Are you sure you want to reverse this transaction?"}
-                confirmationText={"Yes, Reverse"}
+                HeaderText={`${
+                    transactionModalDetails?.transactionType === "POS_CASH_WITHDRAWAL"
+                        ? "Retry"
+                        : "Reverse"
+                } Transaction`}
+                ConfirmationBody={`Are you sure you want to ${
+                    transactionModalDetails?.transactionType === "POS_CASH_WITHDRAWAL"
+                        ? "retry"
+                        : "reverse"
+                } this transaction?`}
+                confirmationText={`${
+                    transactionModalDetails?.transactionType === "POS_CASH_WITHDRAWAL"
+                        ? "Retry"
+                        : "Reverse"
+                } Transaction`}
                 handleClose={() => setOpenReverseTransactionModal(false)}
-                loading={reverseTransactionIsLoading}
-                onClickConfirm={() => {
-                    reverseTransaction(transactionModalDetails.id);
-                }}
+                loading={reverseTransactionIsLoading || retryPOSCreditTransactionIsLoading}
+                onClickConfirm={() => onClickReverseTransaction(transactionModalDetails)}
             />
             <Container>
                 <Header>
@@ -215,8 +270,7 @@ function Transactions() {
                             disabled={
                                 lazyQueryDownloadIsLoading ||
                                 lazyQueryDownloadIsError ||
-                                !lazyQueryDownloadTransactions?.data 
-                                ||
+                                !lazyQueryDownloadTransactions?.data ||
                                 !transactionParams?.startDate ||
                                 !transactionParams?.endDate
                             }

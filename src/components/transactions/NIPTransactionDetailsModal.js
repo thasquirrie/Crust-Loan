@@ -6,7 +6,6 @@ import cancel from "../../assets/transactions/x.svg";
 import download from "../../assets/transactions/download.svg";
 import crustLogoFooter from "../../assets/transactions/crustLogoFooter.svg";
 import { Link } from "react-router-dom";
-import { useDownloadTransactionQuery } from "../../app/services/transaction";
 import { CircularProgress } from "@mui/material";
 import formattedAmount from "../../utils/formatCurrency";
 const moment = require("moment");
@@ -21,18 +20,12 @@ const formattedTime = (time) => {
     return convertedTime;
 };
 
-export default function TransactionModalDetails({
+export default function NIPTransactionModalDetails({
     open,
     handleClose,
     transaction,
     onClickReverseTransaction,
 }) {
-    const {
-        data: transactionPDF,
-        isLoading: transactionPDFLoading,
-        isError: transactionPDFError,
-    } = useDownloadTransactionQuery(transaction?.id);
-
     return (
         <div>
             <Dialog
@@ -44,29 +37,27 @@ export default function TransactionModalDetails({
             >
                 <TransactionModalContainer>
                     <TransactionDetailsModalHeader>
-                        <h4>
-                            {transaction?.transactionType === "INTER_BANK_TRANSFER"
-                                ? "Inter Bank Transfer Transaction Details"
-                                : transaction?.transactionType === "NIP"
-                                ? "NIP FundingTransaction Details"
-                                : transaction?.transactionType === "LOAN_DISBURSEMENT"
-                                ? "Loan Disbursement Transaction Details"
-                                : transaction?.transactionType === "LOAN_REPAYMENT"
-                                ? "Loan Repayment Transaction Details"
-                                : "POS Withdrawal Transaction Details"}
-                        </h4>
+                        <h4>NIP Transaction Details</h4>
                         <img src={cancel} alt="cancel" onClick={handleClose} />
                     </TransactionDetailsModalHeader>
                     <TransactionDetaailsModalBody>
                         <PersonalInformation>
                             <h4>Personal/Private Information</h4>
                             <InformationDetail>
-                                <p>Agent Name</p>
-                                <p>{transaction?.accountName}</p>
+                                <p>Beneficiary Acc. Name</p>
+                                <p>{transaction?.beneficiaryAccountName}</p>
                             </InformationDetail>
                             <InformationDetail>
-                                <p>Account Number</p>
-                                <p>{transaction?.accountNumber}</p>
+                                <p>Beneficiary Acc. Number</p>
+                                <p>{transaction?.beneficiaryAccountNumber}</p>
+                            </InformationDetail>
+                            <InformationDetail>
+                                <p>Originator Acc. Name</p>
+                                <p>{transaction?.originatorAccountName}</p>
+                            </InformationDetail>
+                            <InformationDetail>
+                                <p>Originator Acc. Number</p>
+                                <p>{transaction?.originatorAccountNumber}</p>
                             </InformationDetail>
                         </PersonalInformation>
                         <TransactionInformation>
@@ -75,108 +66,37 @@ export default function TransactionModalDetails({
                                 <p>Date and Time</p>
                                 <p>{formattedTime(transaction?.createdAt)}</p>
                             </InformationDetail>
-                            {transaction?.transactionType === "POS_CARD_WITHDRAWAL" ||
-                            transaction?.transactionType === "POS_CASH_WITHDRAWAL" ? (
-                                <InformationDetail>
-                                    <p>card Type</p>
-                                    <p>{transaction?.cardType}</p>
-                                </InformationDetail>
-                            ) : null}
                             <InformationDetail>
                                 <p>Transaction Amount</p>
                                 <p>{formattedAmount(transaction?.amount)}</p>
                             </InformationDetail>
                             <InformationDetail>
-                                <p>Reference Number</p>
-                                <p>{transaction?.crustTransactionRef}</p>
+                                <p>Payment Reference Number</p>
+                                <p>{transaction?.paymentReference}</p>
                             </InformationDetail>
-                            {transaction?.transactionType === "POS_CARD_WITHDRAWAL" ||
-                            transaction?.transactionType === "POS_CASH_WITHDRAWAL" ? (
-                                <InformationDetail>
-                                    <p>Transaction Commision</p>
-                                    <p>{formattedAmount(transaction?.fee)}</p>
-                                </InformationDetail>
-                            ) : null}
                             <InformationDetail>
-                                <p>Transaction Session ID</p>
-                                <p>{transaction?.platformTransactionRef}</p>
+                                <p>Session ID</p>
+                                <p>{transaction?.sessionId}</p>
+                            </InformationDetail>
+                            <InformationDetail>
+                                <p>Transaction Reference</p>
+                                <p>{transaction?.transactionReference}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Transaction Status</p>
-                                <p>{transaction?.transactionStatus}</p>
+                                <p>{transaction?.status}</p>
                             </InformationDetail>
                             <InformationDetail>
                                 <p>Narration</p>
                                 <p>{transaction?.narration}</p>
                             </InformationDetail>
                             <InformationDetail>
-                                <p>Description</p>
-                                <p>{transaction?.description}</p>
+                                <p>Destination Instittion Code</p>
+                                <p>{transaction?.destinationInstitutionCode}</p>
                             </InformationDetail>
                         </TransactionInformation>
-                        {transaction?.transactionType === "POS_CARD_WITHDRAWAL" ||
-                        transaction?.transactionType === "POS_CASH_WITHDRAWAL" ? (
-                            <POSInformation>
-                                <h4>POS Information</h4>
-                                <InformationDetail>
-                                    <p>POS Serial Number</p>
-                                    <p>{transaction?.merchantId}</p>
-                                </InformationDetail>
-                                <InformationDetail>
-                                    <p>POS Terminal ID</p>
-                                    <p>{transaction?.terminalId}</p>
-                                </InformationDetail>
-                            </POSInformation>
-                        ) : null}
-                        <MoneyInformation>
-                            <h4>Money Information</h4>
-                            <InformationDetail>
-                                <p>Previous Balance</p>
-                                <p>{formattedAmount(transaction?.openingBalance)}</p>
-                            </InformationDetail>
-                            <InformationDetail>
-                                <p>Current Balance</p>
-                                <p>{formattedAmount(transaction?.balance)}</p>
-                            </InformationDetail>
-                        </MoneyInformation>
-                        {transaction?.transactionType === "INTER_BANK_TRANSFER" ||
-                        transaction?.transactionType === "NIP" ? (
-                            <BeneficiaryInformation>
-                                <h4>Money Information</h4>
-                                <InformationDetail>
-                                    <p>Beneficiary Bank</p>
-                                    <p>{transaction?.serviceProvider}</p>
-                                </InformationDetail>
-                                <InformationDetail>
-                                    <p>Beneficiary Account Name</p>
-                                    <p>{transaction?.recipientAccountName}</p>
-                                </InformationDetail>
-                                <InformationDetail>
-                                    <p>Beneficiary Account Number</p>
-                                    <p>{transaction?.recipientAccountNumber}</p>
-                                </InformationDetail>
-                            </BeneficiaryInformation>
-                        ) : null}
-                        <DownloadandReverseTransactionButtons
-                            transactionStatus={transaction?.transactionStatus}
-                        >
-                            <Link to={transactionPDF?.data} target="_blank">
-                                {!transactionPDFLoading ? (
-                                    <>
-                                        <img src={download} alt="download" />
-                                        Download as PDF
-                                    </>
-                                ) : transactionPDFLoading ? (
-                                    <CircularProgress size={20} color="inherit" />
-                                ) : (
-                                    transactionPDFError && <p>Unable to Fetch</p>
-                                )}
-                            </Link>
-                            <button onClick={onClickReverseTransaction}>
-                                {transaction?.transactionType === "POS_CASH_WITHDRAWAL"
-                                    ? "Retry Transaction"
-                                    : "Reverse Transaction"}
-                            </button>
+                        <DownloadandReverseTransactionButtons>
+                            <button onClick={onClickReverseTransaction}>Retry Transaction</button>
                         </DownloadandReverseTransactionButtons>
                     </TransactionDetaailsModalBody>
                     <TransactionDetailsModalFooter>
@@ -379,32 +299,14 @@ const DownloadandReverseTransactionButtons = styled.div`
     justify-content: space-between;
     margin-top: 1.8rem;
 
-    a {
-        background: #ffffff;
-        color: #933d0c;
-        border: 1px solid #933d0c;
-        height: 3rem;
-        border-radius: 4px;
-        width: ${(props) => (props.transactionStatus === "FAILED" ? "49%" : "100%")};
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-
-        img {
-            margin-right: 0.5rem;
-        }
-    }
-
     button {
-        display: ${(props) => (props.transactionStatus === "FAILED" ? "block" : "none")};
+        display: block;
         background: #933d0c;
         color: #ffffff;
         border: none;
         border-radius: 4px;
         height: 3rem;
-        width: 49%;
+        width: 100%;
     }
 `;
 

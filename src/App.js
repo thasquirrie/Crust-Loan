@@ -16,6 +16,10 @@ import AggregatorManagement from './pages/AggregatorManagement/AggregatorManagem
 import POSDispute from './pages/POSDisputes/POSDispute';
 import Clusters from './pages/Clusters/Clusters';
 import ClusterRequests from './pages/ClusterRequests/ClusterRequests';
+import PosDevices from './pages/POSDevices/POSDevices';
+import AggregatorManagement from './pages/AggregatorManagement/AggregatorManagement';
+import NIPTransactions from './pages/NIPTransactions/NIPTransactions';
+import InactivePOS from './pages/InactivePOS/InactivePOS';
 
 function App() {
   return (
@@ -23,7 +27,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Dashboard />} />
         <Route path='transaction' element={<Transactions />} />
-        {/* <Route path="transaction/nip" element={<NIPTransactions />} /> */}
+        <Route path='transaction/nip' element={<NIPTransactions />} />
         <Route path='agent' element={<Agents />} />
         <Route path='auth'>
           <Route path='login' element={<Login />} />
@@ -31,7 +35,7 @@ function App() {
         <Route path='loan'>
           <Route path='application' element={<LoanApplication />} />
           <Route path='clusters' element={<Clusters />} />
-            <Route path='clusters/requests' element={<ClusterRequests />} />
+          <Route path='clusters/requests' element={<ClusterRequests />} />
         </Route>
         <Route path='pos'>
           <Route path='requests' element={<POSRequest />} />
@@ -42,12 +46,8 @@ function App() {
           />
           <Route path='devices' element={<PosDevices />} />
           <Route path='aggregator' element={<AggregatorManagement />} />
-          <Route path='disputes' element={<POSDispute />} />
+          <Route path='inactive' element={<InactivePOS />} />
         </Route>
-        {/* <Route path='clusters'>
-            <Route path='clusters' element={<Clusters />} />
-            <Route path='requests' element={<ClusterRequests />} />
-        </Route> */}
       </Routes>
     </BrowserRouter>
   );
