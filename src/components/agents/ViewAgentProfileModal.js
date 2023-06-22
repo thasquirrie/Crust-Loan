@@ -41,6 +41,8 @@ export default function ViewAgentProfile({ open, handleClose, userId }) {
         skip: !userId,
     });
 
+    // console()
+
     return (
         <div>
             <Dialog

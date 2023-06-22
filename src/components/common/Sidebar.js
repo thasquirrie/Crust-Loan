@@ -98,7 +98,7 @@ function Sidebar({
                             </Link>
                         </div>
                         <div className="SubMenuItem">
-                            <Link to="/">
+                            <Link to="/loan/clusters/">
                                 <img src={clusterManagement} alt="" />
                                 Cluster Management
                             </Link>

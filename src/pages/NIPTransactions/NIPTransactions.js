@@ -2,11 +2,16 @@ import {
     Container,
     Header,
     HeaderTitle,
+
+    SearchFilters,
     SelectSearchBar,
     SelectSearchFilter,
 } from "./NIPTransactionsStyles";
 import Main from "../../components/common/Main";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
+
+import { DateRangePicker } from "rsuite";
+
 import Table from "../../components/common/Table";
 import {
     useGetAllNIPTransactionsQuery,
@@ -65,7 +70,7 @@ function NIPTransactions() {
         message: "",
     });
     const [searchFilters, setSearchFilters] = useState({
-        searchFilterBy: "sessionId",
+        searchFilterBy: "accountNumber",
         searchFilterValue: "",
     });
 
@@ -187,6 +192,8 @@ function NIPTransactions() {
                                 searchInputValue={searchFilters.searchFilterValue}
                                 options={{
                                     "Session ID": "sessionId",
+
+                                    "Account Number": "beneficiaryAccountNumber",
                                 }}
                                 selectOnChange={(e) => {
                                     setSearchFilters({
@@ -207,8 +214,13 @@ function NIPTransactions() {
                                         ...(searchFilters?.searchFilterBy === "sessionId" && {
                                             sessionId: searchFilters?.searchFilterValue,
                                         }),
+
+                                        ...(searchFilters?.searchFilterBy ===
+                                            "beneficiaryAccountNumber" && {
+                                            accountNumber: searchFilters?.searchFilterValue,
+                                        }),
                                     });
-                                    console.log(searchFilters);
+
                                 }}
                                 showClearSearch={
                                     searchFilters.searchFilterValue.length > 0 ? true : false
@@ -244,8 +256,15 @@ function NIPTransactions() {
                         triggerGetAllTransactions({
                             ...transactionParams,
                             page: transactionParams.page - 1,
-                            ...(searchFilters?.searchFilterBy === "sessionId" && {
+
+                            ...(searchFilters?.searchFilterBy === "accountNumber" && {
                                 accountNumber: searchFilters?.searchFilterValue,
+                            }),
+                            ...(searchFilters?.searchFilterBy === "platformRef" && {
+                                platformRef: searchFilters?.searchFilterValue,
+                            }),
+                            ...(searchFilters?.searchFilterBy === "transactionRef" && {
+                                transactionRef: searchFilters?.searchFilterValue,
                             }),
                         });
                     }}
@@ -262,9 +281,17 @@ function NIPTransactions() {
                         triggerGetAllTransactions({
                             ...transactionParams,
                             page: transactionParams.page + 1,
-                            ...(searchFilters?.searchFilterBy === "sessionId" && {
+
+                            ...(searchFilters?.searchFilterBy === "accountNumber" && {
                                 accountNumber: searchFilters?.searchFilterValue,
                             }),
+                            ...(searchFilters?.searchFilterBy === "platformRef" && {
+                                platformRef: searchFilters?.searchFilterValue,
+                            }),
+                            ...(searchFilters?.searchFilterBy === "transactionRef" && {
+                                transactionRef: searchFilters?.searchFilterValue,
+                            }),
+
                         });
                     }}
                     menuItems={tableMenuItems}

@@ -5,12 +5,14 @@ function SelectCommon({ options, onChange, value }) {
     return (
         <SelectContainer>
             <select onChange={onChange} value={value}>
+                {console.log({value})};
                 {options &&
-                    Object.keys(options).map((key) => (
-                        <option key={key} value={key}>
+                    Object.keys(options).map((key) => {
+                        
+                       return <option key={key} value={options[key]}>
                             {options[key]}
                         </option>
-                    ))}
+})}
             </select>
         </SelectContainer>
     );
