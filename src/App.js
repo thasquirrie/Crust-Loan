@@ -16,8 +16,6 @@ import AggregatorManagement from './pages/AggregatorManagement/AggregatorManagem
 import POSDispute from './pages/POSDisputes/POSDispute';
 import Clusters from './pages/Clusters/Clusters';
 import ClusterRequests from './pages/ClusterRequests/ClusterRequests';
-import PosDevices from './pages/POSDevices/POSDevices';
-import AggregatorManagement from './pages/AggregatorManagement/AggregatorManagement';
 import NIPTransactions from './pages/NIPTransactions/NIPTransactions';
 import InactivePOS from './pages/InactivePOS/InactivePOS';
 
