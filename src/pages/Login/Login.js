@@ -48,8 +48,7 @@ function Login() {
             setInvalidEmail(false);
         }
     };
-    console.log('Password:', encryptData(password));
-    
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {

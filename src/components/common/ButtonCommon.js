@@ -9,7 +9,6 @@ function ButtonCommon({
     textColor,
     disabled,
     isLoading,
-    border,
 }) {
     return (
         <ButtonContainer
@@ -18,7 +17,6 @@ function ButtonCommon({
             backgroundColor={backgroundColor}
             textColor={textColor}
             disabled={disabled}
-            border={border}
         >
             {isLoading ? <CircularProgress size={20} color="inherit" /> : text}
         </ButtonContainer>
@@ -31,23 +29,18 @@ const ButtonContainer = styled.button`
     width: 100%;
     height: 52px;
     border-radius: 9px;
+    border: none;
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.2rem;
     letter-spacing: -0.02em;
     cursor: pointer;
-    border: 1px solid #98a2b3;
-    ${(props) => {
-        console.log(props.border);
-        return props.border && `1px solid ${props.textColor}`}};
     ${(props) => (props.textColor ? `color: ${props.textColor};` : `color: #ffffff;`)}
-    ${(props) => {
-        
-        return props.backgroundColor
+    ${(props) => props.marginTop && `margin-top: ${props.marginTop};`}
+    ${(props) =>
+        props.backgroundColor
             ? `background-color: ${props.backgroundColor};`
             : `background-color: #933d0c;`}
-    }
-    ${(props) => props.marginTop && `margin-top: ${props.marginTop};`}
 
     &:disabled {
         background-color: #7a7a7a;
