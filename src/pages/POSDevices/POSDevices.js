@@ -131,6 +131,13 @@ const PosDevices = () => {
                 },
             },
             {
+                name: "Reassign POS",
+                onClick: (row) => {
+                    setPosDevicesModalType(REASSIGN_POS);
+                    setPosDevicesModalDetails(row);
+                }
+            },
+            {
                 name: "Unmap POS from aggregator",
                 onClick: (row) => {
                     setPosDevicesModalType(UNMAP_POS_FROM_AGGREGATOR);
