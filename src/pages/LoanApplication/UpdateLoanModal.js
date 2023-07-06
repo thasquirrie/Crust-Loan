@@ -2,38 +2,21 @@ import { forwardRef, useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import styled from 'styled-components';
-import DisapproveRequest from './DisapproveRequest';
-import StatusTag from '../common/StatusTag';
-import ViewAgentProfile from '../agents/ViewAgentProfileModal';
-import { useGetAllClusterQuery } from '../../app/services/loan';
-import SelectCommonModified from '../common/SelectCommonModified';
+import StatusTag from '../../components/common/StatusTag';
+import ButtonCommon from '../../components/common/ButtonCommon';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export default function ClusterRequestDetailsModal({
+export default function UpdateLoanModal({
   open,
   handleClose,
   agentDetails,
   userId,
-  clusters
+  clusters,
 }) {
-  
-  const [tab, setTab] = useState('posdevices');
-  const [disapproveModal, setDisapproveModal] = useState(false);
-  const [agentDetailsModal, setAgentDetailsModal] = useState(false);
-  const [cluster, setCluster] = useState('');
-  const [approvalInput, setApprovalInput] = useState({
-    userId: '',
-    clusterName: '',
-    clusterRequestId: ''
-  })
-
-  const handleCloseDisapprove = () => {
-    setDisapproveModal(false);
-    handleClose();
-  };
+  const [option, setOption] = useState('true');
 
   const formatStatus = (value) => {
     switch (value) {
@@ -72,38 +55,21 @@ export default function ClusterRequestDetailsModal({
     return new Date(date).toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
-    })
-  }
+      year: 'numeric',
+    });
+  };
 
-  const formatTime = (date) => new Date(date).toLocaleTimeString('en-Us', {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
-  })
+  const formatTime = (date) =>
+    new Date(date).toLocaleTimeString('en-Us', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    });
+
+    console.log({option});
 
   return (
     <div>
-      {disapproveModal && (
-        <DisapproveRequest
-          HeaderText={'Reason for Disapproval'}
-          confirmationBody={'Select reason for disaaproving cluster request'}
-          open={disapproveModal}
-          confirmationText={'Disapprove'}
-          close={handleCloseDisapprove}
-        />
-      )}
-
-      {agentDetailsModal && (
-        <ViewAgentProfile
-          open={agentDetailsModal}
-          handleClose={() => {
-            setAgentDetailsModal(false);
-            handleClose();
-          }}
-          userId={userId}
-        />
-      )}
       <Dialog
         maxWidth={'lg'}
         open={open}
@@ -116,10 +82,10 @@ export default function ClusterRequestDetailsModal({
           <>
             <ModalHeader>
               <div>
-                <AgentName>{agentDetails.name}</AgentName>
-                <p className='request'>Join Cluster request</p>
+                <AgentName>Jamilu Musa</AgentName>
+                <p className='request'>Update loan status</p>
               </div>
-              <div>{formatStatus(agentDetails.status)}</div>
+              <div>{formatStatus('Overdue')}</div>
             </ModalHeader>
             <ModalBody>
               <AgentInformationTitle>
@@ -139,12 +105,39 @@ export default function ClusterRequestDetailsModal({
                   <span>30/5/2023</span>
                 </DetailsTile>
               </AgentInformation>
-              <BusinessAddress>
-                <span>Cluster</span>
-                <span>Divine Grace</span>
-              </BusinessAddress>
-              <div>
-                <span>Have you confirmed agent</span>
+              <AgentInformation>
+                <DetailsTile>
+                  <span>Cluster</span>
+                  <span>Divine Grace</span>
+                </DetailsTile>
+              </AgentInformation>
+            <div style={{width: '100%', alignSelf: ' baseline', paddingLeft: '2rem', paddingRight: '2rem', borderTop: '1px solid #dbdef7', marginBottom: '2rem'}}>
+                <span style={{ display:'block', fontSize: '1.25rem', paddingTop: '2rem' }}>
+                  Have you confirmed agent's payment on this outstanding loan?
+                </span>
+                <div style={{display: 'flex', gap: '2.5rem', marginTop: '1rem', marginBottom: '2rem'}}>
+                  <label style={{display: 'flex', gap: '.5rem', fontSize: '1.25rem', alignItems: 'center'}}>
+                    <input
+                      type='radio'
+                      value={true}
+                      onChange={(e) => setOption(true)}
+                      checked={option}
+                      style={{width: '1.25rem', height: '1.25rem', accentColor: option ? '#933d0c': '#d0dc34'}}
+                    />
+                    Yes
+                  </label>
+                  <label style={{display: 'flex', gap: '.5rem', fontSize: '1.25rem', alignItems: 'center'}}>
+                    <input
+                      type='radio'
+                      value={false}
+                      onChange={(e) => setOption(false)}
+                      checked={!option}
+                      style={{width: '1.25rem', height: '1.25rem', accentColor: !option ? '#933d0c': '#d0dce4'}}
+                    />
+                    No
+                  </label>
+                </div>
+                <ButtonCommon marginTop={'1rem'} text={'Change status to repaid'}/>
               </div>
             </ModalBody>
           </>
@@ -223,7 +216,7 @@ const ButtonContainer = styled.button`
 const ButtonContainerWithBorder = styled(ButtonContainer)`
   color: #933d0c;
   background: #ffffff;
-  border: 1px solid #933D0C;
+  border: 1px solid #933d0c;
 `;
 
 const AgentName = styled.div`

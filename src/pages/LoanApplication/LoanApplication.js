@@ -26,6 +26,8 @@ import SnackBar from '../../components/common/SnackBar';
 import ConfirmationModalWithReason from '../../components/common/ConfirmationModalWithReason';
 import StatusTag from '../../components/common/StatusTag';
 import LoanHistoryModal from '../../components/loan/LoanHistoryModal';
+import UpdateLoanModal from './LoanInsightsModal';
+import LoanInsightsModal from './LoanInsightsModal';
 const moment = require('moment');
 
 const TableColumns = [
@@ -91,7 +93,8 @@ function LoanApplication() {
     page: 1,
     size: 50,
   });
-  const [updateLoanModal, setUpdateLoadnModal] = useState(false);
+  const [updateLoanModal, setUpdateLoanModal] = useState(false);
+  const [loanInsightsModal, setLoanInsightsModal] = useState(false);
 
   const [searchFilters, setSearchFilters] = useState({
     searchFilterBy: 'accountNumber',
@@ -157,7 +160,7 @@ function LoanApplication() {
       {
         name: 'Loan Insights',
         onClick: () => {
-          console.log('Clicked');
+          setLoanInsightsModal(true)
         },
       },
       {
@@ -180,7 +183,7 @@ function LoanApplication() {
       tableMenuItems.push({
         name: 'Update Loan',
         onClick: () => {
-          setUpdateLoadnModal(true);
+          setUpdateLoanModal(true);
         },
       });
     switch (row?.loanStatus) {
@@ -280,6 +283,8 @@ function LoanApplication() {
 
   return (
     <Main>
+      {updateLoanModal && <UpdateLoanModal open={updateLoanModal} handleClose={() => setUpdateLoanModal(false)} />}
+      {loanInsightsModal && <LoanInsightsModal open={loanInsightsModal} handleClose={() => setLoanInsightsModal(false)} />}
       <ConfirmationModal
         open={loanModalType === APPROVED_LOAN}
         HeaderText='Approve Loan'
