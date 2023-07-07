@@ -30,8 +30,8 @@ const TableColumns = [
     { id: "agentAccountNumber", label: "AGENT ACC. NO." },
     { id: "aggregatorName", label: "AGG. NAME" },
     { id: "aggregatorAccountNumber", label: "AGG. ACC. NO." },
-    { id: "withdrawAmount", label: "WITHDRAWAL AMOUNT", format: formattedAmount },
-    { id: "numberOfWithdrawals", label: "WITHDRAWAL COUNT" },
+    { id: "withdrawAmount", label: "TOTAL AMOUNT", format: formattedAmount },
+    { id: "numberOfWithdrawals", label: "TOTAL COUNT" },
     {
         id: "aggregatorCommission",
         label: "Aggregator Commision",

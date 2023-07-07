@@ -460,6 +460,7 @@ function Transactions() {
                                     REVERSED: "Reversed",
                                     FAILED: "Failed",
                                     PENDING: "Pending",
+                                    PROCESSING: "processing",
                                 }}
                                 value={transactionParams?.transactionStatus}
                                 onChange={(e) => {

@@ -45,6 +45,20 @@ export const posApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
+        unmapAgentPOS: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/agent/unmap",
+                method: "POST",
+                body,
+            }),
+        }),
+        unmapAggregatorPOS: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/aggregator/unmap",
+                method: "POST",
+                body,
+            }),
+        }),
         declinePosRequest: builder.mutation({
             query: (id) => ({
                 url: `/transaction/pos/reject/${id}`,
@@ -192,6 +206,8 @@ export const {
     useGetPosCategoryQuery,
     useReassignPosToAgentMutation,
     useReassignPosToAggregatorMutation,
+    useUnmapAgentPOSMutation,
+    useUnmapAggregatorPOSMutation,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
     useGetAggregatorAgentQuery,
