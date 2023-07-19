@@ -78,6 +78,11 @@ const SearchFilters = styled.div`
 
     div:nth-child(3) {
         width: 10vw;
+        margin-right: 1rem;
+    }
+
+    div:nth-child(4) {
+        width: 10vw;
     }
 
     div:nth-child(1) {

@@ -436,6 +436,25 @@ function LoanApplication() {
                 }}
               />
               <SelectCommon
+                options={{
+                  '': 'Due Loan',
+                  'today': 'Today',
+                  'yesterday': 'Yesterday',
+                  'tomorrow': 'Tomorrow'
+                }}
+                value={loanApplicationParams?.clusterName}
+                onChange={(e) => {
+                  setLoanApplicationParams({
+                    ...loanApplicationParams,
+                    clusterName: e.target.value,
+                  });
+                  triggerLoanApplications({
+                    ...loanApplicationParams,
+                    clusterName: e.target.value,
+                  });
+                }}
+              />
+              <SelectCommon
                 options={clusterNameList}
                 value={loanApplicationParams?.clusterName}
                 onChange={(e) => {
