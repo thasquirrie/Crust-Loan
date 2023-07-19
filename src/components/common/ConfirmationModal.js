@@ -42,7 +42,7 @@ function ConfirmationModal({
                     </ConfirmationModalBody>
                     <ConfirmationModalFooter>
                         <button onClick={handleClose}>No, Cancel</button>
-                        <button onClick={onClickConfirm}>
+                        <button onClick={onClickConfirm} disabled={loading}>
                             {loading ? (
                                 <CircularProgress size={20} color="inherit" />
                             ) : (
@@ -133,5 +133,10 @@ const ConfirmationModalFooter = styled.div`
         width: 49%;
         border-radius: 9px;
         height: 3rem;
+    }
+
+    &:disabled {
+        background-color: #7a7a7a;
+        cursor: not-allowed;
     }
 `;

@@ -172,7 +172,11 @@ export default function TransactionModalDetails({
                                     transactionPDFError && <p>Unable to Fetch</p>
                                 )}
                             </Link>
-                            <button onClick={onClickReverseTransaction}>Reverse Transaction</button>
+                            <button onClick={onClickReverseTransaction}>
+                                {transaction?.transactionType === "POS_CASH_WITHDRAWAL"
+                                    ? "Retry Transaction"
+                                    : "Reverse Transaction"}
+                            </button>
                         </DownloadandReverseTransactionButtons>
                     </TransactionDetaailsModalBody>
                     <TransactionDetailsModalFooter>

@@ -8,20 +8,19 @@ import {
     SelectSearchBar,
     SelectSearchFilter,
     DownloadButtonContainer,
-} from "./POSTransactionActivityStyles";
+} from "./InactivePOSStyles";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar";
 import { DateRangePicker } from "rsuite";
 import {
-    useGetAllPosActivityQuery,
-    useLazyGetAllPosActivityQuery,
-    useLazyDownloadPosActivityRecordsQuery,
+    useLazyGetInactivePOSActivityQuery,
+    useGetInactivePOSActivityQuery,
+    useLazyDownloadInactivePosActivityRecordsQuery,
     useGetAggregatorQuery,
 } from "../../app/services/pos";
 import Table from "../../components/common/Table";
-import formattedAmount from "../../utils/formatCurrency";
 import ButtonCommonLink from "../../components/common/ButtonCommonLink";
+import { lazyQueryOptions } from "../../utils/queryOptions";
 import SelectCommon from "../../components/common/SelectCommon";
-import StatusTag from "../../components/common/StatusTag";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -30,30 +29,9 @@ const TableColumns = [
     { id: "agentAccountNumber", label: "AGENT ACC. NO." },
     { id: "aggregatorName", label: "AGG. NAME" },
     { id: "aggregatorAccountNumber", label: "AGG. ACC. NO." },
-    { id: "withdrawAmount", label: "TOTAL AMOUNT", format: formattedAmount },
-    { id: "numberOfWithdrawals", label: "TOTAL COUNT" },
-    {
-        id: "aggregatorCommission",
-        label: "Aggregator Commision",
-        format: (value) => formattedAmount(value),
-    },
-    {
-        id: "status",
-        label: "STATUS",
-        format: (value) => {
-            switch (value) {
-                case "active":
-                    return <StatusTag backgroundColor="#06C281" text={value} />;
-                case "inactive":
-                    return <StatusTag backgroundColor="#FF4747" text={value} />;
-                default:
-                    return <StatusTag backgroundColor="#F9DEA9" text={value} />;
-            }
-        },
-    },
 ];
 
-function POSTransactionActivity() {
+function InactivePOS() {
     const [posActivityParams, setPosActivityParams] = useState({
         page: 1,
     });
@@ -62,17 +40,11 @@ function POSTransactionActivity() {
         searchFilterValue: "",
     });
 
-    const lazyQueryOptions = {
-        refetchOnMountOrArgChange: true,
-        refetchOnReconnect: true,
-        refreshOnWindowFocus: true,
-    };
-
-    const { data: posActivity, isLoading: getQueryIsLoading } = useGetAllPosActivityQuery();
+    const { data: posActivity, isLoading: getQueryIsLoading } = useGetInactivePOSActivityQuery();
     const [
         triggerPosActivity,
         { data: lazyQueryPosActivity, isLoading: lazyQueryPosActivityIsLoading },
-    ] = useLazyGetAllPosActivityQuery(lazyQueryOptions);
+    ] = useLazyGetInactivePOSActivityQuery(lazyQueryOptions);
 
     const [
         triggerDownloadPosActivity,
@@ -81,7 +53,7 @@ function POSTransactionActivity() {
             isLoading: lazyQueryDownloadIsLoading,
             isError: lazyQueryDownloadIsError,
         },
-    ] = useLazyDownloadPosActivityRecordsQuery(lazyQueryOptions);
+    ] = useLazyDownloadInactivePosActivityRecordsQuery(lazyQueryOptions);
 
     const { data: aggregatorList } = useGetAggregatorQuery();
 
@@ -96,7 +68,7 @@ function POSTransactionActivity() {
             <Container>
                 <Header>
                     <HeaderTitle>
-                        <h1>POS Transactions Activity</h1>
+                        <h1>Inactive POS</h1>
                         <p>{posActivity?.data?.totalElements} total POS</p>
                     </HeaderTitle>
                     <DownloadButtonContainer>
@@ -114,7 +86,6 @@ function POSTransactionActivity() {
                             download={true}
                         />
                     </DownloadButtonContainer>
-
                     <SelectSearchFilter>
                         <SelectSearchBar>
                             <TableSelectSearchBar
@@ -261,55 +232,6 @@ function POSTransactionActivity() {
                                     }
                                 }}
                             />
-                            <SelectCommon
-                                options={{
-                                    "": "All",
-                                    active: "Active",
-                                    inactive: "Inactive",
-                                }}
-                                value={posActivityParams?.transactionStatus}
-                                onChange={(e) => {
-                                    setPosActivityParams({
-                                        ...posActivityParams,
-                                        status: e.target.value,
-                                    });
-                                    triggerPosActivity({
-                                        ...posActivityParams,
-                                        status: e.target.value,
-                                        ...(searchFilters.searchFilterBy ===
-                                            "agentAccountNumber" && {
-                                            agentAccountNumber: searchFilters?.searchFilterValue,
-                                        }),
-                                        ...(searchFilters.searchFilterBy === "serialNumber" && {
-                                            serialNumber: searchFilters.searchFilterValue,
-                                        }),
-                                        ...(searchFilters.searchFilterBy === "terminalId" && {
-                                            terminalId: searchFilters.searchFilterValue,
-                                        }),
-                                    });
-
-                                    if (
-                                        posActivityParams?.startDate &&
-                                        posActivityParams?.endDate
-                                    ) {
-                                        triggerDownloadPosActivity({
-                                            ...posActivityParams,
-                                            status: e.target.value,
-                                            ...(searchFilters.searchFilterBy ===
-                                                "agentAccountNumber" && {
-                                                agentAccountNumber:
-                                                    searchFilters?.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy === "serialNumber" && {
-                                                serialNumber: searchFilters.searchFilterValue,
-                                            }),
-                                            ...(searchFilters.searchFilterBy === "terminalId" && {
-                                                terminalId: searchFilters.searchFilterValue,
-                                            }),
-                                        });
-                                    }
-                                }}
-                            />
                         </SearchFilters>
                     </SelectSearchFilter>
                 </Header>
@@ -366,4 +288,4 @@ function POSTransactionActivity() {
     );
 }
 
-export default POSTransactionActivity;
+export default InactivePOS;

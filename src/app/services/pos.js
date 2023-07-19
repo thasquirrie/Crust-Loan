@@ -32,6 +32,7 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+
         getAgent: builder.query({
             query: (accountNumber) => ({
                 url: `/transaction/pos/agent/${accountNumber}`,
@@ -39,16 +40,29 @@ export const posApi = baseApi.injectEndpoints({
         }),
         approvePosRequest: builder.mutation({
             query: (body) => ({
-                url: "transaction/pos/requests/approve",
+                url: "/transaction/pos/requests/approve",
+                method: "POST",
+                body,
+            }),
+        }),
+        unmapAgentPOS: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/agent/unmap",
+                method: "POST",
+                body,
+            }),
+        }),
+        unmapAggregatorPOS: builder.mutation({
+            query: (body) => ({
+                url: "/transaction/pos/aggregator/unmap",
                 method: "POST",
                 body,
             }),
         }),
         declinePosRequest: builder.mutation({
-            query: (body) => ({
-                url: "transaction/pos/requests/decline",
+            query: (id) => ({
+                url: `/transaction/pos/reject/${id}`,
                 method: "POST",
-                body,
             }),
         }),
         mapPosToAggregators: builder.mutation({
@@ -78,6 +92,12 @@ export const posApi = baseApi.injectEndpoints({
                 params,
             }),
         }),
+        getInactivePOSActivity: builder.query({
+            query: (params) => ({
+                url: "/transaction/pos/activity/inactive",
+                params,
+            }),
+        }),
         createAggregator: builder.mutation({
             query: (agentId) => ({
                 url: `/user/admin/agent/upgrade/${agentId}`,
@@ -102,6 +122,12 @@ export const posApi = baseApi.injectEndpoints({
         downloadPosActivityRecords: builder.query({
             query: (params) => ({
                 url: `/transaction/pos/activity/download`,
+                params,
+            }),
+        }),
+        downloadInactivePosActivityRecords: builder.query({
+            query: (params) => ({
+                url: `/transaction/pos/activity/inactive/download`,
                 params,
             }),
         }),
@@ -137,9 +163,16 @@ export const posApi = baseApi.injectEndpoints({
                 url: `/transaction/pos/category`,
             }),
         }),
-        reassignPos: builder.mutation({
+        reassignPosToAgent: builder.mutation({
             query: (body) => ({
                 url: `/transaction/pos/agent/reassign`,
+                method: "POST",
+                body,
+            }),
+        }),
+        reassignPosToAggregator: builder.mutation({
+            query: (body) => ({
+                url: `/transaction/pos/aggregator/reassign`,
                 method: "POST",
                 body,
             }),
@@ -164,17 +197,23 @@ export const {
     useAssignPosToAgentMutation,
     useGetAllPosActivityQuery,
     useLazyGetAllPosActivityQuery,
+    useGetInactivePOSActivityQuery,
+    useLazyGetInactivePOSActivityQuery,
     useGetPosHistoryQuery,
     useGetAllMerchantsQuery,
     useCreatePosMutation,
     useLazyGetAgentByAccountNumberQuery,
     useGetPosCategoryQuery,
-    useReassignPosMutation,
+    useReassignPosToAgentMutation,
+    useReassignPosToAggregatorMutation,
+    useUnmapAgentPOSMutation,
+    useUnmapAggregatorPOSMutation,
     useLazyGetAgentQuery,
     useCreateAggregatorMutation,
     useGetAggregatorAgentQuery,
     useGetAggregatorTransactionQuery,
     useGetAggregatorPosDevicesQuery,
     useLazyDownloadPosActivityRecordsQuery,
+    useLazyDownloadInactivePosActivityRecordsQuery,
     useGetPosDetailsQuery,
 } = posApi;

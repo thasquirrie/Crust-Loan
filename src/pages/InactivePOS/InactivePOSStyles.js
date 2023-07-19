@@ -51,16 +51,6 @@ const HeaderTitle = styled.div`
     }
 `;
 
-const DownloadButtonContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 15%;
-    margin-left: auto;
-    margin-bottom: 1rem;
-`;
-
 const SelectSearchFilter = styled.div`
     display: flex;
     flex-direction: row;
@@ -68,7 +58,6 @@ const SelectSearchFilter = styled.div`
     align-items: center;
     width: 100%;
     margin-bottom: 1rem;
-    margin-top: 3rem
 `;
 
 const SelectSearchBar = styled.div`
@@ -86,19 +75,22 @@ const SearchFilters = styled.div`
     align-items: center;
     width: auto;
 
-    div:nth-child(2),
-    div:nth-child(3) {
-        width: 10vw;
+     div:nth-child(2),
+     div:nth-child(3),
+     div:nth-child(4) {
+        width: 100%;
         margin-left: 1rem;
-    }
+     }
 `;
 
-export {
-    Container,
-    Header,
-    HeaderTitle,
-    DownloadButtonContainer,
-    SelectSearchFilter,
-    SelectSearchBar,
-    SearchFilters,
-};
+const DownloadButtonContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    margin-left: auto;
+    margin-bottom: 1rem;
+`;
+
+export { Container, Header, HeaderTitle,  DownloadButtonContainer , SelectSearchFilter, SelectSearchBar, SearchFilters };

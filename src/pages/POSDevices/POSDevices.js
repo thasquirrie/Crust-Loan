@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Main from "../../components/common/Main.js";
 import {
     Container,
@@ -10,9 +11,13 @@ import {
     CreateAssignPOSContainer,
     AssignMultipleDeviceBtn,
 } from "./POSDevicesStyles.js";
-import { useState } from "react";
 import TableSelectSearchBar from "../../components/common/TableSelectSearchBar.js";
-import { useGetPosQuery, useLazyGetPosQuery } from "../../app/services/pos.js";
+import {
+    useGetPosQuery,
+    useLazyGetPosQuery,
+    useUnmapAgentPOSMutation,
+    useUnmapAggregatorPOSMutation,
+} from "../../app/services/pos.js";
 import { lazyQueryOptions } from "../../utils/queryOptions.js";
 import QueryButton from "../../components/posDevices/QueryButton.js";
 import AssignMultipleDevicesToAgg from "../../components/posDevices/AssignMultipleDevicesToAggModal.js";
@@ -23,7 +28,9 @@ import mennIcon from "../../assets/common/Kebab.svg";
 import POSHistoryModal from "../../components/posDevices/POSHistoryModal.js";
 import CreatePOS from "../../components/posDevices/CreatePOS.js";
 import ReassignPOSModal from "../../components/posDevices/ReassignPOS.js";
-import POSDetailsModal from "../../components/posDevices/POSDetailsModal.js";
+import UnmapPOSModal from "../../components/posDevices/UnmapPOSModal.js";
+import SnackBar from "../../components/common/SnackBar";
+import ConfirmationModal from "../../components/common/ConfirmationModal.js";
 
 const TableColumns = [
     { id: "serialNumber", label: "SERIAL NO." },
@@ -41,6 +48,8 @@ const TableColumns = [
 const PosDevices = () => {
     const VIEW_POS_HISTORY = "VIEW_POS_HISTORY";
     const VIEW_POS_DETAILS = "VIEW_POS_DETAILS";
+    const UNMAP_POS = "UNMAP_POS";
+    const UNMAP_POS_FROM_AGGREGATOR = "UNMAP_POS_FROM_AGGREGATOR";
     const CREATE_POS = "CREATE_POS";
     const REASSIGN_POS = "REASSIGN_POS";
 
@@ -51,13 +60,23 @@ const PosDevices = () => {
     const [posDevicesModalType, setPosDevicesModalType] = useState("");
     const [posDevicesModalDetails, setPosDevicesModalDetails] = useState("");
     const [openModal, setOpenModal] = useState(false);
+    const [unmapConfirmationModal, setUnmapConfirmationModal] = useState({
+        open: false,
+        type: "",
+    });
     const [selected, setSelected] = useState([]);
     const [uploadedSelectedDevice, setUploadedSelectedDevice] = useState([]);
+    const [activeBtn, setActiveBtn] = useState("all");
+
+    const [openSnackbar, setOpenSnackbar] = useState({
+        open: false,
+        severity: "success",
+        message: "",
+    });
 
     const [posDevicesParams, setPosDevicesParams] = useState({
         page: 1,
     });
-    const [activeBtn, setActiveBtn] = useState("all");
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -70,33 +89,126 @@ const PosDevices = () => {
         setAnchorEl(null);
     };
 
-    const tableMenuItems = [
-        {
-            name: "View POS History",
-            onClick: (row) => {
-                setPosDevicesModalType(VIEW_POS_HISTORY);
-                setPosDevicesModalDetails(row);
-            },
-        },
-        {
-            name: "View POS Details",
-            onClick: (row) => {
-                setPosDevicesModalType(VIEW_POS_DETAILS);
-                setPosDevicesModalDetails(row);
-            },
-        },
-        {
-            name: "Reassign POS",
-            onClick: (row) => {
-                setPosDevicesModalType(REASSIGN_POS);
-                setPosDevicesModalDetails(row);
-            },
-        },
-    ];
+    const { data: posDevices, isLoading: posDevicesIsLoading } = useGetPosQuery();
 
     const [triggerGetPos, { data: lazyQueryGetPosData, isLoading: lazyQueryGetPosIsLoading }] =
         useLazyGetPosQuery(lazyQueryOptions);
-    const { data: posDevices, isLoading: posDevicesIsLoading } = useGetPosQuery();
+
+    const [
+        triggerUnmapAggregatorPos,
+        {
+            isLoading: unmapAggregatorPosIsLoading,
+            isSuccess: unmapAggregatorPosIsSuccess,
+            isError: unmapAggregatorPosIsError,
+            error: unmapAggregatorPosError,
+        },
+    ] = useUnmapAggregatorPOSMutation();
+
+    const [
+        triggerUnmapAgentPos,
+        {
+            isLoading: unmapAgentPosIsLoading,
+            isSuccess: unmapAgentPosIsSuccess,
+            isError: unmapAgentPosIsError,
+            error: unmapAgentPosError,
+        },
+    ] = useUnmapAgentPOSMutation();
+
+    function generateTableMenuItems(row) {
+        let tableMenuItems = [
+            {
+                name: "View POS History",
+                onClick: (row) => {
+                    setPosDevicesModalType(VIEW_POS_HISTORY);
+                    setPosDevicesModalDetails(row);
+                },
+            },
+            {
+                name: "View POS Details",
+                onClick: (row) => {
+                    setPosDevicesModalType(VIEW_POS_DETAILS);
+                    setPosDevicesModalDetails(row);
+                },
+            },
+            {
+                name: "Reassign POS",
+                onClick: (row) => {
+                    setPosDevicesModalType(REASSIGN_POS);
+                    setPosDevicesModalDetails(row);
+                }
+            },
+            {
+                name: "Unmap POS from aggregator",
+                onClick: (row) => {
+                    setPosDevicesModalType(UNMAP_POS_FROM_AGGREGATOR);
+                    setPosDevicesModalDetails(row);
+                },
+            },
+        ];
+        switch (row?.status) {
+            case "ASSIGNED":
+                tableMenuItems.push({
+                    name: "Unmap POS from agent",
+                    onClick: (row) => {
+                        setPosDevicesModalType(UNMAP_POS);
+                        setPosDevicesModalDetails(row);
+                    },
+                });
+                break;
+            default:
+                break;
+        }
+        return tableMenuItems;
+    }
+
+    useEffect(() => {
+        if (unmapAgentPosIsSuccess) {
+            setUnmapConfirmationModal({
+                open: false,
+                type: "",
+            });
+            setOpenSnackbar({
+                open: true,
+                severity: "success",
+                message: "POS Unmapped Successfully",
+            });
+        } else if (unmapAgentPosIsError) {
+            const errorKey = Object.keys(unmapAgentPosError?.data.errors)[0];
+            const errorMessage = unmapAgentPosError?.data.errors[errorKey];
+            setOpenSnackbar({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
+        }
+        setUnmapConfirmationModal({
+            open: false,
+            type: "",
+        });
+    }, [unmapAgentPosIsSuccess, unmapAgentPosIsError]);
+
+    useEffect(() => {
+        if (unmapAggregatorPosIsSuccess) {
+            setOpenSnackbar({
+                open: true,
+                severity: "success",
+                message: `You have successfully unmapped POS from aggregator`,
+            });
+        } else if (unmapAggregatorPosIsError) {
+            const errorKey = Object.keys(unmapAggregatorPosError?.data.errors)[0];
+            console.log("ERRORS :", unmapAggregatorPosError);
+            const errorMessage = unmapAggregatorPosError?.data.errors[errorKey];
+            setOpenSnackbar({
+                open: true,
+                severity: "error",
+                message: errorMessage,
+            });
+        }
+        setUnmapConfirmationModal({
+            open: false,
+            type: "",
+        });
+    }, [unmapAggregatorPosIsSuccess, unmapAggregatorPosIsError]);
 
     const searchFilterOptions = {
         ...(searchFilters?.searchFilterBy === "serialNumber" &&
@@ -127,8 +239,21 @@ const PosDevices = () => {
     };
 
     const handleClearSelectedPosDevices = () => {
-        setSelected([])
-    }
+        setSelected([]);
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpenSnackbar({
+            open: false,
+            severity: "success",
+            message: "",
+        });
+    };
+
     return (
         <Main>
             <AssignMultipleDevicesToAgg
@@ -142,24 +267,83 @@ const PosDevices = () => {
                 <POSHistoryModal
                     open={posDevicesModalType === VIEW_POS_HISTORY}
                     handleClose={() => setPosDevicesModalType("")}
-                    posDevicesModalDetails={
-                        posDevicesModalType === VIEW_POS_HISTORY ? posDevicesModalDetails : null
-                    }
+                    posDevicesModalDetails={posDevicesModalType === VIEW_POS_HISTORY ? posDevicesModalDetails : null}
                 />
             )}
-               {posDevicesModalDetails && (
-                <POSDetailsModal
+            {posDevicesModalDetails && (
+                <POSHistoryModal
                     open={posDevicesModalType === VIEW_POS_DETAILS}
                     handleClose={() => setPosDevicesModalType("")}
-                    posDevicesModalDetails={
-                        posDevicesModalType === VIEW_POS_DETAILS ? posDevicesModalDetails : null
-                    }
+                    posDevicesModalDetails={posDevicesModalType === VIEW_POS_DETAILS ? posDevicesModalDetails : null}
                 />
             )}
-            <CreatePOS
-                open={posDevicesModalType === CREATE_POS}
-                setPosDevicesModalType={setPosDevicesModalType}
+
+            {posDevicesModalDetails && (
+                <UnmapPOSModal
+                    open={posDevicesModalType === UNMAP_POS_FROM_AGGREGATOR || posDevicesModalType === UNMAP_POS}
+                    HeaderText={`
+					${posDevicesModalType === UNMAP_POS_FROM_AGGREGATOR ? "Unmap POS from Aggregator" : "Unmap POS from Agent"}
+					`}
+                    RiderText={"Device Information"}
+                    ConfirmationSerialNumberText={"POS Serial Number :"}
+                    ConfirmationSerialNumber={posDevicesModalDetails.serialNumber}
+                    ConfirmationTerminalIDText={"POS Terminal ID :"}
+                    ConfirmationTerminalID={posDevicesModalDetails.terminalId}
+                    ConfirmationMerchantNameText={"Merchant Name :"}
+                    ConfirmationMerchantName={posDevicesModalDetails.institution}
+                    confirmationText={"Unmap Device"}
+                    handleClose={() => setPosDevicesModalType("")}
+                    onClickConfirm={() => {
+                        setUnmapConfirmationModal({
+                            open: true,
+                            type: posDevicesModalType,
+                        });
+                        setPosDevicesModalType("");
+                    }}
+                />
+            )}
+
+            <ConfirmationModal
+                open={unmapConfirmationModal.open}
+                HeaderText={`
+					${unmapConfirmationModal.type === UNMAP_POS_FROM_AGGREGATOR ? "Unmap POS from Aggregator" : "Unmap POS from Agent"}
+					`}
+                ConfirmationBody={`Are you sure you want to unmap this device from this ${
+                    unmapConfirmationModal.type === UNMAP_POS_FROM_AGGREGATOR ? "Aggregator" : "Agent"
+                } ?`}
+                confirmationText={"Yes, Unmap"}
+                handleClose={() =>
+                    setUnmapConfirmationModal({
+                        open: false,
+                        type: "",
+                    })
+                }
+                loading={
+                    unmapConfirmationModal.type === UNMAP_POS_FROM_AGGREGATOR
+                        ? unmapAggregatorPosIsLoading
+                        : unmapAgentPosIsLoading
+                }
+                onClickConfirm={() => {
+                    if (unmapConfirmationModal.type === UNMAP_POS_FROM_AGGREGATOR) {
+                        triggerUnmapAggregatorPos({
+                            id: posDevicesModalDetails?.id,
+                        });
+                    } else if (unmapConfirmationModal.type === UNMAP_POS) {
+                        triggerUnmapAgentPos({
+                            id: posDevicesModalDetails?.id,
+                        });
+                    }
+                }}
             />
+
+            <SnackBar
+                openSnackbar={openSnackbar?.open}
+                handleClose={handleSnackbarClose}
+                snackbarSeverity={openSnackbar?.severity}
+                SnackbarMessage={openSnackbar?.message}
+            />
+
+            <CreatePOS open={posDevicesModalType === CREATE_POS} setPosDevicesModalType={setPosDevicesModalType} />
             <ReassignPOSModal
                 open={posDevicesModalType === REASSIGN_POS}
                 posDeviceDetails={posDevicesModalDetails}
@@ -178,9 +362,7 @@ const PosDevices = () => {
                             </p>
                         </div>
                         <CreateAssignPOSContainer>
-                            <CreatePosBtn onClick={() => setPosDevicesModalType(CREATE_POS)}>
-                                Create POS
-                            </CreatePosBtn>
+                            <CreatePosBtn onClick={() => setPosDevicesModalType(CREATE_POS)}>Create POS</CreatePosBtn>
                             <AssignMultipleDeviceBtn onClick={handleClick}>
                                 <img src={mennIcon} alt="" />
                             </AssignMultipleDeviceBtn>
@@ -240,9 +422,7 @@ const PosDevices = () => {
                                     "Agent Acc. No.": "agentAccountNumber",
                                     "Merchant Name": "merchantName",
                                 }}
-                                showClearSearch={
-                                    searchFilters.searchFilterValue.length > 0 ? true : false
-                                }
+                                showClearSearch={searchFilters.searchFilterValue.length > 0 ? true : false}
                                 selectOnChange={(e) => {
                                     setSearchFilters({
                                         ...searchFilters,
@@ -352,7 +532,7 @@ const PosDevices = () => {
                         });
                     }}
                     firstPage={posDevicesParams.page === 1}
-                    menuItems={tableMenuItems}
+                    menuItems={generateTableMenuItems}
                     lastPage={
                         lazyQueryGetPosData?.data?.totalPages
                             ? lazyQueryGetPosData.data.totalPages === posDevicesParams.page
