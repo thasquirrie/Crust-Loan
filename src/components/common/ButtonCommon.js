@@ -38,7 +38,6 @@ const ButtonContainer = styled.button`
   letter-spacing: -0.02em;
   cursor: pointer;
   ${(props) => {
-    console.log({props})
     return (props.border ? `border: 1px solid #933d0c` : `border: none`)}};
   ${(props) =>
     props.textColor ? `color: ${props.textColor};` : `color: #ffffff;`}

@@ -15,7 +15,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function LoanInsightsModal({
   open,
   handleClose,
-  agentDetails,
+  loanInsights,
   userId,
   clusters,
 }) {
